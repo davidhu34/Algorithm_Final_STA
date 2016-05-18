@@ -45,67 +45,59 @@ a list of true paths.
 
 ## Definition
 
-Static Timing Analysis (STA)
+<dl>
 
-:   is a process of checking whether propagation time from input to
+<dt>Static Timing Analysis (STA)</dt>
+<dd><p> is a process of checking whether propagation time from input to
     output is within a certain time constraint. It is an IC design
-    process.
+    process. </p></dd>
 
-Critical Path
+<dt>Critical Path</dt>
+<dd><p>TODO</p></dd>
 
-:   TODO
+<dt>Timing Violation</dt>
+<dd><p>TODO</p></dd>
 
-Timing Violation
+<dt>False Path Problem</dt>
+<dd><p>TODO</p></dd>
 
-:   TODO
-
-False Path Problem
-
-:   TODO
-
-Floating-mode
-
-:   is a state of a point. It means that the value of the point is 
+<dt>Floating-mode</dt>
+<dd><p>is a state of a point. It means that the value of the point is 
     unknown. Point can be input or output of any elements in the
-    circuit.
+    circuit.</p></dd>
 
-Slack
+<dt>Slack</dt>
+<dd><p>TODO</p></dd>
 
-:   TODO
-
-True Path
-
-:   is a path from an input I to an output O, that change of I from
+<dt>True Path</dt>
+<dd><p>is a path from an input I to an output O, that change of I from
     floating-mode to a certain value, causes a change of O from
     floating-mode to a certain value. It depends on the relative
     arrival time of this path's input, the delay of each elements
     in the circuit, the value of this path's input and other paths'
-    input, and the type of gates along the path.
+    input, and the type of gates along the path.</p></dd>
 
-False Path
+<dt>False Path</dt>
+<dd><p>is a path that is not true path.</p></dd>
 
-:   is a path that is not true path.
-
-Sensitizing A Path
-
-:   is an action of changing the value of source from floating-mode to
+<dt>Sensitizing A Path</dt>
+<dd><p>is an action of changing the value of source from floating-mode to
     a certain value, and cause the value of destination change from 
     floating-mode to certain value. In other word, make that path become
-    a true path.
+    a true path.</p></dd>
 
-Controlling Value
-
-:   is a value that its existance in input will guarantee a certain
+<dt>Controlling Value</dt>
+<dd><p>is a value that its existance in input will guarantee a certain
     output. E.g. Controlling value for AND and NAND gate is 0,
-    Controlling value for OR and NOR gate is 1.
+    Controlling value for OR and NOR gate is 1.</p></dd>
 
-Online Signal
+<dt>Online Signal</dt>
+<dd><p>is the input we are focusing right now.</p></dd>
 
-:   is the input we are focusing right now.
+<dt>Side Input</dt>
+<dd><p>is an input that is not online signal.</p></dd>
 
-Side Input
-
-:   is an input that is not online signal.
+</dl>
 
 ## True Path of Gates
 
@@ -158,8 +150,10 @@ sta <input_file>
 ## Options
 
 <dl>
-  <dt><code>input_file</code></dt>
-  <dd><p>Verilog file that describing a gate-level netlist.</p></dd>
+
+<dt><code>input_file</code></dt>
+<dd><p>Verilog file that describing a gate-level netlist.</p></dd>
+
 </dl>
 
 
