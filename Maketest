@@ -1,0 +1,129 @@
+# How to Use Maketest
+#
+# This if for unit testing.
+# Just write some testing functions into a file into a mudule
+# Add your testing functions into testall.cpp
+# make -f Maketest
+
+# Variables
+
+# =  : Will do recursive expansion.
+# := : Won't do recursive expansion.
+
+# Compiler
+CC := g++
+
+# Compiler Flags
+# -Wall               : Warn all possible mistakes.
+# -Wextra             : Extra warning.
+# -Werror=return-type : Turn "forget to return" warning to error.
+# -O2                 : Optimization level 2 (0, 1, 2, 3).
+CFLAGS := -Wall -Wextra -Werror=return-type -O2
+
+# Compiler flags for debugging
+# -g        : Add information for debugger in that object file.
+# -pg       : Add information for gnu profiler in that object file.
+# -D<macro> : Tell preprocessor to define "macro".
+CFLAGS := -Wall -Wextra -Werror=return-type -O0 -g
+
+# Archiver to create static library
+AR := ar  
+
+# Archiver flags
+# r (operation) : Insert files to archive, replace if files already exist.
+# c (modifier)  : If archive doesn't exist, do not issue warning.
+# v (modifier)  : Verbose.
+# s (modifier)  : Write an object-file index into the archive.
+ARFLAGS := rcv
+
+OUTPUT := bin/unit_test
+
+# Directories
+MODULES := test/src/main test/src/util src/main src/util
+LIB_DIR := test/lib lib
+
+# Look for include files in each modules (directories)
+INCLUDE := $(patsubst %,-I%,$(MODULES))
+LIB_DIR := $(patsubst %,-L%,$(LIB_DIR))
+CFLAGS += $(INCLUDE)
+
+# Each modules' file will add to these variables
+SRC :=
+MAIN_SRC :=
+LIB :=
+
+# Include the descriptor (file list) for each module
+include $(patsubst %,%/module.mk,$(MODULES))
+
+# Determine the object files
+OBJ := $(patsubst %.cpp,%.o,$(SRC))
+LIB := $(patsubst lib%,-l%,$(LIB))
+
+# Pattern rules
+# <target> : <dependency> ...
+# .cpp depends on .o
+# @<cmd> : Do not print this line of command, just execute it.
+#
+# $@    : Target (bin/NTU_sort).
+# $<    : First prerequisites (sort_tool_opt.o).
+# $?    : All prerequisites newer than target.
+# $^    : All prerequisites.
+# $*    : Match %, used in implicit rules only.
+# $(^D) : Directories of all prerequisites.
+#
+# -c : Compile and create object file.
+# -o : Output to file.
+#
+# $(filter pattern...,strings)
+# - Return string that match any pattern.
+# - E.g. $(filter %.c %.o,1.c 2.c 3.o 4.h 5.h) -> 1.c 2.c 3.o
+#
+# $(patsubst pattern,replacement,strings)
+# - For each string, match with pattern, then do replacement.
+# - E.g. $(patsubst %.d,%.c,a.d b.d c) -> a.c b.c c.c
+%.o: %.cpp
+	@echo "Compiling $<..."
+	@$(CC) -c $< $(CFLAGS) -o $*.o
+
+# Calculate Cpp include dependencies
+#
+# -MM   : Create dependencies.
+#
+# sed   : "file.o:" -> "dir/file.d dir/file.o:"
+# sed   : remove "file.o:"
+# sed   : remove backslash at end of line
+# fmt -1: print word by word
+# sed   : remove space at beginning of line
+# sed   : add colon at end of line
+%.d: %.cpp
+	@echo "Building dependency for $<..."
+	@$(CC) $(INCLUDE) -MM $*.cpp > $*.tempd
+	@sed -e 's|.*\.o:|$*.d $*.o:|' < $*.tempd > $*.d
+	@sed -e 's|.*:||' -e 's|\\$$||g' < $*.tempd | fmt -1 | \
+	 sed -e 's|^ *||' -e 's|$$|:|' >> $*.d
+	@rm $*.tempd
+
+# Phony target
+.PHONY: clean all
+
+# Link the program
+all: $(OUTPUT)
+
+$(OUTPUT): $(OBJ)
+	@echo "Linking..."
+	@$(CC) -o $@ $(LIB_DIR) $(OBJ) $(LIB)
+	@echo $(OUTPUT)" build succeed."
+	@echo
+	@echo "Start unit testing..."
+	@$(OUTPUT)
+
+# Include dependencies
+-include $(patsubst %.o,%.d,$(OBJ))
+
+# clean all the .o and executable files
+clean:
+	@for D in $(MODULES); do \
+	   rm $$D/*.o $$D/*.d ;\
+	 done; \
+	 rm $(OUTPUT)
+

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Synopsys
+#   test_all
+#
+# Description
+#   Use the program to create output from all inputs.
+#   Then validate all outputs.
+#
+# Options
+#
+# Exit Status
+#   0 Test finished.
+#   1 Error occurred.
+
+print_usage() {
+    echo "Usage:"
+    echo "  test_all"
+}
+
+# Go to directory of script.
+cd "${BASH_SOURCE%/*}" || { echo "Error: Cannot go to script dir."; exit 1; }
+
+# Create outputs and validate.
+for f in abc nono tobe star pnp_part pnp vlog_part vlog lunyu; do
+    ./test_one "$f" || exit 1;
+done

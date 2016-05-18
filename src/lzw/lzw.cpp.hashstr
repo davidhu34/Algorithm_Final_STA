@@ -1,0 +1,245 @@
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <iostream>
+
+#include "lzw.h"
+
+typedef unsigned int    Uint;
+typedef unsigned char   Uchar;
+
+static constexpr size_t Uint_len  = sizeof(Uint)*8;
+static constexpr size_t Uchar_len = sizeof(Uchar)*8;
+
+// Example: TOBEORNOTTOBEORTOBEORNOT#
+//
+// Initial table:
+// 
+// Symbol  Binary  Decimal
+// ------  ------  -------
+// #       00000    0
+// A       00001    1
+// B       00010    2
+//         .
+//         .
+//         .
+//
+// Z       11010   26
+
+static constexpr Uint max_code   = 65535;
+static constexpr Uint init_code  = 255; // last code of initial dictionary
+static constexpr Uint clear_code = init_code + 1;
+static constexpr Uint stop_code  = clear_code + 1;
+
+static constexpr Uint max_size_default = 512; // power of 2 that > stop_code
+static constexpr Uint new_code_default = stop_code + 1;
+static constexpr Uint bit_len_default  = 9;   // 2^bit_len = max_size
+
+static Uint read_char(std::ifstream& fin) {
+    char c;
+    if (!fin.get(c)) {
+        return stop_code;
+    }
+    else {
+        return (Uint)(Uchar)c;
+    }
+}
+
+static void write_bit(std::ofstream& fout, Uint bits, Uint bit_len,
+                      bool flush = false) {
+    std::cout << (bits << (Uint_len - bit_len) >> (Uint_len - bit_len)) 
+              << " " << bit_len << "\n";
+
+    // Store at here first, output only if full.
+    // Back in front out. [0 0 0 0 0 0 0 0] <--
+    static Uchar  c     = 0;
+    static size_t c_len = 0;
+
+    while (bit_len > 0) {
+        c <<= 1;
+        c |= (bits >> (bit_len - 1)) & 1;
+        c_len += 1;
+
+        // If c has been full, output.
+        if (c_len == Uchar_len) {
+            fout.put(c);
+            c_len = 0;
+            c = 0;
+        }
+        bit_len -= 1;
+    }
+
+    if (flush) {
+        c <<= Uchar_len - c_len;
+        fout.put(c);
+        c_len = 0;
+        c = 0;
+    }
+}
+
+// Encoding:
+//
+// Current  Code Of  Output code  Extend dict  Comment
+// -------  -------  -----------  -----------  -------
+// TO       T        20  10100    27: TO
+// OB       O        15  01111    28: OB
+// BE       B         2  00010    29: BE
+// EO       E         5  00101    30: EO
+// OR       O        15  01111    31: OR
+// RN       R        18  10010    32: RN       32 need 6 bits, start 6 bit.
+// NO       N        14 001110    33: NO
+// OT       O        15 001111    34: OT
+// TT       T        20 010100    35: TT
+// TOB      TO       27 011011    36: TOB
+// BEO      BE       29 011101    37: BEO
+// ORT      OR       31 011111    38: ORT
+// TOBE     TOB      36 100100    39: TOBE
+// EOR      EO       30 011110    40: EOR
+// RNO      RN       32 100000    41: RNO
+// OT#      OT       34 100010
+//                    0 000000                 stop code
+//
+// Current  Code Of  Output code      Extend dict  Comment
+// -------  -------  ---------------  -----------  -------
+// **       *         42 0 0010 1010  258: **
+// **#      **       258 1 0000 0010  
+//                   257 1 0000 0001               stop code
+//
+
+void lzw_c(std::ifstream& fin, std::ofstream& fout) {
+    Uint max_size = max_size_default;
+    Uint new_code = new_code_default;
+    Uint bit_len  = bit_len_default;
+
+    std::unordered_map<std::string, Uint> dict;
+    dict.reserve(max_code + 1);
+
+    // Initialize dictionary.
+    for (Uint i = 0; i <= init_code; ++i) {
+        dict[std::string(1, (char)i)] = i;
+    }
+
+    std::string cur_str  = "";
+    Uint        cur_char = read_char(fin);
+    
+    // Start encoding.
+    while (cur_char != stop_code) {
+        // Read until that string not in dict.
+        if (dict.count(cur_str + (char)cur_char)) {
+            cur_str += (char)cur_char;
+        }
+        else {
+            write_bit(fout, dict[cur_str], bit_len);
+            dict[cur_str + (char)cur_char] = new_code;
+            if (new_code == max_size) {
+                max_size <<= 1;
+                bit_len += 1;
+            }
+            new_code += 1;
+            cur_str = (char)cur_char;
+        }
+        cur_char = read_char(fin);
+    }
+
+    if (!cur_str.empty()) {
+        write_bit(fout, dict[cur_str], bit_len);
+    }
+    write_bit(fout, stop_code, bit_len, true);
+}
+
+static void write_str(std::ofstream& fout, const std::string& str) {
+    fout.write(str.data(), str.size());
+}
+
+static Uint read_bit(std::ifstream& fin, size_t bit_len) {
+    // c is the fridge.
+    static Uchar c = 0;
+    static int bit_left = 0;
+
+    // temp is the plate.
+    Uint temp = 0;
+    for (size_t i = 0; i < bit_len; ++i) {
+        // If fridge is empty, fill it with food again.
+        if (bit_left == 0) {
+            c = fin.get();
+            bit_left = 8;
+        }
+        
+        // Fetch food from fridge to plate.
+        temp <<= 1;
+        temp |= c >> (Uchar_len - 1);
+        c <<= 1;
+        bit_left -= 1;
+    }
+    
+    std::cout << temp << " " << bit_len << "\n";
+    return temp;
+}
+
+// Decoding:
+//
+// Input code  Seq   Extend dict      Comments
+// ----------  ----  ---------------  --------
+//  10100 20   T     27 T?   -> TO
+//  01111 15   O     28 O?   -> OB
+//  00010  2   B     29 B?   -> BE
+//  00101  5   E     30 E?   -> EO
+//  01111 15   O     31 O?   -> OR
+//  10010 18   R     32 R?   -> RN    32 need 6 bits, start 6 bit
+// 001110 14   N     33 N?   -> NO
+// 001111 15   O     34 O?   -> OT
+// 010100 20   T     35 T?   -> TT
+// 011011 27   TO    36 TO?  -> TOB
+// 011101 29   BE    37 BE?  -> BEO
+// 011111 31   OR    38 OR?  -> ORT
+// 100100 36   TOB   39 TOB? -> TOBE
+// 011110 30   EO    40 EO?  -> EOR
+// 100000 32   RN    41 RN?  -> RNO
+// 100010 34   OT    42 OT?
+// 000000  0                          stop code
+//
+// Input code       Seq  Extend dict    Comment
+// ---------------  ---  -------------  -------
+// 0 0010 1010  42  *    258 *?  -> **
+// 1 0000 0010 258  **   259 **?
+// 1 0000 0001                          stop code
+//
+
+void lzw_x(std::ifstream& fin, std::ofstream& fout) {
+    Uint max_size = max_size_default;
+    Uint new_code = new_code_default;
+    Uint bit_len  = bit_len_default;
+
+    // Initialize dictionary.
+    std::vector<std::string> dict;
+    dict.reserve(max_code + 1);
+    for (Uint i = 0; i <= init_code; ++i) {
+        dict.push_back(std::string(1, (char)i));
+    }
+    dict.push_back(""); // for clear_code
+    dict.push_back(""); // for stop_code
+
+    // Read code.
+    Uint cur_code = read_bit(fin, bit_len);
+    if (cur_code == stop_code) {
+        return;
+    }
+
+    // Write answer.
+    write_str(fout, dict[cur_code]);
+
+    // Add code.
+    dict.push_back(dict[cur_code]); // dict[new_code] = dict[cur_code]
+
+    // Repeat: Read code, decode, write answer, add code.
+    while ((cur_code = read_bit(fin, bit_len)) != stop_code) {
+        dict[new_code] += dict[cur_code][0];
+        new_code += 1;
+        if (new_code == max_size) {
+            max_size <<= 1;
+            bit_len += 1;
+        }
+        write_str(fout, dict[cur_code]);
+        dict.push_back(dict[cur_code]); // dict[new_code] = dict[cur_code];
+    }
+}

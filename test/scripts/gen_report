@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Synopsys
+#   gen_report
+#
+# Description
+#   Generate csv files from program.
+#     1. song_n,  dp_time,     gd_time
+#     2. song_n,  dp_mem,      gd_mem
+#     3. song_n,  dp_max_song, gd_max_song
+#     4. dvd_n,   dp_time,     gd_time
+#     5. dvd_n,   dp_mem,      gd_mem
+#     6. dvd_n,   dp_max_song, gd_max_song
+#     7. dvd_cap, dp_time,     gd_time
+#     8. dvd_cap, dp_mem,      gd_mem
+#     9. dvd_cap, dp_max_song, gd_max_song
+#   Draw graphs (.png) for each csv above.
+# 
+# Options
+#
+# Exit Status
+#   0 Success.
+#   1 Error occurred.
+
+print_usage() {
+    echo "Usage:"
+    echo "  gen_report"
+}
+
+# Go to directory of script.
+cd "${BASH_SOURCE%/*}" || { echo "Error: Cannot go to script dir."; exit 1; }
+
+# Append memory usage to .out file.
+for f in song_n{01..10} dvd_n{01..10} dvd_cap{01..10}; do
+    valgrind --tool=massif --massif-out-file=massif.out \
+        ../../bin/DVD_Dealer -DP ../inputs/${f}.in temp.txt \
+        > /dev/null 2>&1
+    ms_print_max massif.out >> ../outputs/${f}_dp.out
+
+    valgrind --tool=massif --massif-out-file=massif.out \
+        ../../bin/DVD_Dealer -GD ../inputs/${f}.in temp.txt \
+        > /dev/null 2>&1
+    ms_print_max massif.out >> ../outputs/${f}_gd.out
+done
+
+rm massif.out
+rm temp.txt
+
+# Create .csv files.
+
+# Compare to Description
+#   A11 A12 A13 | song_n  dp_time     gd_time
+#   A21 A22 A23 | song_n  dp_mem      gd_mem
+#       ...     |             ...
+#   A91 A92 A93 | dvd_cap dp_max_song gd_max_song
+A11=() A12=() A13=()
+A21=() A22=() A23=()
+A31=() A32=() A33=()
+
+for f in song_n dvd_n dvd_cap; do
+    indep=()
+    dep1=()
+    dep2=()
+    for n in {01..10}; do
+        read -r var1 var2 var3 < ../inputs/${f}${n}.in
+        case "$f" in
+            song_n)  indep+=("$var1") ;;
+            dvd_n )  indep+=("$var2") ;;
+            dvd_cap) indep+=("$var3") ;;
+        esac
+        
+        {
+            read -r line1
+            read -r line2
+            read -r line3
+            read -r line4
+        } < ../outputs/${f}${n}_dp.out

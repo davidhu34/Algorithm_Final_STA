@@ -1,0 +1,136 @@
+#!/bin/bash
+
+# Synopsys
+#   validate [-q] <input_file> <output_file>
+# 
+# Description
+#   Make sure that the output meet the requirement of input.
+#   It check the following:
+#     Song in each DVD does not exceed capacity of that DVD.
+#     Song is in range.
+#     Song does not repeat.
+#     Songs' relative position is not changed.
+#     Maximum number of songs matches.
+#     Number of DVDs does not exceed.
+#   It does not check the format of input/output file.
+#     Make sure the input/output file format follow description in README.
+#
+# Options
+#   -q
+#     Quiet, do not print result to stdout.
+#   input_file
+#     File that describe problem requirement.
+#   output_file
+#     File output by your program.
+#
+# Example
+#
+# Exit Status
+#   0 Requirement met.
+#   1 Requirement unmet.
+#   2 Error.
+
+print_usage() {
+    echo "Usage: "
+    echo "  validate [-q] <input_file> <output_file>"
+}
+
+inform() {
+    [ "$quiet" = "false" ] && echo "$1"
+}
+
+# Parse arguments.
+quiet="false"
+files=()
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -q)
+            quiet="true"
+            ;;
+        *)
+            files+=("$1")
+            ;;
+    esac
+    shift
+done
+
+if [ ${#files[@]} -ne 2 ]; then
+    print_usage
+    exit 2
+fi
+
+if [ -f ${files[0]} ]; then
+    input_file="${files[0]}"
+else
+    echo "Error: File \"${files[0]}\" does not exist."
+    exit 2
+fi
+
+if [ -f ${files[1]} ]; then
+    output_file="${files[1]}"
+else
+    echo "Error: File \"${files[1]}\" does not exist."
+    exit 2
+fi
+
+inform "Validating $input_file and $output_file..."
+
+# Read from input_file.
+{
+    read -r song_n dvd_n dvd_cap
+    read -r -a song_len
+} < "$input_file"
+
+# Read from output_file.
+{
+    read -r max_song_n
+    read -r -a chosen
+} < "$output_file"
+
+# Check validity
+((dvd_sum = 0))
+((song_sum = 0))
+((last_song = 0))
+
+for s in "${chosen[@]}"; do
+    # Start new DVD?
+    if [ $s -eq 0 ]; then
+        ((dvd_sum += 1))
+        ((cap_sum = 0))
+
+    # In range?
+    elif [ $s -lt 1 ] || [ $s -gt $song_n ]; then
+        inform "$s is out of range."
+        exit 1
+
+    # Repeat? Relative position changed?
+    elif [ $s -le $last_song ]; then
+        inform "$s is repeated or the relative position has been changed."
+        exit 1
+
+    # Song exceed capacity?
+    else
+        ((cap_sum += song_len[s - 1]))
+        if [ $cap_sum -gt $dvd_cap ]; then
+            inform "DVD $dvd_sum ($cap_sum) has exceed its capacity ($dvd_cap)."
+            exit 1
+        fi
+
+        ((song_sum += 1))
+        ((last_song = s))
+    fi
+done
+
+if [ $dvd_sum -gt $dvd_n ]; then
+    inform "Number of DVDs used $dvd_sum exceed the requirement $dvd_n."
+    exit 1
+fi
+
+if [ $max_song_n -ne $song_sum ]; then
+    inform "Maximum number of DVDs does not match what has been reported."
+    exit 1
+fi
+
+inform "Validation passed."
+exit 0
