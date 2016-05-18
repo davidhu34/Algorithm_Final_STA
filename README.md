@@ -11,12 +11,12 @@ Group 24
 
 ## Schedule
 
-Date   Item
------  ----
-5/4    Contest application deadline.
-5/24   Progress report deadline.
-6/8    Alpha test.
-6/14   Project deadline.
+Date  |Item
+----- |----
+5/4   |Contest application deadline.
+5/24  |Progress report deadline.
+6/8   |Alpha test.
+6/14  |Project deadline.
 
 ## TODO
 
@@ -158,7 +158,7 @@ sta <input_file>
 ## Options
 
 <dl>
-  <dt>`input_file`</dt>
+  <dt><code>input_file</code></dt>
   <dd><p>Verilog file that describing a gate-level netlist.</p></dd>
 </dl>
 
