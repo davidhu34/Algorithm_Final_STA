@@ -6,6 +6,9 @@
 
 namespace Cir {
 
+using std::string;
+using std::vector;
+
 class Wire
 {
 public:
