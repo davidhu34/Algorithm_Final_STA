@@ -15,6 +15,8 @@ public:
 		_riseWire = new Wire(true);
 		_fallWire = new Wire(false);
 	}
+	void newModel ( string mname, string gtype )
+	{ 	case_model[mname] = gtype; }	// TODO
 	void newInput ( string gname )
 	{ 
 		_Inputs.push_back(gname);
@@ -40,7 +42,11 @@ public:
 	bool parseFile ( ifstream &inf ) {}
 
 private:
-	bool inModel ( string str ) {}
+	bool inModel ( string str )
+	{
+		return ( case_model.find(str) != case_model.end() )?
+			true: false;
+	}
 	string parseWord ( string &parsing ) {}
 	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
 	void checkWire ( string wname )
@@ -63,8 +69,10 @@ private:
 	vector<string>		_Outputs;
 	map< string, Wire*> _Wire;
 	map< string, Gate*>	_Gate;
-	string				case_name;
-	vector<string>		case_reg;
+
+	string					case_name;
+	vector<string>			case_reg;
+	map< string, string> 	case_model;	// < model, gate type> 
 
 	Wire*		_riseWire;
 	Wire* 		_fallWire;
