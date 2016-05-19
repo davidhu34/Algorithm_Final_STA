@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "components.cpp"
+namespace Cir {
 
 class Wire
 {
@@ -78,3 +78,5 @@ class OUTPUT: Gate
 public:
 	OUTPUT(){};
 };
+
+} // namespace Cir

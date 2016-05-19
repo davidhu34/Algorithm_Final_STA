@@ -4,18 +4,22 @@
 #include <map>
 #include <string>
 
-bool moduleERR ( int line )
+#include "cir/circuit.h"
+
+static bool moduleERR ( int line )
 { 
 	cerr << "invalid module file format (line "
 		<< line << ")."<<endl;
 	return false;
 }
-bool regERR ( int line )
+static bool regERR ( int line )
 {
 	cerr << "name not registerred in module (line "
 		<< line << ")."<<endl;
 	return false;
 }
+
+namespace Cir {
 
 void Circuit::parseFile ( ifstream &inf )
 {	// premise: first line starts with "module <case_name>"
@@ -116,3 +120,5 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 	}	// empty vector for ERR
 	return (flag)? vars: vector<string>();
 }
+
+} // namespace Cir

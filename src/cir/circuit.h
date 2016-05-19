@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 
-#include "circuit.cpp"
+namespace Cir {
 
 class Circuit
 {
@@ -66,3 +66,5 @@ private:
 	Wire* 		_fallWire;
 
 };
+
+} // namespace Cir
