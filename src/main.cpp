@@ -11,5 +11,4 @@ int main ( int argc, char)
 	ifstream inf;
 	inf.open();	// input
 	Ckt->parseFile(inf);
-	
 }

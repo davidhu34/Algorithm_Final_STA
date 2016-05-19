@@ -29,10 +29,9 @@ public:
 		if ( wireName.size() == 3 )
 			wireIn( wireName[1], gateName );
 	}
-
 	bool parseFile ( ifstream &inf ) {}
-private:
 	
+private:	
 	void checkWire ( string wname )
 	{
 		if ( _Wire.find(wname) )
@@ -48,9 +47,12 @@ private:
 		checkWire(wname);
 		_Wire[wname]->setTo(_Gate[gname]);
 	}
-	vector<string> _Inputs;
-	vector<string> _Outputs;
+
+	vector<string>		_Inputs;
+	vector<string>		_Outputs;
 	map< string, Wire*> _Wire;
-	map< string, Gate*> _Gate;
+	map< string, Gate*>	_Gate;
+	string				case_name;
+	vector<string>		case_reg;
 
 };
