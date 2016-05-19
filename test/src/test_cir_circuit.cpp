@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-//#include "cir/Circuit.h"
+#include "cir/circuit.h"
 
 using namespace std;
 

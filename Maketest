@@ -40,11 +40,11 @@ ARFLAGS := rcv
 OUTPUT := bin/unit_test
 
 # Directories
-MODULES := src/util test/src test/src/util
+MODULES := src/util src/cir test/src test/src/util
 LIB_DIR := test/lib lib
 
 # Look for include files in each modules (directories)
-INCLUDE := -Isrc -I.
+INCLUDE := -Isrc
 LIB_DIR := $(patsubst %,-L%,$(LIB_DIR))
 CFLAGS += $(INCLUDE)
 

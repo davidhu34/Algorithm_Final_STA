@@ -1,2 +1,3 @@
-test/src/testcircuit.d test/src/testcircuit.o: test/src/testcircuit.cpp
-test/src/testcircuit.cpp:
+test/src/test_cir_circuit.d test/src/test_cir_circuit.o: test/src/test_cir_circuit.cpp src/cir/circuit.h
+test/src/test_cir_circuit.cpp:
+src/cir/circuit.h:
