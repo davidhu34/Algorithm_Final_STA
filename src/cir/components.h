@@ -9,6 +9,9 @@ namespace Cir {
 using std::string;
 using std::vector;
 
+// Forward declaration.
+class Gate;
+
 class Wire
 {
 public:
