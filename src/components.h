@@ -10,6 +10,7 @@ class Wire
 {
 public:
 	Wire () {}
+	Wire ( bool v ) { _value = v; }
 	void setFrom ( string from ) { _from = from; }
 	void setTo ( string to ) { _to = to; }
 	void setValue ( bool v ) { _value = v; }

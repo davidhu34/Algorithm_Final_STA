@@ -37,7 +37,7 @@ void Circuit::parseFile ( ifstream &inf )
 	while (1)
 	{
 		type = parseWord(parsing_str);
-		if ( type == "") return moduleERR(line);
+		if ( type == "") return moduleERR(parsing_line);
 		if ( inModel(type) )
 			if ( !parseGate( parsing_str ) )
 				return moduleERR(parsing_line);
@@ -63,7 +63,7 @@ void Circuit::parseFile ( ifstream &inf )
 						newWire(it.second);
 					}	break;
 				default:	// invalid type	
-					return moduleERR(line)
+					return moduleERR(parsing_line);
 			}	
 		}
 	}
@@ -71,7 +71,7 @@ void Circuit::parseFile ( ifstream &inf )
 }
 
 
-string parseWord ( string &parsing )
+string Circuit::parseWord ( string &parsing )
 {
 	string type = "";
 	while ( isspace( parsing[0] ) )
@@ -83,7 +83,8 @@ string parseWord ( string &parsing )
 	}
 	return type;	// empty type for ERR
 }
-vector<string> parseVars ( string &parsing, ifstream &inf, int &line )
+
+vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 {
 	vector<string> vars;
 	string parsed_tmp;
