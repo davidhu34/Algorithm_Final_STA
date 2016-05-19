@@ -9,9 +9,8 @@ using namespace std;
 
 void testcircuit(void)
 {
-	/*Circuit* Ckt = new Circuit();
+	Circuit* Ckt = new Circuit();
 	ifstream inf;
 	inf.open();	// input
 	Ckt->parseFile(inf);
-	*/
 }
