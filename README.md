@@ -18,12 +18,6 @@ Date  |Item
 6/8   |Alpha test.
 6/14  |Project deadline.
 
-## TODO
-
-- [ ] Finish `requirement.md`.
-- [ ] Input parser.
-- [ ] Define interfaces.
-
 ## Problem
 
 **2016 D. Static Timing Analysis**
