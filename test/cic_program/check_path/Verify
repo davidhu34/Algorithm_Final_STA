@@ -1,0 +1,247 @@
+#!/usr/bin/perl
+####################################################################
+##          Check Path Function Contest 2016                      ##
+####################################################################
+#Check the correctness of the true path list file 
+#
+#Function
+##Reading the timing report and set the path to justify 
+##Write out the PrimeTime cmd
+##The PrimeTime cmd will exec paralle in PrimeTime
+#
+#Author
+##CIC DSD 
+##C.L. Yang
+#
+#Version Info.
+##v20110118-1
+###Init. veriosn
+####################################################################
+
+####################################
+## Usage        
+####################################
+sub print_usage{
+
+print <<ENDL;   
+        
+        Usage : verify_path <file name of the true path list file> 
+               
+ENDL
+}
+
+####################################
+## ARGV Check
+####################################
+if ($#ARGV == -1) {
+    print_usage();
+    exit;
+}
+unless($#ARGV!=2){
+    print_usage();
+    exit;
+}
+
+#################################### 
+## VARs 
+####################################
+$true_path_file = $ARGV[0];
+$exit=0;
+$error = 0;
+$slack_con = 0;
+$now_case = 0;
+
+
+#check the true path set file name 
+if($true_path_file=~/case\d+_true_path_set/s){
+$exit=1;
+}
+if($exit==0){
+print "File name error!\n";
+exit;
+}
+#check the true path set file name END!
+
+#$true_path_file = lc($true_path_file);
+$true_path_file =~/(case[\d])/s;
+
+if($1 eq case1){
+$slack_con = 4;
+}
+elsif($1 eq case2){
+$slack_con = 10;
+}
+elsif($1 eq case3){
+$slack_con = 6;
+}
+elsif($1 eq case4){
+$slack_con = 6;
+}
+elsif($1 eq case5){
+$slack_con = 10;
+}
+
+$now_case=$1;
+if (-e "../output/$now_case.verify.rpt") {
+	unlink "../output/$now_case.verify.rpt";
+}
+system "/bin/touch ../output/$now_case.verify.rpt" || die "Error: Fail to create ../output/$now_case.verify.rpt\n";
+
+
+open (REPORTFILE, "< $true_path_file") || die "Error: Can't find the $true_path_file\n";
+close(REPORTFILE);
+
+print "***************************\n";
+print "*Start ".$1." verification *"."\n";
+print "***************************\n";
+$now_case=$1;
+print "NOTE: The slack constraint for $1 is $slack_con, the path slack must be lesser than (<) $slack_con\n";
+unlink "../output/*";
+unlink "../tmp/";
+#######################################################
+## Convert the true path list file format to prime time 
+## report_timing command to check te correctness of the
+## true path list file.
+#######################################################
+system "write_justify_path_v1.pl $true_path_file $slack_con $1";
+
+########################################################
+## Run prime time to check the correctness of every path
+########################################################
+chdir "../input" || die "Error: Fail to chdir to ../input\n"; 
+print "***********************************\n";
+print "*Step 2. Run Prime Time           *"."\n";
+print "***********************************\n";
+#system "pt_shell -f $1_pt.tcl > ../output/pt.log";
+system "pt_shell -f $1_pt.tcl";
+
+chdir "../true_path" || die "Error: Fail to chdir to ../true_path\n"; 
+########################################################
+## Extract the path info. from the true path list file
+########################################################
+system "compare.pl $true_path_file";
+
+###############################################################
+## Extract the path info. from the result of running prime time
+###############################################################
+system "compare1.pl ../tmp/parallel_execute_file.rpt";
+
+###############################################################
+## Compare the above results
+###############################################################
+if (-e "../output/diff.log") {
+	unlink "../output/diff.log";
+}
+print "********************************************************************************\n";
+print "*Step 5. Read the comparison results in the diff.log file and check the results*"."\n";
+print "********************************************************************************\n";
+system "diff -w ../tmp/tmp1 ../tmp/tmp2 > ../output/diff.log";
+
+#########################################################################
+## Read the comparison results in the diff.log file and check the results
+## If the results are mismatch, error = 1
+#########################################################################
+open (REPORTFILE, "< ../output/diff.log") || die "Error: Can't find the ../output/diff.log.\n";
+while (<REPORTFILE>){
+	chomp($_);
+        if($_ != "") {
+	$error = 1;
+	}
+}
+close(REPORTFILE);
+
+
+############################
+## Check the redundant paths
+############################
+print "***************************************\n";
+print "*Step 6. Check the redundant paths    *"."\n";
+print "***************************************\n";
+
+if (-e "../output/repeat.log") {
+	unlink "../output/repeat.log";
+}
+
+system "report_filter.pl $true_path_file > ../output/repeat.log";
+open (REPORTFILE, "< ../output/repeat.log") || die "Error: Can't find the ../output/repeat.log.\n";
+while (<REPORTFILE>){
+	chomp($_);
+        @checkrpt = split(/\s+/);
+	if($checkrpt[0] == $checkrpt[1]){
+	$error_path_repeat = 0;
+	}
+	else{
+	$error_path_repeat = 1;
+	}
+}
+close(REPORTFILE);
+
+############################
+## Report summary
+############################
+if($error == 0){
+   if($error_path_repeat==0){
+        print "\n**********\n";
+	print "\n* P a s s*\n";
+	print "\n**********\n";
+	
+	$justify_cmd = "**********\n";
+	&write_cmd;
+	$justify_cmd = "* P a s s*\n";
+	&write_cmd;
+	$justify_cmd = "**********\n";
+	&write_cmd;
+
+   }
+   else{
+        print "\n*******************************************\n";
+	print "\n*Verification Result: Fail, redundant path*\n";
+	print "\n*******************************************\n";
+	
+	$justify_cmd = "*******************************************\n";
+	&write_cmd;
+	$justify_cmd = "*Verification Result: Fail, redundant path*\n";
+	&write_cmd;
+	$justify_cmd = "*******************************************\n";
+	&write_cmd;
+   }
+}
+if($error == 1){
+ if($error_path_repeat==0){
+        print "\n***************************************\n";
+	print "\n*Verification Result: Fail, Path Error*\n";
+	print "\n***************************************\n";
+	
+	$justify_cmd = "***************************************\n";
+	&write_cmd;
+	$justify_cmd = "*Verification Result: Fail, Path Error*\n";
+	&write_cmd;
+	$justify_cmd = "***************************************\n";
+	&write_cmd;
+	
+ }
+ else{
+        print "\n***************************************\n";
+	print "\n*Verification Result: Fail, Path Error*\n";
+	print "\n***************************************\n";
+	
+	$justify_cmd = "***************************************\n";
+	&write_cmd;
+	$justify_cmd = "*Verification Result: Fail, Path Error*\n";
+	&write_cmd;
+	$justify_cmd = "***************************************\n";
+	&write_cmd;
+
+ }
+}	
+	
+sub write_cmd{
+#print "Notice: Write the cmd.\n";
+
+open (WRITECMDFILE, ">>../output/$now_case.verify.rpt") || die "Error: Can't open $now_case.verify.rpt to write.\n";
+
+print WRITECMDFILE $justify_cmd;
+
+close (WRITECMDFILE);
+
+}

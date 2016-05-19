@@ -399,7 +399,7 @@ Grade 1 is better than Grade 2, no matter how they perform in performance.
 
 ### Performance
 
-Not important since we are not applying for contest :laughing: .
+Not important since we are not applying for contest :wink: .
 
 ## Time and Slack Constraint
 

@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+sub print_usage{
+
+print <<ENDL;   
+        
+        Usage : Justify <file name of the true path list file> 
+               
+ENDL
+}
+
+####################################
+## ARGV Check
+####################################
+if ($#ARGV == -1) {
+    print_usage();
+    exit;
+}
+unless($#ARGV!=2){
+    print_usage();
+    exit;
+}
+$true_path_file = $ARGV[0];
+$exit=0;
+#check the true path set file name 
+if($true_path_file=~/case\d+_true_path_set/s){
+$exit=1;
+}
+if($exit==0){
+print "File name error!\n";
+exit;
+}
+#check the true path set file name END!
+
+
+open (REPORTFILE, "< $true_path_file") || die "Error: Can't find the $true_path_file\n";
+close(REPORTFILE);
+
+
+$true_path_file =~/(case[\d])/s;
+
+system "floating_mode_sim_v1.pl ./ $true_path_file ../input/$1 " || die "Error: Fail to create file\n";
+chdir "../tmp" || die "Error: Fail to chdir to ../tmp\n";
+system "vcs -R floating_mode_testbench.v floating_mode_testbench_v.v ../input/$1 -v ../input/cadcontest.v > vcs.log.$1";
+system "summary_rpt.pl vcs.log.$1";
+system "more ../output/$1.justify.rpt";
+#system "mv ./input/$1.vcd ../output";
