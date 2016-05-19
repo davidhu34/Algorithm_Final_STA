@@ -25,14 +25,14 @@ CC := g++
 # -Wextra             : Extra warning.
 # -Werror=return-type : Turn "forget to return" warning to error.
 # -O2                 : Optimization level 2 (0, 1, 2, 3).
-# -std=standard       : Use this standard
-CFLAGS := -Wall -Wextra -Werror=return-type -DNDEBUG -O2 -std=gnu++11
+# -std=<standard>     : Use this standard
+#CFLAGS := -Wall -Wextra -Werror=return-type -DNDEBUG -O2
 
 # Compiler flags for debugging
 # -g        : Add information for debugger in that object file.
 # -pg       : Add information for gnu profiler in that object file.
 # -D<macro> : Tell preprocessor to define "macro".
-CFLAGS := -Wall -Wextra -Werror=return-type -O0 -g -std=gnu++11
+CFLAGS := -Wall -Wextra -Werror=return-type -O0 -g
 
 # Archiver to create static library
 AR := ar  
@@ -47,11 +47,11 @@ ARFLAGS := rcv
 OUTPUT := bin/sta
 
 # Directories
-MODULES := src/main
+MODULES := src/main src/util
 LIB_DIR := lib
 
 # Look for include files in each modules (directories)
-INCLUDE := $(patsubst %,-I%,$(MODULES))
+INCLUDE := -Isrc
 LIB_DIR := $(patsubst %,-L%,$(LIB_DIR))
 CFLAGS += $(INCLUDE)
 

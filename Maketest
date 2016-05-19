@@ -18,7 +18,8 @@ CC := g++
 # -Wextra             : Extra warning.
 # -Werror=return-type : Turn "forget to return" warning to error.
 # -O2                 : Optimization level 2 (0, 1, 2, 3).
-CFLAGS := -Wall -Wextra -Werror=return-type -O2
+# -std=<standard>     : Use this standard
+#CFLAGS := -Wall -Wextra -Werror=return-type -O2
 
 # Compiler flags for debugging
 # -g        : Add information for debugger in that object file.
@@ -39,17 +40,17 @@ ARFLAGS := rcv
 OUTPUT := bin/unit_test
 
 # Directories
-MODULES := test/src/main test/src/util src/main src/util
+MODULES := src/util test/src test/src/util
 LIB_DIR := test/lib lib
 
 # Look for include files in each modules (directories)
-INCLUDE := $(patsubst %,-I%,$(MODULES))
+INCLUDE := -Isrc -I.
 LIB_DIR := $(patsubst %,-L%,$(LIB_DIR))
 CFLAGS += $(INCLUDE)
 
 # Each modules' file will add to these variables
 SRC :=
-MAIN_SRC :=
+MAIN_SRC := test/src/main.cpp
 LIB :=
 
 # Include the descriptor (file list) for each module
