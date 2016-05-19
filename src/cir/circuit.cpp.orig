@@ -4,12 +4,18 @@
 #include <map>
 #include <string>
 
-#include "cir/components.h"
+<<<<<<< HEAD:src/cir/circuit.cpp
 #include "cir/circuit.h"
+
+static bool moduleERR ( int line )
+=======
+#include "components.h"
+#include "circuit.h"
 
 using namespace std;
 
-static bool moduleERR ( int line )
+bool moduleERR ( int line )
+>>>>>>> cc76811396903f51cc7041ea04eb213b147e46d3:src/circuit.cpp
 { 
 	cerr << "invalid module file format (line "
 		<< line << ")."<<endl;
@@ -22,9 +28,13 @@ static bool regERR ( int line )
 	return false;
 }
 
+<<<<<<< HEAD:src/cir/circuit.cpp
 namespace Cir {
 
+void Circuit::parseFile ( ifstream &inf )
+=======
 bool Circuit::parseFile ( ifstream &inf )
+>>>>>>> cc76811396903f51cc7041ea04eb213b147e46d3:src/circuit.cpp
 {	// premise: first line starts with "module <case_name>"
 	int parsing_line = 1;	// track error
 	string parsing_str;

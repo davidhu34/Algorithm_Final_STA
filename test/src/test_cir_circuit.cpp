@@ -1,16 +1,14 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
-#include <map>
 
 #include "cir/circuit.h"
 
 using namespace std;
 
-void testcircuit(void)
+int testcircuit( int argc, char** argv)
 {
 	Circuit* Ckt = new Circuit();
 	ifstream inf;
-	inf.open();	// input
+	inf.open("../input/case1");	// input
 	Ckt->parseFile(inf);
 }

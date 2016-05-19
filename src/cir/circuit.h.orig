@@ -1,19 +1,15 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <map>
 #include <string>
 
-#include "cir/components.h"
-
+<<<<<<< HEAD:src/cir/circuit.h
 namespace Cir {
+=======
+using namespace std;
 
-using std::ifstream;
-using std::vector;
-using std::map;
-using std::string
-
-#include "cir/components.h"
+#include "components.h"
+>>>>>>> cc76811396903f51cc7041ea04eb213b147e46d3:src/circuit.h
 
 class Circuit
 {
