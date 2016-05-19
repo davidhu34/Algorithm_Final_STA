@@ -1,3 +1,6 @@
+#ifndef STA_CIR_COMPONENTS_H
+#define STA_CIR_COMPONENTS_H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -85,3 +88,5 @@ public:
 };
 
 } // namespace Cir
+
+#endif // STA_CIR_COMPONENTS_H

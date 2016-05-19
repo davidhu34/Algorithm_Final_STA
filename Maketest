@@ -44,7 +44,7 @@ MODULES := src/util src/cir test/src test/src/util
 LIB_DIR := test/lib lib
 
 # Look for include files in each modules (directories)
-INCLUDE := -Isrc
+INCLUDE := -Isrc -I.
 LIB_DIR := $(patsubst %,-L%,$(LIB_DIR))
 CFLAGS += $(INCLUDE)
 

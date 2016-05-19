@@ -28,7 +28,7 @@ bool Circuit::parseFile ( ifstream &inf )
 {	// premise: first line starts with "module <case_name>"
 	int parsing_line = 1;	// track error
 	string parsing_str;
-	type = "";	// input / output / modle name 
+	string type = "";	// input / output / modle name 
 
 	getline( inf, parsing_str );
 	type = parseWord(parsing_str);
@@ -38,16 +38,17 @@ bool Circuit::parseFile ( ifstream &inf )
 	{	// get case name
 		type = parseWord(parsing_str);
 		if ( type == "" )	return moduleERR(parsing_line);
-		parseVars( parsing_str, inf );	// register names
+		parseVars( parsing_str, inf, parsing_line);	// register names
 	}
 
 	while (1)
 	{
 		type = parseWord(parsing_str);
 		if ( type == "") return moduleERR(parsing_line);
-		if ( inModel(type) )
+		if ( inModel(type) ) {
 			if ( !parseGate( parsing_str ) )
 				return moduleERR(parsing_line);
+                }
 		else if ( type == "endmodule") break;
 		{
 			vector<string> var_tmp = parseVars( parsing_str, inf, parsing_line );
@@ -70,8 +71,7 @@ bool Circuit::parseFile ( ifstream &inf )
 						newWire(it.second);
 					}	break;
 				default:	// invalid type	
-					return moduleERR(parsing_line);
-			}	
+					return moduleERR(parsing_line); }	
 		}
 	}
 	return true;
@@ -101,11 +101,11 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 	{
 		if ( isalnum( parsing[0] ) )
 			parsed_tmp += parsing[0];
-		else if ( parsing[0] == "," || parsing[0] == ";")
+		else if ( parsing[0] == ',' || parsing[0] == ';')
 		{
 			case_reg.push_back(parsed_tmp);
 			parsed_tmp = "";
-			if ( parsing[0] == ";")
+			if ( parsing[0] == ';')
 			{
 				string nextLine = "";
 				if ( !getline( inf, nextLine ) )
@@ -114,7 +114,7 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 				break;
 			}
 		}
-		else if ( parsed_tmp != "" && isspace( parsing_str[0] ) )
+		else if ( parsed_tmp != "" && isspace( parsing[0] ) )
 			flag = false;
 
 		if ( parsing.length() > 1 ) parsing.erase(0,1);

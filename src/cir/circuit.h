@@ -1,3 +1,6 @@
+#ifndef STA_CIR_CIRCUIT_H
+#define STA_CIR_CIRCUIT_H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -11,9 +14,7 @@ namespace Cir {
 using std::ifstream;
 using std::vector;
 using std::map;
-using std::string
-
-#include "cir/components.h"
+using std::string;
 
 class Circuit
 {
@@ -47,7 +48,7 @@ public:
 		if ( wireName.size() == 3 )
 			wireIn( wireName[1], gateName );
 	}
-	bool parseFile ( ifstream &inf ) {}
+	bool parseFile ( ifstream &inf );
 
 private:
 	bool inModel ( string str )
@@ -55,7 +56,7 @@ private:
 		return ( case_model.find(str) != case_model.end() )?
 			true: false;
 	}
-	string parseWord ( string &parsing ) {}
+	string parseWord ( string &parsing );
 	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
 	void checkWire ( string wname )
 	{
@@ -88,3 +89,5 @@ private:
 };
 
 } // namespace Cir
+
+#endif // STA_CIR_CIRCUIT_H
