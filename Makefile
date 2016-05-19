@@ -44,10 +44,10 @@ AR := ar
 # s (modifier)  : Write an object-file index into the archive.
 ARFLAGS := rcv
 
-OUTPUT := bin/compress
+OUTPUT := bin/sta
 
 # Directories
-MODULES := src/main src/util src/hc src/ac src/lz77 src/lzw src/bwt
+MODULES := src/main
 LIB_DIR := lib
 
 # Look for include files in each modules (directories)
@@ -107,6 +107,7 @@ LIB := $(patsubst lib%,-l%,$(LIB))
 %.d: %.cpp
 	@echo "Building dependency for $<..."
 	@$(CC) $(CFLAGS) $(INCLUDE) -MM $*.cpp > $*.tempd
+	@
 	@sed -e 's|.*\.o:|$*.d $*.o:|' < $*.tempd > $*.d
 	@sed -e 's|.*:||' -e 's|\\$$||g' < $*.tempd | fmt -1 | \
 	 sed -e 's|^ *||' -e 's|$$|:|' >> $*.d

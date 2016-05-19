@@ -20,7 +20,9 @@ Date  |Item
 
 ## TODO
 
+- [ ] Finish `requirement.md`.
 - [ ] Input parser.
+- [ ] Define interfaces.
 
 ## Problem
 
@@ -29,111 +31,6 @@ Date  |Item
 Design a parallel STA program for combinational logic circuit under
 multicore environment.
 
-### Input
-
-Input will be a verilog file describing gate-level netlist.
-
-### Output
-
-a list of true paths.
-
-### Specification
-
--   Assume wire does not cause delay.
--   Only 3 types of gate will be used in input: NAND, NOR, NOT.
--   All gate has delay of 1ns.
-
-## Definition
-
-<dl>
-
-<dt>Static Timing Analysis (STA)</dt>
-<dd><p> is a process of checking whether propagation time from input to
-    output is within a certain time constraint. It is an IC design
-    process. </p></dd>
-
-<dt>Critical Path</dt>
-<dd><p>TODO</p></dd>
-
-<dt>Timing Violation</dt>
-<dd><p>TODO</p></dd>
-
-<dt>False Path Problem</dt>
-<dd><p>TODO</p></dd>
-
-<dt>Floating-mode</dt>
-<dd><p>is a state of a point. It means that the value of the point is 
-    unknown. Point can be input or output of any elements in the
-    circuit.</p></dd>
-
-<dt>Slack</dt>
-<dd><p>TODO</p></dd>
-
-<dt>True Path</dt>
-<dd><p>is a path from an input I to an output O, that change of I from
-    floating-mode to a certain value, causes a change of O from
-    floating-mode to a certain value. It depends on the relative
-    arrival time of this path's input, the delay of each elements
-    in the circuit, the value of this path's input and other paths'
-    input, and the type of gates along the path.</p></dd>
-
-<dt>False Path</dt>
-<dd><p>is a path that is not true path.</p></dd>
-
-<dt>Sensitizing A Path</dt>
-<dd><p>is an action of changing the value of source from floating-mode to
-    a certain value, and cause the value of destination change from 
-    floating-mode to certain value. In other word, make that path become
-    a true path.</p></dd>
-
-<dt>Controlling Value</dt>
-<dd><p>is a value that its existance in input will guarantee a certain
-    output. E.g. Controlling value for AND and NAND gate is 0,
-    Controlling value for OR and NOR gate is 1.</p></dd>
-
-<dt>Online Signal</dt>
-<dd><p>is the input we are focusing right now.</p></dd>
-
-<dt>Side Input</dt>
-<dd><p>is an input that is not online signal.</p></dd>
-
-</dl>
-
-## True Path of Gates
-
-Consider a 2-input gate. Let A and B be its two input. There are two
-paths in this case: A --- gate --- output, B --- gate --- output. Now
-we are going to find out which path is true path for specific type
-of gates, at different arrival time of A and B. Let current state
-of A and B be floating-mode.
-
-Table: A arrives *earlier* than B.
-
-Next State |True Path of NAND |True Path of NOR
----------- |----------------- |----------------
-00         |A                 |B
-01         |A                 |B
-10         |B                 |A
-11         |B                 |A
-
-Table: A arrives *later* than B.
-
-Next State |True Path of NAND |True Path of NOR
----------- |----------------- |----------------
-00         |B                 |A
-01         |A                 |B
-10         |B                 |A
-11         |A                 |B
-
-Table: A and B arrive *together*.
-
-Next State |True Path of NAND |True Path of NOR
----------- |----------------- |----------------
-00         |A and B           |A and B
-01         |A                 |B
-10         |B                 |A
-11         |A and B           |A and B
-
 ## Some Ideas
 
 -   Use a directed graph to represent the circuit.
@@ -141,11 +38,16 @@ Next State |True Path of NAND |True Path of NOR
 -   Edges represent wires.
 -   Edges has weights, represent delays.
 
-## Program Synopsys
+## Synopsys
 
 ```
 sta <input_file>
 ```
+
+## Description
+
+It will output a true path set. For more details about input and output,
+see `doc/requirement.md`.
 
 ## Options
 
@@ -155,7 +57,6 @@ sta <input_file>
 <dd><p>Verilog file that describing a gate-level netlist.</p></dd>
 
 </dl>
-
 
 ## Directory
 
@@ -177,12 +78,18 @@ test/scripts/  |Scripts for testing.
 
 ## How to Compile
 
--   Type `make`.
--   You can choose between optimize or debug version in Makefile.
+Type `make`.
+
+You can choose between optimize or debug version in Makefile. Remember
+to clear all files before you switch.
 
 ## How to Run
 
--   See sypnosis.
+See sypnosis.
 
 ## How to Test
+
+To run unit test, type `make -f Maketest`, then run `bin/unit_test`.
+
+To run integration test, see scripts under `test/scripts`.
 
