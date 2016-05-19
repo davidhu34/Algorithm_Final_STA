@@ -3,13 +3,15 @@
 #include <vector>
 #include <map>
 
+//#include "cir/Circuit.h"
+
 using namespace std;
 
-int main ( int argc, char)
+void testcircuit(void)
 {
-	Circuit* Ckt = new Circuit();
+	/*Circuit* Ckt = new Circuit();
 	ifstream inf;
 	inf.open();	// input
 	Ckt->parseFile(inf);
-	
+	*/
 }
