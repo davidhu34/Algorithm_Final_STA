@@ -7,6 +7,11 @@
 class Circuit
 {
 public:
+	Circuit ()
+	{
+		_riseWire = new Wire(true);
+		_fallWire = new Wire(false);
+	}
 	void newInput ( string gname )
 	{ 
 		_Inputs.push_back(gname);
@@ -29,10 +34,11 @@ public:
 		if ( wireName.size() == 3 )
 			wireIn( wireName[1], gateName );
 	}
-
 	bool parseFile ( ifstream &inf ) {}
+
 private:
-	
+	string parseWord ( string &parsing ) {}
+	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
 	void checkWire ( string wname )
 	{
 		if ( _Wire.find(wname) )
@@ -48,9 +54,15 @@ private:
 		checkWire(wname);
 		_Wire[wname]->setTo(_Gate[gname]);
 	}
-	vector<string> _Inputs;
-	vector<string> _Outputs;
+
+	vector<string>		_Inputs;
+	vector<string>		_Outputs;
 	map< string, Wire*> _Wire;
-	map< string, Gate*> _Gate;
+	map< string, Gate*>	_Gate;
+	string				case_name;
+	vector<string>		case_reg;
+
+	Wire*		_riseWire;
+	Wire* 		_fallWire;
 
 };

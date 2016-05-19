@@ -10,15 +10,16 @@ class Wire
 {
 public:
 	Wire () {}
+	Wire ( bool v ) { _value = v; }
 	void setFrom ( string from ) { _from = from; }
 	void setTo ( string to ) { _to = to; }
 	void setValue ( bool v ) { _value = v; }
 	bool getValue () { return _value; }
 private:
-	string name;
-	Gate* _from;
-	Gate* _to;
-	bool _value;
+	string	name;
+	Gate* 	_from;
+	Gate* 	_to;
+	bool 	_value;
 };
 
 class Gate
@@ -39,14 +40,14 @@ public:
 	};
 	void outputValue() {}
 private:
-	string _name;
-	string _type;
-	Gate* _inputA;	// empty for INPUT
-	Gate* _inputB;	// empty for NOT / INPUT / OUTPUT
-	vector<Gate*> _outputs;	// empty for OUTPUT
-	Wire* _wireA;	// empty for INPUT
-	Wire* _wireB;	// empty for NOT / INPUT / OUTPUT
-	vector<Wire*> _wireOut;	// empty for OUTPUT
+	string	 		_name;
+	string 			_type;
+	Gate* 			_inputA;	// empty for INPUT
+	Gate* 			_inputB;	// empty for NOT / INPUT / OUTPUT
+	vector<Gate*> 	_outputs;	// empty for OUTPUT
+	Wire*			_wireA;		// empty for INPUT
+	Wire*			_wireB;		// empty for NOT / INPUT / OUTPUT
+	vector<Wire*>	_wireOut;	// empty for OUTPUT
 };
 
 class NOT: public Gate
