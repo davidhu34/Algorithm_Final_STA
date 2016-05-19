@@ -4,19 +4,22 @@
 #include <map>
 #include <string>
 
-#include "components.cpp"
+using namespace std;
+
+class Wire;
+class Gate;
 
 class Wire
 {
 public:
-	Wire () {}
+	Wire ( string wname ) { _name = wname; }
 	Wire ( bool v ) { _value = v; }
-	void setFrom ( string from ) { _from = from; }
-	void setTo ( string to ) { _to = to; }
+	void setFrom ( Gate* from ) { _from = from; }
+	void setTo ( Gate* to ) { _to = to; }
 	void setValue ( bool v ) { _value = v; }
 	bool getValue () { return _value; }
 private:
-	string	name;
+	string	_name;
 	Gate* 	_from;
 	Gate* 	_to;
 	bool 	_value;
@@ -25,7 +28,7 @@ private:
 class Gate
 {
 public:
-	Gate ( string name ) { _name = name; }
+	Gate ( string gname ) { _name = gname; }
 	void setWires ( Wire* inA, Wire* inB, Wire* out )
 	{
 		_wireA = inA;
@@ -39,7 +42,7 @@ public:
 		}*/
 	};
 	void outputValue() {}
-private:
+protected:
 	string	 		_name;
 	string 			_type;
 	Gate* 			_inputA;	// empty for INPUT
@@ -53,28 +56,26 @@ private:
 class NOT: public Gate
 {
 public:
-	NOT(){};
-	
+	NOT ( string gname ): Gate ( gname ) {}
 };
 class NAND: public Gate
 {
 public:
-	NAND () {};
+	NAND ( string gname ): Gate ( gname ) {}
 };
 class NOR: public Gate
 {
 public:
-	NOR(){};
-	
+	NOR ( string gname ): Gate ( gname ) {}
 };
 
-class INPUT: Gate
+class INPUT: public Gate
 {
 public:
-	INPUT(){};
+	INPUT ( string gname ): Gate ( gname ) {}
 };
-class OUTPUT: Gate
+class OUTPUT: public Gate
 {
 public:
-	OUTPUT(){};
+	OUTPUT ( string gname ): Gate ( gname ) {}
 };

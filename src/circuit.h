@@ -1,8 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string>
 
-#include "circuit.cpp"
+using namespace std;
+
+#include "components.h"
 
 class Circuit
 {
@@ -15,12 +18,12 @@ public:
 	void newInput ( string gname )
 	{ 
 		_Inputs.push_back(gname);
-		_Gate[gname] = newGate(gname);
+		_Gate[gname] = new INPUT(gname);
 	}
 	void newOutput ( string gname )
 	{
-		Outputs.push_back(gname);
-		_Gate[gname] = newGate(gname);
+		_Outputs.push_back(gname);
+		_Gate[gname] = new OUTPUT(gname);
 	}
 	void newWire ( string wname ) { _Wire[wname] = new Wire(wname); }
 	void newGate ( string line )
@@ -37,19 +40,20 @@ public:
 	bool parseFile ( ifstream &inf ) {}
 
 private:
+	bool inModel ( string str ) {}
 	string parseWord ( string &parsing ) {}
 	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
 	void checkWire ( string wname )
 	{
-		if ( _Wire.find(wname) )
+		if ( _Wire.find(wname) != _Wire.end() )
 			_Wire[wname] = new Wire(wname);
 	}
-	void wireOut ( string wname, string gmane )
+	void wireOut ( string wname, string gname )
 	{
 		checkWire(wname);
 		_Wire[wname]->setFrom(_Gate[gname]);
 	}
-	void wireIn ( string wname, string gmane )
+	void wireIn ( string wname, string gname )
 	{
 		checkWire(wname);
 		_Wire[wname]->setTo(_Gate[gname]);

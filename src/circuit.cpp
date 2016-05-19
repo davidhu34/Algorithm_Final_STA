@@ -4,6 +4,11 @@
 #include <map>
 #include <string>
 
+#include "components.h"
+#include "circuit.h"
+
+using namespace std;
+
 bool moduleERR ( int line )
 { 
 	cerr << "invalid module file format (line "
@@ -17,7 +22,7 @@ bool regERR ( int line )
 	return false;
 }
 
-void Circuit::parseFile ( ifstream &inf )
+bool Circuit::parseFile ( ifstream &inf )
 {	// premise: first line starts with "module <case_name>"
 	int parsing_line = 1;	// track error
 	string parsing_str;
@@ -43,23 +48,23 @@ void Circuit::parseFile ( ifstream &inf )
 				return moduleERR(parsing_line);
 		else if ( type == "endmodule") break;
 		{
-			vector<string> var_tmp = parseVars( parsing_str, inf );
+			vector<string> var_tmp = parseVars( parsing_str, inf, parsing_line );
 			if ( var_tmp.empty() ) moduleERR(parsing_line);
 			switch (type)
 			{
 				case "input":
 					for( std::vector<string>::iterator it;
-						it != var_emp.end(); it++ ) {
+						it != var_tmp.end(); it++ ) {
 						newInput(it.second);
 					}	break;
 				case "output":
 					for( std::vector<string>::iterator it;
-						it != var_emp.end(); it++ ) {
+						it != var_tmp.end(); it++ ) {
 						newOutput(it.second);
 					}	break;
 				case "wire":
 					for( std::vector<string>::iterator it;
-						it != var_emp.end(); it++ ) {
+						it != var_tmp.end(); it++ ) {
 						newWire(it.second);
 					}	break;
 				default:	// invalid type	
