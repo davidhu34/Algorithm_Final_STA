@@ -399,7 +399,7 @@ Grade 1 is better than Grade 2, no matter how they perform in performance.
 
 ### Performance
 
-Not important since we are not applying for contest :wink: .
+Not important since we are not participating the contest :wink: .
 
 ## Time and Slack Constraint
 
@@ -411,4 +411,18 @@ case3 |      95 |        8 |         9 |             31 |               6
 case4 |     276 |       41 |        21 |             45 |               6
 case5 |  127389 |       64 |        32 |             47 |              10
 
-## 
+## Reference
+
+Verilog Parser:
+
+-   Icarus <http://icarus.com/eda/verilog>
+-   VBS <http://www.geda.seul.org/index.html>
+
+Verilog Format:
+
+-   IEEE std 1346-1995 <http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=803556&isnumber=12005&tag=1>
+
+## How to Use `Verify` and `Justify`
+
+1.  Run your program, 
+
