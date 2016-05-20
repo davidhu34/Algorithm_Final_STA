@@ -55,9 +55,6 @@ For complete problem description, refer to [Official Problem Specification][].
 <dd><p>is a path that is not true path, i.e. when its input change from
     floating-mode to a certain value, its output doesn't change.</p></dd>
 
-<dt>Critical Path</dt>
-<dd><p>TODO</p></dd>
-
 <dt>Sensitizing A Path</dt>
 <dd><p>is an action of changing the path input from floating-mode to
     a certain value, and cause the path output change from floating-mode
