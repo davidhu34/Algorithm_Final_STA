@@ -35,7 +35,11 @@ private:
 class Gate
 {
 public:
-	Gate ( string gname ) { _name = gname; }
+	Gate ( string gname , string mname = "IO" )
+	{
+		_name = gname;
+		_model = mname;
+	}
 	void setWires ( Wire* inA, Wire* inB, Wire* out )
 	{
 		_wireA = inA;
@@ -43,7 +47,7 @@ public:
 		_wireOut.push_back(out);
 		/*_inputA = _wireA->getTo();
 		_inputB = _wireB->getTo();
-		for ( vector<Wire*>::iterator it;
+		for ( vector<Wire*>::iterator it = _wireOut.begin();
 			it != _wireOut.end(); it++ ) {
 			_outputs.push_back( it.second->getFrom() );
 		}*/
@@ -51,7 +55,7 @@ public:
 	void outputValue() {}
 protected:
 	string	 		_name;
-	string 			_type;
+	string 			_model;
 	Gate* 			_inputA;	// empty for INPUT
 	Gate* 			_inputB;	// empty for NOT / INPUT / OUTPUT
 	vector<Gate*> 	_outputs;	// empty for OUTPUT
@@ -63,17 +67,17 @@ protected:
 class NOT: public Gate
 {
 public:
-	NOT ( string gname ): Gate ( gname ) {}
+	NOT ( string gname, string mname ): Gate ( gname, mname ) {}
 };
 class NAND: public Gate
 {
 public:
-	NAND ( string gname ): Gate ( gname ) {}
+	NAND ( string gname, string mname ): Gate ( gname, mname ) {}
 };
 class NOR: public Gate
 {
 public:
-	NOR ( string gname ): Gate ( gname ) {}
+	NOR ( string gname, string mname ): Gate ( gname, mname ) {}
 };
 
 class INPUT: public Gate

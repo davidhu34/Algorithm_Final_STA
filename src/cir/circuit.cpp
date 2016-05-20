@@ -56,17 +56,17 @@ bool Circuit::parseFile ( ifstream &inf )
 			switch (type)
 			{
 				case "input":
-					for( std::vector<string>::iterator it;
+					for ( std::vector<string>::iterator it = var_tmp.begin();
 						it != var_tmp.end(); it++ ) {
 						newInput(it.second);
 					}	break;
 				case "output":
-					for( std::vector<string>::iterator it;
+					for ( std::vector<string>::iterator it = var_tmp.begin();
 						it != var_tmp.end(); it++ ) {
 						newOutput(it.second);
 					}	break;
 				case "wire":
-					for( std::vector<string>::iterator it;
+					for ( std::vector<string>::iterator it = var_tmp.begin();
 						it != var_tmp.end(); it++ ) {
 						newWire(it.second);
 					}	break;
