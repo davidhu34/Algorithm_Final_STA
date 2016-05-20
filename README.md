@@ -22,8 +22,8 @@ Date  |Item
 
 **2016 D. Static Timing Analysis**
 
-Design a parallel STA program for combinational logic circuit under
-multicore environment.
+Find as many sensitizable paths as possible for combinational logic
+circuit using shortest time.
 
 ## Some Ideas
 

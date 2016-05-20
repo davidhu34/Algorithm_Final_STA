@@ -2,8 +2,8 @@
 
 ## Problem Description
 
-Design a parallel STA program for combinational logic circuit under
-multicore environment.
+Find as many sensitizable paths as possible for combinational logic
+circuit using shortest time.
 
 It take a verilog file describing gate-level netlist as input, and output
 a true path set. See Input and Output section below.
