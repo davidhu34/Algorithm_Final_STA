@@ -55,20 +55,22 @@ see `doc/requirement.md`.
 ## Directory
 
 Directory      |Put what kind of file?
--------------- |--------------------------------------------------
+-------------- |------------------------------------------------------
 bin/           |Executable, product.
 doc/           |Documentation, reports.
-lib/           |Library needed for this program.
+lib/           |Library needed for this program, e.g. openMP.
 res/           |Resources needed for this program, such as images.
 src/           |Source code, grouped into modules.
-src/main/      |Main module.
-src/util/      |Utility module.
+src/main/      |Main module, should contain only main function.
+src/util/      |Utility module, can be used by other modules.
+src/cir/       |Circuit module, contain parser and circuits elements.
+src/ana/       |Analyzer module, contain anything about STA algo.
 test/          |Everything related to testing.
 test/doc/      |Testing documentation and results.
-test/inputs/   |Input for testing.
-test/outputs/  |Output for testing.
+test/cases/    |Input and output of all cases.
 test/lib/      |Library needed for testing.
 test/src/      |Source code of testing.
+test/src/util/ |Some utilities for testing.
 test/scripts/  |Scripts for testing.
 
 ### How to Work With It
