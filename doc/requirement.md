@@ -144,11 +144,12 @@ A_is_true_path_of_nor(A, B, A_arrival_time, B_arrival_time)
 
 ## Input
 
-Input will be a verilog file describing gate-level netlist, and
-time and slack constraint for this file, e.g.
+There are 3 inputs per case:
+
+1.  File `cadcontest.v` contains basic models.
 
 ```verilog
-// Verilog model
+// cadcontest.v
 
 module NAND2(Y, A, B);
     input    A, B;
@@ -167,8 +168,15 @@ module NOT1 (Y, A);
     input    A;
     not    I0(Y, A);
 endmodule
+```
 
-// Netlist (A 2-bit multiplier)
+Please see `case1/input/cadcontest.v` for more verilog constructs.
+This is a simplified example.
+
+2.  File `case*` where `*` = case number, contains netlist.
+
+```verilog
+// case0
 
 module mul2 ( M, A, B );     output [3:0] M;
     input [1:0] A;
@@ -195,17 +203,43 @@ module mul2 ( M, A, B );     output [3:0] M;
 endmodule
 ```
 
-Time and slack constraint will not be given in the file, but will be
-announce at the webpage.
+3.  Time constraint and slack constraint. They will not be given
+    in the file. You can find them at official page or section
+    [Time and Slack Constraint](#time-and-slack-constraint) below.
+    Please set them in your Makefile using compiler option, e.g.
+    `-DTIME_CONSTRAINT=<value> -DSLACK_CONSTRAINT=<value>`.
 
-5 input files will be given (`case1` to `case5`). You can download them
+5 cases will be given (`case1` to `case5`). You can download them
 at [Official Problem Specification][].
 
 Some specifications:
 
--   Only 3 types of gate will be used in input: NAND, NOR, NOT.
+-   Only 3 types of gate will be used in input: NAND2, NOR2, NOT1.
+    NAND2 and NOR2 are 2-input gates, while NOT1 is 1-input gate.
+
 -   Assume wire does not cause delay.
+
 -   All gate has delay of 1ns.
+
+-   The input and output pins of NAND2, NOR2, NOT1 will be named
+    as above (`A`, `B`, `Y`) in all cases. But to immitate real world
+    scenario, please get those names by parsing them.
+
+-   The naming of each object (wire and gate) is random, not
+    necessarily (`U1`, `U2`, ...) and (`n1`, `n2`, ...).
+
+-   While create object from module, "naming association" is the
+    only method we use in all cases. We won't use "positional
+    association" method to pass arguments.
+
+Please see [IEEE std 1346-1995][] for verilog's syntax. 
+
+[IEEE std 1346-1995]: <http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=803556&isnumber=12005&tag=1>
+
+There are some open source verilog parser outside. You can refer to them.
+
+-   Icarus <http://icarus.com/eda/verilog>
+-   VBS <http://www.geda.seul.org/index.html>
 
 ## Output
 
@@ -338,6 +372,8 @@ Some requirements:
     blocks is same if they have identical path with identical input.
     (If their input is not same, then these two blocks are not same
     and both of them must be listed.)
+-   Output filename should be `case*_true_path_set` where `*` is the
+    case number.
     
 You can verify your output using a program provided by CIC.
 
@@ -411,18 +447,17 @@ case3 |      95 |        8 |         9 |             31 |               6
 case4 |     276 |       41 |        21 |             45 |               6
 case5 |  127389 |       64 |        32 |             47 |              10
 
-## Reference
-
-Verilog Parser:
-
--   Icarus <http://icarus.com/eda/verilog>
--   VBS <http://www.geda.seul.org/index.html>
-
-Verilog Format:
-
--   IEEE std 1346-1995 <http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=803556&isnumber=12005&tag=1>
-
 ## How to Use `Verify` and `Justify`
 
-1.  Run your program, 
+1.  Run your program and create an output file `case1_true_path_set`.
+
+2.  Put it under `case1/true_path/` directory.
+
+3.  Under `case1/true_path/` directory, execute
+    `path/to/Verify case1_true_path_set`. It will create a report
+    `case1.verify.rpt` at `case1/output/`. If you pass the verification,
+    it will show the keyword "pass".
+
+Same steps for `Justify`.
+
 
