@@ -25,30 +25,33 @@ Date  |Item
 Find as many sensitizable paths as possible for combinational logic
 circuit using shortest time.
 
-## Some Ideas
-
--   Use a directed graph to represent the circuit.
--   Vertices represent gates, primary inputs and primary outputs.
--   Edges represent wires.
--   Edges has weights, represent delays.
+See `doc/requirement.md` for more information.
 
 ## Synopsys
 
 ```
-sta <input_file>
+sta [-o <output_file>] <input_file> ...
 ```
 
 ## Description
 
-It will output a true path set. For more details about input and output,
+It will print a true path set. If option `-o` is given, it will print
+into `<output_file>`. For more details about input and output,
 see `doc/requirement.md`.
 
 ## Options
 
 <dl>
 
-<dt><code>input_file</code></dt>
-<dd><p>Verilog file that describing a gate-level netlist.</p></dd>
+<dt><code>-o</code></dt>
+<dd><p>Output to this file.</p></dd>
+
+<dt><code>&lt;output_file&gt;</code></dt>
+<dd><p>If given, a true path set will be printed into it.</p></dd>
+
+<dt><code>&lt;input_file&gt;</code></dt>
+<dd><p>Verilog file describing a gate-level netlist. Files will
+    concatenated before being parsed. </p></dd>
 
 </dl>
 
