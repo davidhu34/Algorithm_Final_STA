@@ -1,16 +1,31 @@
+# ### How to Work With This Makefile
+# 
+# Module is a directory that contains many source and header files.
+# Use module to group closely related classes and functions.
+# 
+# Procedure for creating a new module:
+# 
+# 1.  Create a new directory under `src/`, e.g. `src/foo`.
+# 
+# 2.  Copy `src/util/module.mk` to `src/foo/`.
+# 
+# 3.  Modify the first line of `src/foo/module.mk`, change it to
+#     `DIR := src/foo`.
+# 
+# 4.  Modify `Makefile`, add your module (`src/foo`) to the line start
+#     with `MODULES := `. 
+# 
+# That's it. You can add whatever headers and sources in your new
+# module. Please put all these functions and classes under namespace
+# with the name same as your module, e.g. `Foo`.
+# 
+# To include a header file, always prefix it with its module name.
+# E.g. `#include "foo/parser.h"`.
+# 
+# Any files under `src/main/` (e.g. main.cpp) won't be compiled while
+# doing unit test. Testing has its own main function, so don't put
+# files that you want to do unit test under `src/main/`.
 # How to Use This Project Directory And Makefile
-#
-# To add a new module (directory that contain .cpp and .h files)
-# - Create a new module (directory) under src/
-# - Copy module.mk from src/util/ to src/your_module/
-# - Add "src/your_module" to MODULES in Makefile
-#
-# To add a new .cpp or .h file
-# - Just add it under any module
-#
-# Any files under src/main/ (e.g. main.cpp) won't be linked in Maketest
-# - Testing has its own main function (test/src/main/main.cpp)
-# - So don't put files that you want to do unit test under src/main/
 
 # Variables
 
@@ -57,7 +72,6 @@ CFLAGS += $(INCLUDE)
 
 # Each modules' file will add to these variables
 SRC :=
-MAIN_SRC :=
 LIB :=
 
 # Include the descriptor (file list) for each module
@@ -65,7 +79,6 @@ include $(patsubst %,%/module.mk,$(MODULES))
 
 # Determine the object files
 OBJ := $(patsubst %.cpp,%.o,$(SRC))
-MAIN_OBJ := $(patsubst %.cpp,%.o,$(MAIN_SRC))
 LIB := $(patsubst lib%,-l%,$(LIB))
 
 # Pattern rules
@@ -107,7 +120,6 @@ LIB := $(patsubst lib%,-l%,$(LIB))
 %.d: %.cpp
 	@echo "Building dependency for $<..."
 	@$(CC) $(CFLAGS) $(INCLUDE) -MM $*.cpp > $*.tempd
-	@
 	@sed -e 's|.*\.o:|$*.d $*.o:|' < $*.tempd > $*.d
 	@sed -e 's|.*:||' -e 's|\\$$||g' < $*.tempd | fmt -1 | \
 	 sed -e 's|^ *||' -e 's|$$|:|' >> $*.d
@@ -119,14 +131,13 @@ LIB := $(patsubst lib%,-l%,$(LIB))
 # Link the program
 all: $(OUTPUT)
 
-$(OUTPUT): $(OBJ) $(MAIN_OBJ)
+$(OUTPUT): $(OBJ)
 	@echo "Linking..."
-	@$(CC) -o $@ $(LIB_DIR) $(OBJ) $(MAIN_OBJ) $(LIB)
+	@$(CC) -o $@ $(LIB_DIR) $(OBJ) $(LIB)
 	@echo $(OUTPUT)" build succeed."
 
 # Include dependencies
 -include $(patsubst %.o,%.d,$(OBJ))
--include $(patsubst %.o,%.d,$(MAIN_OBJ))
 
 # clean all the .o and executable files
 clean:
