@@ -50,7 +50,6 @@ CFLAGS += $(INCLUDE)
 
 # Each modules' file will add to these variables
 SRC :=
-MAIN_SRC := test/src/main.cpp
 LIB :=
 
 # Include the descriptor (file list) for each module
