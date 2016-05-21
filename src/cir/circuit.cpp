@@ -25,20 +25,20 @@ static bool regERR ( int line )
 namespace Cir {
 
 bool Circuit::parseFile ( ifstream &inf )
-{	// premise: first line starts with "module <case_name>"
-	int parsing_line = 1;	// track error
+{   // premise: first line starts with "module <case_name>"
+	int parsing_line = 1;   // track error
 	string parsing_str;
-	string type = "";	// input / output / modle name 
+	string type = "";   // input / output / modle name 
 
 	getline( inf, parsing_str );
 	type = parseWord(parsing_str);
 	if ( type != "module" )
 		return moduleERR(parsing_line); 
-	else	// module initialized
-	{	// get case name
+	else    // module initialized
+	{   // get case name
 		type = parseWord(parsing_str);
-		if ( type == "" )	return moduleERR(parsing_line);
-		parseVars( parsing_str, inf, parsing_line);	// register names
+		if ( type == "" )   return moduleERR(parsing_line);
+		parseVars( parsing_str, inf, parsing_line); // register names
 	}
 
 	while (1)
@@ -46,10 +46,12 @@ bool Circuit::parseFile ( ifstream &inf )
 		type = parseWord(parsing_str);
 		if ( type == "") return moduleERR(parsing_line);
 		if ( inModel(type) ) {
-			if ( !parseGate( parsing_str ) )
+			if ( !parseGate( type, parsing_str ) )
 				return moduleERR(parsing_line);
-                }
+			else getline( inf, parsing_str );
+		}
 		else if ( type == "endmodule") break;
+		else
 		{
 			vector<string> var_tmp = parseVars( parsing_str, inf, parsing_line );
 			if ( var_tmp.empty() ) moduleERR(parsing_line);
@@ -59,19 +61,20 @@ bool Circuit::parseFile ( ifstream &inf )
 					for ( std::vector<string>::iterator it = var_tmp.begin();
 						it != var_tmp.end(); it++ ) {
 						newInput(it.second);
-					}	break;
+					}   break;
 				case "output":
 					for ( std::vector<string>::iterator it = var_tmp.begin();
 						it != var_tmp.end(); it++ ) {
 						newOutput(it.second);
-					}	break;
+					}   break;
 				case "wire":
 					for ( std::vector<string>::iterator it = var_tmp.begin();
 						it != var_tmp.end(); it++ ) {
 						newWire(it.second);
-					}	break;
-				default:	// invalid type	
-					return moduleERR(parsing_line); }	
+					}   break;
+				default:    // invalid type 
+					return moduleERR(parsing_line);
+			}   
 		}
 	}
 	return true;
@@ -80,15 +83,15 @@ bool Circuit::parseFile ( ifstream &inf )
 
 string Circuit::parseWord ( string &parsing )
 {
-	string type = "";
+	string word = "";
 	while ( isspace( parsing[0] ) )
 		parsing.erase(0,1);
 	while ( isalnum( parsing[0] ) )
 	{
-		type += parsing[0];
+		word += parsing[0];
 		parsing.erase(0,1);
 	}
-	return type;	// empty type for ERR
+	return word;    // empty word for ERR
 }
 
 vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
@@ -120,8 +123,29 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 		if ( parsing.length() > 1 ) parsing.erase(0,1);
 		else if ( getline( inf, parsing ) ) line++;
 		else flag = false;
-	}	// empty vector for ERR
+	}   // empty vector for ERR
 	return (flag)? vars: vector<string>();
+}
+
+bool Circuit::parseGate ( string model, string line )
+{
+	string gname, inputA, inputB, outputY;
+	gname = parseWord(line);
+	if ( gname == "" ) return false;
+	inputA = trimWire( line, "A");
+	inputB = trimWire( line, "B");
+	outputY = trimWire ( line, "Y");
+	return newGate ( gname, model, inputA, inputB, outputY );
+}
+
+string Circuit::trimWire ( string line, string pos )
+{
+	size_t pStart, pEnd;
+	pStart = line.find( "." + pos +"(" );
+	if ( pStart == string::npos ) return "";
+	else pEnd = line.substr( cursor + 2 ).find( ")" );
+	if ( pEnd == string::npos ) return "";
+	return line.substr( pStart + 3, pEnd - pStart + 3 );
 }
 
 } // namespace Cir

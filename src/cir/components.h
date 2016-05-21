@@ -40,7 +40,7 @@ public:
 		_name = gname;
 		_model = mname;
 	}
-	void setWires ( Wire* inA, Wire* inB, Wire* out )
+	virtual void setWires ( Wire* inA, Wire* inB, Wire* out )
 	{
 		_wireA = inA;
 		_wireB = inB;
