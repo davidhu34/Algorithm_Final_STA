@@ -16,6 +16,9 @@ using std::vector;
 using std::map;
 using std::string;
 
+typedef std::vector<const Cir::Gate*> Path;
+typedef std::vector<bool>             InputVec;
+
 class Circuit
 {
 public:
