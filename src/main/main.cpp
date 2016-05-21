@@ -1,38 +1,74 @@
+#include <cstring>
 #include <iostream>
 #include <vector>
 
+static void print_usage(void) {
+    std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
+}
+
 int main(int argc, const char* argv[]) {
-    // TODO: Validate arguments.
-
-    // Parse input file into circuit.
+    // Parse arguments.
     
-    Cir::Parser parser;
-    Cir::Circuit circuit = parser.parse(argv[1]);
+    std::vector<const char*> infiles;
+    const char*              outfile = 0;
 
-    // Find all sensitizable paths.
-    
-    typedef std::vector<const Cir::Circuit::Node*> Path;
-    typedef std::vector<bool>                      InputVec;
+    for (int i = 1; i < argc, ++i) {
+        // Read -o and its argument.
+        if (strcmp(argv[i], "-o") == 0) {
+            ++i;
+            if (i >= argc) {
+                std::cerr << "Error: Missing argument after -o.\n";
+                print_usage();
+                return 1;
+            }
 
-    std::vector<Path>     paths;
-    std::vector<int>      delays;
-    std::vector<InputVec> input_vecs;
+            outfile = argv[i];
+        }
+        // Read input file names.
+        else {
+            infiles.push_back(argv[i]);
+        }
+    }
 
-    Ana::Analyzer analyzer;
-    analyzer.analyze(circuit, paths, delays, input_vecs);
+    // Check arguments.
 
-    // Output those paths.
-
-    std::string outfilename = argv[1];
-    outfilename += "_true_path_set";
-
-    std::ofstream fout(outfilename.c_str());
-    if (!fout.good()) {
-        std::cerr << "Error: Cannot open file '" << outfilename << "'.\n";
+    if (infiles.empty()) {
+        std::cerr << "Error: Missing <input_file>.\n";
+        print_usage();
         return 1;
     }
 
-    // TODO: Continue to print paths to file.
+    // Pass input files into circuit.
+    
+    Cir::Parser  parser;
+    Cir::Circuit circuit;
+    
+    int errcode = parser.parse(infiles, circuit);
+    if (errcode != 0) {
+        return 1;
+    }
+
+    // Find all sensitizable paths.
+    
+    typedef std::vector<const Cir::Circuit::Gate*> Path;
+    typedef std::vector<bool>                      InputVec;
+
+    std::vector<Path>     paths;
+    std::vector<InputVec> input_vecs;
+
+    Ana::Analyzer analyzer;
+    errcode = analyzer.find_sensitizable_paths(circuit, paths, input_vecs);
+    if (errcode != 0) {
+        return 1;
+    }
+
+    // Output those paths.
+
+    Util::Writer writer;
+    errcode = writer.write_file(outfile, paths, input_vecs);
+    if (errcode != 0) {
+        return 1;
+    }
 
     return 0;
 }
