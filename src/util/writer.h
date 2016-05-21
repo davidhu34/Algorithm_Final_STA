@@ -14,13 +14,15 @@ public:
     // Write paths and input vectors in format specified by requirement.md
     // into stdout or a file.
     //
-    // Input
+    // #### Input
+    //
     // - paths     : To be printed. Path is defined in cir module.
     // - input_vecs: To be printed. InputVec is defined in cir module.
     // - outfile   : Output file name, default to empty. If it is empty,
     //               write to stdout.
     //
-    // Output
+    // #### Output
+    //
     // - Error code.
     // - 0: Execute successfully.
     // - 1: Cannot open file.
