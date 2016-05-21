@@ -49,7 +49,7 @@ private:
 	string parseWord ( string &parsing );
 	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
 	bool parseGate ( string model, string line );
-	string trimWire ( string line, string pos );
+	string trimWire ( string line, string pin );
 
 	void newInput ( string gname )
 	{ 
@@ -80,7 +80,6 @@ private:
 					_Gate[gname] = new NAND( gname, model );
 					wireIn( inA, gname, "A" );
 					wireIn( inB, gname, "B" );
-
 					wireOut( outY, gname );
 				}	break;
 			case "nor":
@@ -103,10 +102,10 @@ private:
 		checkWire(wname);
 		_Wire[wname]->setFrom(_Gate[gname]);
 	}
-	void wireIn ( string wname, string gname )
+	void wireIn ( string wname, string gname, string pin )
 	{
 		checkWire(wname);
-		_Wire[wname]->setTo(_Gate[gname] );
+		_Wire[wname]->setTo( _Gate[gname], pin );
 	}
 	void checkWire ( string wname )
 	{
@@ -116,7 +115,7 @@ private:
 
 	vector<string>		_Inputs;
 	vector<string>		_Outputs;
-	map< string, Wire*> _Wire;
+	map< string, Wire*>	_Wire;
 	map< string, Gate*>	_Gate;
 
 	string					case_name;

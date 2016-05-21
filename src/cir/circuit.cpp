@@ -77,6 +77,14 @@ bool Circuit::parseFile ( ifstream &inf )
 			}   
 		}
 	}
+
+	for ( map< string, Wire*>::iterator wit = _Wire.begin();
+		wit != _Wire.end(); wit++) {
+		Gate* from = it->second->getFrom();
+		Gate* to = it->second->getTo();
+		from->connectGate(to);
+		to->connectGate( from, it->getToPin() );
+	}
 	return true;
 }
 
@@ -138,10 +146,10 @@ bool Circuit::parseGate ( string model, string line )
 	return newGate ( gname, model, inputA, inputB, outputY );
 }
 
-string Circuit::trimWire ( string line, string pos )
+string Circuit::trimWire ( string line, string pin )
 {
 	size_t pStart, pEnd;
-	pStart = line.find( "." + pos +"(" );
+	pStart = line.find( "." + pin +"(" );
 	if ( pStart == string::npos ) return "";
 	else pEnd = line.substr( cursor + 2 ).find( ")" );
 	if ( pEnd == string::npos ) return "";
