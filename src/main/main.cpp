@@ -2,6 +2,11 @@
 #include <iostream>
 #include <vector>
 
+#include <cir/parser.h>
+#include <cir/circuit.h>
+#include <ana/analyzer.h>
+#include <util/writer.h>
+
 static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
@@ -45,6 +50,7 @@ int main(int argc, const char* argv[]) {
     
     int errcode = parser.parse(infiles, circuit);
     if (errcode != 0) {
+        std::cerr << "Error: Parsing failed.\n";
         return 1;
     }
 
@@ -59,14 +65,17 @@ int main(int argc, const char* argv[]) {
     Ana::Analyzer analyzer;
     errcode = analyzer.find_sensitizable_paths(circuit, paths, input_vecs);
     if (errcode != 0) {
+        std::cerr << "Error: Analyzing failed.\n";
         return 1;
     }
 
     // Output those paths.
 
     Util::Writer writer;
-    errcode = writer.write_file(outfile, paths, input_vecs);
+
+    errcode = writer.write(paths, input_vecs, outfile);
     if (errcode != 0) {
+        std::cerr << "Error: Write to file failed.\n";
         return 1;
     }
 
