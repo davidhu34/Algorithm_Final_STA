@@ -45,42 +45,34 @@ bool Circuit::parseFile ( ifstream &inf )
 	{
 		type = parseWord(parsing_str);
 		if ( type == "") return moduleERR(parsing_line);
+		
 		if ( inModel(type) ) {
 			if ( !parseGate( type, parsing_str ) )
 				return moduleERR(parsing_line);
 			else getline( inf, parsing_str );
-		}
-		else if ( type == "endmodule") break;
+		} else if ( type == "endmodule") break;
 		else
 		{
 			vector<string> var_tmp = parseVars( parsing_str, inf, parsing_line );
 			if ( var_tmp.empty() ) moduleERR(parsing_line);
-			switch (type)
-			{
-				case "input":
-					for ( std::vector<string>::iterator it = var_tmp.begin();
-						it != var_tmp.end(); it++ ) {
-						newInput(it.second);
-					}   break;
-				case "output":
-					for ( std::vector<string>::iterator it = var_tmp.begin();
-						it != var_tmp.end(); it++ ) {
-						newOutput(it.second);
-					}   break;
-				case "wire":
-					for ( std::vector<string>::iterator it = var_tmp.begin();
-						it != var_tmp.end(); it++ ) {
-						newWire(it.second);
-					}   break;
-				default:    // invalid type 
-					return moduleERR(parsing_line);
-			}   
+			if ( type == "input" ) {
+				for ( std::vector<string>::iterator it = var_tmp.begin();
+					it != var_tmp.end(); it++ )
+					newInput(it.second);
+			} else if ( type == "output" ) {
+				for ( std::vector<string>::iterator it = var_tmp.begin();
+					it != var_tmp.end(); it++ )
+					newOutput(it.second);
+			} else if ( type == "wire" ) {
+				for ( std::vector<string>::iterator it = var_tmp.begin();
+					it != var_tmp.end(); it++ )
+					newWire(it.second);
+			} else return moduleERR(parsing_line);		// invalid type 
 		}
 	}
 	connectGates();
 	return true;
 }
-
 
 string Circuit::parseWord ( string &parsing )
 {
@@ -117,8 +109,7 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 				else parsing += nextLine;
 				break;
 			}
-		}
-		else if ( parsed_tmp != "" && isspace( parsing[0] ) )
+		} else if ( parsed_tmp != "" && isspace( parsing[0] ) )
 			flag = false;
 
 		if ( parsing.length() > 1 ) parsing.erase(0,1);

@@ -64,38 +64,34 @@ private:
 	};
 	bool newGate ( string gname, string model, string inA, string inB, string outY )
 	{
-		switch ( case_model[model] )
-		{
-			case "not":
-				if ( inA == "" || outY == "" ) return false;
-				else
-				{
-					_Gate[gname] = new NOT( gname, model );
-					wireIn( inA, gname, "A" );
-					wireOut( outY, gname );
-				}	break;
-			case "nand":
-				if ( inA == "" || inB == "" || outY == "" ) return false;
-				else
-				{
-					_Gate[gname] = new NAND( gname, model );
-					wireIn( inA, gname, "A" );
-					wireIn( inB, gname, "B" );
-					wireOut( outY, gname );
-				}	break;
-			case "nor":
-				if ( inA == "" || inB == "" || outY == "" ) return false;
-				else
-				{
-					_Gate[gname] = new NOR( gname, model );
-					wireIn( inA, gname, "A" );
-					wireIn( inB, gname, "B" );
-					wireOut( outY, gname );
-				}	break;
-			default:	// not in model
-				return false;
-				break;
-		}
+		string m = case_model[model];
+		if ( m == "not" ) {
+			if ( inA == "" || outY == "" ) return false;
+			else
+			{
+				_Gate[gname] = new NOT( gname, model );
+				wireIn( inA, gname, "A" );
+				wireOut( outY, gname );
+			}
+		} else if ( m == "nand" ) {
+			if ( inA == "" || inB == "" || outY == "" ) return false;
+			else
+			{
+				_Gate[gname] = new NAND( gname, model );
+				wireIn( inA, gname, "A" );
+				wireIn( inB, gname, "B" );
+				wireOut( outY, gname );
+			}
+		} else if ( m == "nor" ) {
+			if ( inA == "" || inB == "" || outY == "" ) return false;
+			else
+			{
+				_Gate[gname] = new NOR( gname, model );
+				wireIn( inA, gname, "A" );
+				wireIn( inB, gname, "B" );
+				wireOut( outY, gname );
+			}
+		} else return false;	// not in model
 	};
 
 	void wireOut ( string wname, string gname )
