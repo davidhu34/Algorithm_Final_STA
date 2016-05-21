@@ -57,15 +57,11 @@ public:
 	NOT ( string gname, string mname ): Gate ( gname, mname ) {};
 	void connectGate ( Gate* gate, string pin )
 	{
-		switch (pin)
-		{
-			case "A":
-				_inputA = gate; break;
-			case "Y":
-				_outputs.push_back(gate); break;
-			default:
-				break;
-		}
+		if ( pin == "A" ) {
+			_inputA = gate;
+		} else if ( pin == "Y" ) {
+			_outputs.push_back(gate);
+		} else return;
 	}
 };
 class NAND: public Gate
@@ -74,17 +70,13 @@ public:
 	NAND ( string gname, string mname ): Gate ( gname, mname ) {}
 	void connectGate ( Gate* gate, string pin )
 	{
-		switch (pin)
-		{
-			case "A":
-				_inputA = gate; break;
-			case "B":
-				_inputB = gate; break;
-			case "Y":
-				_outputs.push_back(gate); break;
-			default:
-				break;
-		}
+		if ( pin == "A" ) {
+			_inputA = gate;
+		} else if ( pin == "B") {
+			_inputB = gate;
+		} else if ( pin == "Y" ) {
+			_outputs.push_back(gate);
+		} else return;
 	}
 };
 class NOR: public Gate
@@ -93,17 +85,13 @@ public:
 	NOR ( string gname, string mname ): Gate ( gname, mname ) {}
 	void connectGate ( Gate* gate, string pin )
 	{
-		switch (pin)
-		{
-			case "A":
-				_inputA = gate; break;
-			case "B":
-				_inputB = gate; break;
-			case "Y":
-				_outputs.push_back(gate); break;
-			default:
-				break;
-		}
+		if ( pin == "A" ) {
+			_inputA = gate;
+		} else if ( pin == "B") {
+			_inputB = gate;
+		} else if ( pin == "Y" ) {
+			_outputs.push_back(gate);
+		} else return;
 	}
 };
 
@@ -112,30 +100,14 @@ class INPUT: public Gate
 public:
 	INPUT ( string gname ): Gate ( gname ) {}
 	void connectGate ( Gate* gate, string pin )
-	{
-		switch (pin)
-		{
-			case "Y":
-				_outputs.push_back(gate); break;
-			default:
-				break;
-		}
-	}
+	{	if ( pin == "Y" )  _outputs.push_back(gate); }
 };
 class OUTPUT: public Gate
 {
 public:
 	OUTPUT ( string gname ): Gate ( gname ) {}
 	void connectGate ( Gate* gate, string pin )
-	{
-		switch (pin)
-		{
-			case "A":
-				_inputA = gate; break;
-			default:
-				break;
-		}
-	}
+	{	if ( pin == "A" )  _inputA = gate; }
 };
 
 } // namespace Cir

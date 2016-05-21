@@ -39,7 +39,7 @@ private:
 			Gate* from = wit->second->getFrom();
 			Gate* to = wit->second->getTo();
 			from->connectGate( to, "Y");
-			to->connectGate( from, wit->getToPin() );
+			to->connectGate( from, wit->second->getToPin() );
 		}
 	};
 	bool inModel ( string str )   
