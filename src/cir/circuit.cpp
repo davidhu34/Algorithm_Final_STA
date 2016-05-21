@@ -77,14 +77,7 @@ bool Circuit::parseFile ( ifstream &inf )
 			}   
 		}
 	}
-
-	for ( map< string, Wire*>::iterator wit = _Wire.begin();
-		wit != _Wire.end(); wit++) {
-		Gate* from = it->second->getFrom();
-		Gate* to = it->second->getTo();
-		from->connectGate(to);
-		to->connectGate( from, it->getToPin() );
-	}
+	connectGates();
 	return true;
 }
 

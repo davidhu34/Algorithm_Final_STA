@@ -19,14 +19,13 @@ class Gate;
 class Wire
 {
 public:
-	Wire ( string wname ) { _name = wname; }
-	Wire ( bool v ) { _value = v; }
+	Wire ( string wname ) { _name = wname; _pin = "A"; }
 	void setFrom ( Gate* from ) { _from = from; }
 	void setTo ( Gate* to, string pin ) { _to = to; _pin = pin; }
 	Gate* getFrom () { return _from; }
 	Gate* getTo () { return _to; }
 	string getToPin () { return _pin; }
-	
+
 private:
 	string	_name;
 	Gate* 	_from;
@@ -42,7 +41,7 @@ public:
 		_name = gname;
 		_model = mname;
 	}
-	virtual void connectGate () = 0;
+	virtual void connectGate ( Gate* gate, string pin ) = 0;
 
 protected:
 	string	 		_name;
@@ -79,7 +78,7 @@ public:
 		{
 			case "A":
 				_inputA = gate; break;
-			case "B"
+			case "B":
 				_inputB = gate; break;
 			case "Y":
 				_outputs.push_back(gate); break;
@@ -98,7 +97,7 @@ public:
 		{
 			case "A":
 				_inputA = gate; break;
-			case "B"
+			case "B":
 				_inputB = gate; break;
 			case "Y":
 				_outputs.push_back(gate); break;
