@@ -64,7 +64,7 @@ doc/           |Documentation, reports.
 lib/           |Library needed for this program, e.g. openMP.
 res/           |Resources needed for this program, such as images.
 src/           |Source code, grouped into modules.
-src/main/      |Main module, should contain only main function.
+src/main/      |Main module, should contain only main function and utilities don't need to be tested.
 src/util/      |Utility module, can be used by other modules.
 src/cir/       |Circuit module, contain parser and circuits elements.
 src/ana/       |Analyzer module, contain anything about STA algo.
