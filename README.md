@@ -100,6 +100,10 @@ with the name same as your module, e.g. `Foo`.
 To include a header file, always prefix it with its module name.
 E.g. `#include "foo/parser.h"`.
 
+Any files under `src/main/` (e.g. main.cpp) won't be compiled while
+doing unit test. Testing has its own main function, so don't put
+files that you want to do unit test under `src/main/`.
+
 ## How to Test
 
 ### Unit Testing

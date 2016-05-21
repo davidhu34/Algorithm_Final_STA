@@ -56,11 +56,8 @@ int main(int argc, const char* argv[]) {
 
     // Find all sensitizable paths.
     
-    typedef std::vector<const Cir::Circuit::Gate*> Path;
-    typedef std::vector<bool>                      InputVec;
-
-    std::vector<Path>     paths;
-    std::vector<InputVec> input_vecs;
+    std::vector<Cir::Path>     paths;
+    std::vector<Cir::InputVec> input_vecs;
 
     Ana::Analyzer analyzer;
     errcode = analyzer.find_sensitizable_paths(circuit, paths, input_vecs);
@@ -73,7 +70,13 @@ int main(int argc, const char* argv[]) {
 
     Util::Writer writer;
 
-    errcode = writer.write(paths, input_vecs, outfile);
+    if (outfile) { // User specify output file.
+        errcode = writer.write(paths, input_vecs, outfile);
+    }
+    else {
+        errcode = writer.write(paths, input_vecs);
+    }
+
     if (errcode != 0) {
         std::cerr << "Error: Write to file failed.\n";
         return 1;
