@@ -1,9 +1,33 @@
-# How to Use Maketest
-#
-# This if for unit testing.
-# Just write some testing functions into a file into a mudule
-# Add your testing functions into testall.cpp
-# make -f Maketest
+# ### Unit Testing
+# 
+# Let's say you have written some classes or functions in `src/foo/bar.cpp`
+# and `src/foo/bar.h` and you want to test them. Here is the procedure:
+# 
+# 1.  Go to `test/src` directory.
+# 
+# 2.  Create a test file: `test_foo_bar.cpp`. The naming format is
+#     `test_<module>_<file>.cpp` or `test_<module>_<file>_<class>.cpp`.
+# 
+# 3.  Write your test function there. See `test_example.cpp` for examples.
+#     I've written some random functions to help testing. It's in
+#     `test/src/util`. You can use it if you need it.
+# 
+# 4.  Open `test/src/main.cpp`, add your test functions' prototype before
+#     `main()`, then call your test functions inside `main()`.
+# 
+# 5.  Go to project root directory, open `Maketest` file. Make sure
+#     your module (`src/foo`) is listed on the `MODULES := ` line.
+#     If you want to exclude other module, just delete it from that line.
+# 
+# 6.  At project root directory, type `make -f Maketest`. If will compile
+#     all necessary files and create an executable: `bin/unit_test`.
+#     It will execute it automatically at the end of make.
+# 
+# In the implementation or debugging process, some people will write
+# many small `main()` function to test their class or function, and
+# dump them away after their test complete. This is a kind of waste.
+# Try to write those functions in `test/src` so we can reuse them
+# everytime after we modify our source code.
 
 # Variables
 
@@ -97,13 +121,13 @@ LIB := $(patsubst lib%,-l%,$(LIB))
 # sed   : add colon at end of line
 %.d: %.cpp
 	@echo "Building dependency for $<..."
-	@$(CC) $(INCLUDE) -MM $*.cpp > $*.tempd
+	@$(CC) $(CFLAGS) $(INCLUDE) -MM $*.cpp > $*.tempd
 	@sed -e 's|.*\.o:|$*.d $*.o:|' < $*.tempd > $*.d
 	@sed -e 's|.*:||' -e 's|\\$$||g' < $*.tempd | fmt -1 | \
 	 sed -e 's|^ *||' -e 's|$$|:|' >> $*.d
 	@rm $*.tempd
 
-# Phony target
+# Phony target (not real file)
 .PHONY: clean all
 
 # Link the program
