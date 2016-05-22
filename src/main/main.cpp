@@ -2,18 +2,24 @@
 #include <iostream>
 #include <vector>
 
-#include <cir/parser.h>
+
+//#include <cir/parser.h>
 #include <cir/circuit.h>
-#include <ana/analyzer.h>
-#include <util/writer.h>
+//#include <ana/analyzer.h>
+//#include <util/writer.h>
 
 static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
 
-int main(int argc, const char* argv[]) {
+int main( int argc, const char* argv[] ) {
+/*
+    Circuit* Ckt = new Circuit();
+    ifstream inf ("../inputs/case1", ifstream::in);
+    if ( Ckt->parseFile(inf) ) Ckt->connectGates();
+
     // Parse arguments.
-    
+/*    
     std::vector<const char*> infiles;
     const char*              outfile = 0;
 
@@ -83,4 +89,5 @@ int main(int argc, const char* argv[]) {
     }
 
     return 0;
+*/
 }
