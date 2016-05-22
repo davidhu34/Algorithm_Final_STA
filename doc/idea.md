@@ -112,6 +112,7 @@ trace(gate)
     path.add(pair(gate, gate.value))
 
     if gate.value == X
+        assert(gate.type == PO)
         path.pop()
         gate.value = 0
         trace(gate)
