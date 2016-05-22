@@ -31,10 +31,18 @@
 
 -   Time complexity is same as depth first search, i.e. O(|PI| * |E|).
 
-## How to Find Out Value of All Points
+## How to Calculate Arrival Time of All Gates
+
+-   From input pins, do breadth first search toward output pins.
+
+#### Time Complexity
+
+-   O(|E|).
+
+## How to Calculate Value of All Points
 
 Given an input vector and a set of nodes sorted according to each node's
-arrival time, how to find out value of all nodes.
+arrival time, how to find value of all nodes.
 
 -   For each node in the sorted set, get its input nodes' value, then
     calculate its value.
@@ -46,14 +54,14 @@ arrival time, how to find out value of all nodes.
 
 ## How to Find Sensitizable Paths
 
-### Method 1 (Brute force)
+### Method 1 (Brute Force)
 
 -   Find all paths within constraint and collect them in a path list.
 
 -   Try all possible permutation of input vectors.
 
 -   For each input vector, assume circuit has become stable (ignoring
-    delay), then find out value of all points in the circuit.
+    delay), then find value of all points in the circuit.
 
 -   With arrival time and value at each point, we can know whether a
     path is sensitizable. For each path in path list, check whether it
@@ -65,7 +73,7 @@ arrival time, how to find out value of all nodes.
 
 -   Try all possible permutation: O(2^|PI|).
 
--   Find out value of all points for an input vector: O(|E|).
+-   Find value of all points for an input vector: O(|E|).
 
 -   Check all paths in path list: O(|P| * |p|) where |P| is number of
     paths and |p| is average number of node in a path.
@@ -77,9 +85,119 @@ arrival time, how to find out value of all nodes.
 
 -   This method will find all sensitizable paths.
 
-### Method 2
+### Method 2 (Less Brute Force)
 
--   
+-   Calculate arrival time of all gates.
+
+-   Basically the idea is trace from output pins toward input pins. Try
+    every possibility (condition) that make a path become a true path.
+    Check whether our assumption has any contradiction.
+
+-   Monitor slack constraint and time constraint while tracing.
+
+-   Pseudo code:
+
+TODO: Parallelize it; Monitor constraint; How to check for confliction?
+
+```
+sensitizable_paths = vector()
+input_vecs = vector()
+
+path = vector()
+
+for po in output_pins
+    trace(po.from)
+
+trace(gate)
+    path.add(pair(gate, gate.value))
+
+    if gate.value == X
+        path.pop()
+        gate.value = 0
+        trace(gate)
+        gate.value = 1
+        trace(gate)
+        gate.value = X
+
+    else if gate.type == NAND
+        # Try to make gate.from_a become a true path.
+
+        ` start_code_block(basic_logic)
+        if gate.from_a.arrival_time < gate.from_b.arrival_time
+            if gate.from_a.value == X
+                if gate.value == 1
+                    gate.from_a.value = 0
+                    trace(gate.from_a)
+                    gate.from_a.value = X
+
+        else if gate.from_a.arrival_time > gate.from_b.arrival_time
+            if gate.from_b.value == X
+                gate.from_b.value = 1
+                gate.from_a.value = !gate.value
+                trace(gate.from_a)
+                gate.from_b.value = X
+                gate.from_a.value = X
+
+        else # Both of them have same arrival time.
+            if gate.from_a.value == X
+                if gate.value == 1
+                    gate.from_a.value = 0
+                    trace(gate.from_a)
+                    gate.from_a.value = X
+
+            if gate.from_b.value == X
+                gate.from_b.value = 1
+                gate.from_a.value = !gate.value
+                trace(gate.from_a)
+                gate.from_b.value = X
+                gate.from_a.value = X
+        ` end_code_block(basic_logic)
+
+        # Try to make gate.from_b become a true path.
+
+        ` print(swap("from_a", "from_b", basic_logic))
+
+    else if gate.type == NOR
+        # Try to make gate.from_a become a true path.
+
+        ` print(swap("0", "1", basic_logic))
+
+        # Try to make gate.from_b become a true path.
+
+        ` print(swap("0", "1", swap("from_a", "from_b", basic_logic)))
+
+    else if gate.type == NOT
+        if gate.from.value == X
+            gate.from.value = !gate.value
+            trace(gate.from)
+            gate.from.value = X
+
+    else if gate.type == PI and no_conflict()
+        sensitizable_paths.add(reverse(path))
+        input_vec = vector()
+        for pi in input_pins
+            input_vec.add(pi.value)
+        input_vecs.add(input_vec)
+        
+    else
+        print("Error: Unknown gate type.\n")
+        exit(1)
+
+    path.pop_front()
+```
+
+#### Time Complexity
+
+-   Calculate arrival time: O(|E|).
+
+-   Tracing: ?
+
+#### Note
+
+-   This method find all sensitizable paths too.
+
+-   To adapt parallel execution, every thread must have their own copy
+    of `gate.value`. Other gate attribute can be shared.
 
 ## How to Find the Longest Sensitizable Path
 
