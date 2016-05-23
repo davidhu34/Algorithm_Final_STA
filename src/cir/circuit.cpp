@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -141,3 +142,4 @@ string Circuit::trimWire ( string line, string pin )
 }
 
 } // namespace Cir
+*/
