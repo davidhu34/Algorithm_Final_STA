@@ -114,7 +114,7 @@ and `src/foo/bar.h` and you want to test them. Here is the procedure:
 1.  Go to `test/src` directory.
 
 2.  Create a test file: `test_foo_bar.cpp`. The naming format is
-    `test_<module>_<file>.cpp` or `test_<module>_<file>_<class>.cpp`.
+    `test_<module>_<file>.cpp` or `test_<module>_<class>.cpp`.
 
 3.  Write your test function there. See `test_example.cpp` for examples.
     I've written some random functions to help testing. It's in
