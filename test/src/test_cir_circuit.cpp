@@ -3,12 +3,16 @@
 
 #include "cir/circuit.h"
 
+/*
 using namespace std;
 
-int testcircuit( int argc, char** argv)
+int test_circuit( int argc, char** argv)
 {
-	Circuit* Ckt = new Circuit();
-	ifstream inf;
-	inf.open("../cases/case1/input/case1");	// input
-	Ckt->parseFile(inf);
+    Cir::Circuit* Ckt = new Cir::Circuit();
+    ifstream inf;
+    inf.open("../cases/case1/input/case1");	// input
+    Ckt->parseFile(inf);
+
+    return 0;
 }
+*/
