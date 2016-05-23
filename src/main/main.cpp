@@ -2,22 +2,18 @@
 #include <iostream>
 #include <vector>
 
-
-#include <cir/parser.h>
 #include <cir/circuit.h>
+#include <cir/parser.h>
+#include <cir/writer.h>
 #include <ana/analyzer.h>
-#include <util/writer.h>
 
 static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
 
 int main( int argc, const char* argv[] ) {
-    Circuit* Ckt = new Circuit();
-    ifstream inf ("../inputs/case1", ifstream::in);
-    if ( Ckt->parseFile(inf) ) Ckt->connectGates();
-
     // Parse arguments.
+
     std::vector<const char*> infiles;
     const char*              outfile = 0;
 
@@ -49,10 +45,9 @@ int main( int argc, const char* argv[] ) {
 
     // Pass input files into circuit.
     
-    Cir::Parser  parser;
     Cir::Circuit circuit;
     
-    int errcode = parser.parse(infiles, circuit);
+    int errcode = Cir::parse(infiles, circuit);
     if (errcode != 0) {
         std::cerr << "Error: Parsing failed.\n";
         return 1;
@@ -63,22 +58,19 @@ int main( int argc, const char* argv[] ) {
     std::vector<Cir::Path>     paths;
     std::vector<Cir::InputVec> input_vecs;
 
-    Ana::Analyzer analyzer;
-    errcode = analyzer.find_sensitizable_paths(circuit, paths, input_vecs);
+    errcode = Ana::find_sensitizable_paths(circuit, paths, input_vecs);
     if (errcode != 0) {
-        std::cerr << "Error: Analyzing failed.\n";
+        std::cerr << "Error: Finding failed.\n";
         return 1;
     }
 
     // Output those paths.
 
-    Util::Writer writer;
-
     if (outfile) { // User specify output file.
-        errcode = writer.write(paths, input_vecs, outfile);
+        errcode = Cir::write(paths, input_vecs, outfile);
     }
     else {
-        errcode = writer.write(paths, input_vecs);
+        errcode = Cir::write(paths, input_vecs);
     }
 
     if (errcode != 0) {
