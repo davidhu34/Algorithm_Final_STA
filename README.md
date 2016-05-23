@@ -137,6 +137,13 @@ dump them away after their test complete. This is a kind of waste.
 Try to write those functions in `test/src` so we can reuse them
 everytime after we modify our source code.
 
+Please write a `print()` member function for each class you defined
+that print all data members' state. This is for debugging purpose.
+
+If you want your static (intenal linkage) functions to be testable,
+write them in a file end with `.inc`, then include it into your `.cpp`.
+Then you can include that `.inc` file to test it.
+
 ### Integration Testing
 
 Integration testing if for whole project. To run integration test,
