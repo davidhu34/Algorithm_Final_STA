@@ -1,10 +1,10 @@
 # Compiler.
 CC := g++
 
-# Mode can be `debug` (default) or `release`.
-mode := debug
+# Version can be `debug` (default) or `release`.
+ver := debug
 
-ifeq ($(mode),release) # Release version.
+ifeq ($(ver),release) # Release version.
     $(info Building release version.)
 
     # Directories.
@@ -23,7 +23,7 @@ ifeq ($(mode),release) # Release version.
     # Output file.
     OUTPUT := bin/sta
 
-else ifeq ($(mode),debug) # Debug version.
+else ifeq ($(ver),debug) # Debug version.
     $(info Building debug version.)
 
     # Directories
@@ -44,7 +44,7 @@ else ifeq ($(mode),debug) # Debug version.
 
 else 
     # Mode not recognized.
-    $(error Mode $(mode) not recognized!)
+    $(error Mode $(ver) not recognized!)
 
 endif
 
@@ -61,8 +61,13 @@ LIB :=
 # Include subdirectories' makefile.
 include $(patsubst %,%/module.mk,$(MODULES))
 
+# If module include `src/main`, remove `test/*` from source.
+ifeq ($(findstring src/main/main.cpp,$(SRC)),src/main/main.cpp)
+    SRC := $(filter-out test/%,SRC)
+endif
+
 # Determine the object files.
-ifeq ($(mode),release)
+ifeq ($(ver),release)
     # Modify object file name to include `_rel` before `.o` extension.
     OBJ := $(patsubst %.cpp,%_rel.o,$(SRC))
 else
@@ -111,7 +116,7 @@ $(OUTPUT): $(OBJ)
 	@echo "Linking..."
 	@$(CC) -o $@ $(OBJ) $(LFLAGS)
 	@echo $(OUTPUT)" build succeed."
-ifeq ($(mode),debug)
+ifeq ($(ver),debug)
 	@echo
 	@echo "Start unit testing..."
 	@-$(OUTPUT)

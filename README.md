@@ -123,11 +123,12 @@ and `src/foo/bar.h` and you want to test them. Here is the procedure:
 4.  Open `test/src/main.cpp`, add your test functions' prototype before
     `main()`, then call your test functions inside `main()`.
 
-5.  Go to project root directory, open `Maketest` file. Make sure
-    your module (`src/foo`) is listed on the `MODULES := ` line.
-    If you want to exclude other module, just delete it from that line.
+5.  Go to project root directory, open `Makefile` file. Make sure
+    your module (`src/foo`) is listed on the `MODULES := ` line in
+    `debug` section. If you want to exclude other module, just
+    delete it from that line.
 
-6.  At project root directory, type `make -f Maketest`. If will compile
+6.  At project root directory, type `make`. If will compile
     all necessary files and create an executable: `bin/unit_test`.
     It will execute it automatically at the end of make.
 
@@ -151,11 +152,7 @@ see scripts under `test/scripts`.
 
 ## How to Compile
 
-Type `make`.
-
-You can choose between optimize or debug version in `Makefile`. Choose
-appropriate `CFLAGS :=` line. Comment out the line with `-O0`. Use
-the line with `-O2`. Remember to `make clear` before you switch.
+Type `make mode=release`.
 
 ## How to Run
 
