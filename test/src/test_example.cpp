@@ -11,8 +11,8 @@ void test1(void) {
     double b = myrand();
     double c = myrand();
 
-    assert(!(a == b && b == c)); // Error: a = b = c, seems like myrand()
-                                 // have some problem
+    assert(!(a == b && b == c) && 
+        "Error: a = b = c, seems like myrand() have some problem");
 
     std::cerr << "test1() passed.\n";
 }
@@ -26,7 +26,8 @@ void test2(void) {
     b = a ^ b;
     a = a ^ b;
 
-    assert(a == 30); // Error: a != 30, swap failed.
-    assert(b == 13); // Error: b != 13, swap failed.
+    assert(a == 30 && "Error: a != 30, swap failed.");
+    assert(b == 13 && "Error: b != 13, swap failed.");
+
     std::cerr << "test2() passed.\n";
 }
