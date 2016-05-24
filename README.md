@@ -152,7 +152,7 @@ see scripts under `test/scripts`.
 
 ## How to Compile
 
-Type `make mode=release`.
+Type `make ver=release`.
 
 ## How to Run
 
