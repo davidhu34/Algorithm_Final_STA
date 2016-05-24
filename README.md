@@ -152,7 +152,8 @@ see scripts under `test/scripts`.
 
 ## How to Compile
 
-Type `make ver=release`.
+Type `make ver=dbg` for debug version and `make ver=rel` for release
+(optimized) version.
 
 ## How to Run
 

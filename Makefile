@@ -1,17 +1,17 @@
 # Compiler.
 CC := g++
 
-# Version can be `debug` (default) or `release`.
-ver := debug
+# Version can be `utest` (default), `dbg` or `rel`.
+ver := utest
 
-ifeq ($(ver),release) # Release version.
+ifeq ($(ver),rel) # Release version.
     $(info Building release version.)
 
     # Directories.
     MODULES := src/main src/util src/cir src/ana
     LIB_DIR := lib
 
-    # Preprocessor flags
+    # Preprocessor flags.
     PFLAGS := -Isrc -Wall -DNDEBUG 
 
     # Compiler flags.
@@ -23,17 +23,39 @@ ifeq ($(ver),release) # Release version.
     # Output file.
     OUTPUT := bin/sta
 
-    # Version extension
+    # Version extension.
     VEXT := _rel
 
-else ifeq ($(ver),debug) # Debug version.
+else ifeq ($(ver),dbg) # Debug version.
     $(info Building debug version.)
 
-    # Directories
+    # Directories.
+    MODULES := src/main src/util src/cir src/ana
+    LIB_DIR := lib
+
+    # Preprocessor flags.
+    PFLAGS := -Isrc -Wall
+
+    # Compiler flags.
+    CFLAGS := -Wall -Wextra -O0 -g
+
+    # Linker flags.
+    LFLAGS := $(patsubst %,-L%,$(LIB_DIR))
+
+    # Output file.
+    OUTPUT := bin/sta
+
+    # Version extension.
+    VEXT := _dbg
+
+else ifeq ($(ver),utest) # Debug version.
+    $(info Building unit test.)
+
+    # Directories.
     MODULES := src/util src/cir test/src test/src/util
     LIB_DIR := lib test/lib
 
-    # Preprocessor flags
+    # Preprocessor flags.
     PFLAGS := -Isrc -I. -Wall
 
     # Compiler flags.
@@ -45,7 +67,7 @@ else ifeq ($(ver),debug) # Debug version.
     # Output file.
     OUTPUT := bin/unit_test
 
-    # Version extension
+    # Version extension.
     VEXT := _dbg
 
 else 
@@ -67,12 +89,8 @@ LIB :=
 # Include subdirectories' makefile.
 include $(patsubst %,%/module.mk,$(MODULES))
 
-# If module include `src/main`, remove `test/*` from source.
-ifeq ($(findstring src/main/main.cpp,$(SRC)),src/main/main.cpp)
-    SRC := $(filter-out test/%,$(SRC))
-endif
-
-# Modify object file name to include `_rel` before `.o` extension.
+# Modify object file name to include `_<version_extension>` before
+# `.o` extension.
 OBJ := $(patsubst %.cpp,%$(VEXT).o,$(SRC))
 
 LFLAGS += $(patsubst lib%,-l%,$(LIB))
@@ -113,7 +131,7 @@ $(OUTPUT): $(OBJ)
 	@echo "Linking..."
 	@$(CC) -o $@ $(OBJ) $(LFLAGS)
 	@echo $(OUTPUT)" build succeed."
-ifeq ($(ver),debug)
+ifeq ($(ver),utest)
 	@echo
 	@echo "Start unit testing..."
 	@-$(OUTPUT)
