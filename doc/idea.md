@@ -200,8 +200,4 @@ trace(gate)
 -   To adapt parallel execution, every thread must have their own copy
     of `gate.value`. Other gate attribute can be shared.
 
-## How to Find the Longest Sensitizable Path
-
-### Method 1
-
 
