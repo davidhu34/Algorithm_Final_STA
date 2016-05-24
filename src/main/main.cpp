@@ -11,13 +11,13 @@ static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
 
-int main( int argc, const char* argv[] ) {
+int main(int argc, const char* argv[]) {
     // Parse arguments.
 
     std::vector<const char*> infiles;
     const char*              outfile = 0;
 
-    for (int i = 1; i < argc, ++i) {
+    for (int i = 1; i < argc; ++i) {
         // Read -o and its argument.
         if (strcmp(argv[i], "-o") == 0) {
             ++i;
