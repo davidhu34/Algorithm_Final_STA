@@ -114,7 +114,7 @@ and `src/foo/bar.h` and you want to test them. Here is the procedure:
 1.  Go to `test/src` directory.
 
 2.  Create a test file: `test_foo_bar.cpp`. The naming format is
-    `test_<module>_<file>.cpp` or `test_<module>_<file>_<class>.cpp`.
+    `test_<module>_<file>.cpp` or `test_<module>_<class>.cpp`.
 
 3.  Write your test function there. See `test_example.cpp` for examples.
     I've written some random functions to help testing. It's in
@@ -123,11 +123,12 @@ and `src/foo/bar.h` and you want to test them. Here is the procedure:
 4.  Open `test/src/main.cpp`, add your test functions' prototype before
     `main()`, then call your test functions inside `main()`.
 
-5.  Go to project root directory, open `Maketest` file. Make sure
-    your module (`src/foo`) is listed on the `MODULES := ` line.
-    If you want to exclude other module, just delete it from that line.
+5.  Go to project root directory, open `Makefile` file. Make sure
+    your module (`src/foo`) is listed on the `MODULES := ` line in
+    `debug` section. If you want to exclude other module, just
+    delete it from that line.
 
-6.  At project root directory, type `make -f Maketest`. If will compile
+6.  At project root directory, type `make`. If will compile
     all necessary files and create an executable: `bin/unit_test`.
     It will execute it automatically at the end of make.
 
@@ -137,6 +138,13 @@ dump them away after their test complete. This is a kind of waste.
 Try to write those functions in `test/src` so we can reuse them
 everytime after we modify our source code.
 
+Please write a `print()` member function for each class you defined
+that print all data members' state. This is for debugging purpose.
+
+If you want your static (intenal linkage) functions to be testable,
+write them in a file end with `.inc`, then include it into your `.cpp`.
+Then you can include that `.inc` file to test it.
+
 ### Integration Testing
 
 Integration testing if for whole project. To run integration test,
@@ -144,11 +152,8 @@ see scripts under `test/scripts`.
 
 ## How to Compile
 
-Type `make`.
-
-You can choose between optimize or debug version in `Makefile`. Choose
-appropriate `CFLAGS :=` line. Comment out the line with `-O0`. Use
-the line with `-O2`. Remember to `make clear` before you switch.
+Type `make ver=dbg` for debug version and `make ver=rel` for release
+(optimized) version.
 
 ## How to Run
 
