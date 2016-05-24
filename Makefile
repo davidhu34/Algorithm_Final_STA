@@ -8,20 +8,23 @@ ifeq ($(ver),release) # Release version.
     $(info Building release version.)
 
     # Directories.
-    MODULES := src/main src/util
+    MODULES := src/main src/util src/cir src/ana
     LIB_DIR := lib
 
     # Preprocessor flags
-    PFLAGS := -Isrc
+    PFLAGS := -Isrc -Wall -DNDEBUG 
 
     # Compiler flags.
-    CFLAGS := -Wall -Wextra -Werror=return-type -DNDEBUG -O3
+    CFLAGS := -Wall -Wextra -O3
 
     # Linker flags.
     LFLAGS := $(patsubst %,-L%,$(LIB_DIR))
 
     # Output file.
     OUTPUT := bin/sta
+
+    # Version extension
+    VEXT := _rel
 
 else ifeq ($(ver),debug) # Debug version.
     $(info Building debug version.)
@@ -31,16 +34,19 @@ else ifeq ($(ver),debug) # Debug version.
     LIB_DIR := lib test/lib
 
     # Preprocessor flags
-    PFLAGS := -Isrc -I.
+    PFLAGS := -Isrc -I. -Wall
 
     # Compiler flags.
-    CFLAGS := -Wall -Wextra -Werror=return-type -O0 -g
+    CFLAGS := -Wall -Wextra -O0 -g
 
     # Linker flags.
     LFLAGS := $(patsubst %,-L%,$(LIB_DIR))
 
     # Output file.
     OUTPUT := bin/unit_test
+
+    # Version extension
+    VEXT := _dbg
 
 else 
     # Mode not recognized.
@@ -63,28 +69,18 @@ include $(patsubst %,%/module.mk,$(MODULES))
 
 # If module include `src/main`, remove `test/*` from source.
 ifeq ($(findstring src/main/main.cpp,$(SRC)),src/main/main.cpp)
-    SRC := $(filter-out test/%,SRC)
+    SRC := $(filter-out test/%,$(SRC))
 endif
 
-# Determine the object files.
-ifeq ($(ver),release)
-    # Modify object file name to include `_rel` before `.o` extension.
-    OBJ := $(patsubst %.cpp,%_rel.o,$(SRC))
-else
-    # Modify object file name to include `_dbg` before `.o` extension.
-    OBJ := $(patsubst %.cpp,%_dbg.o,$(SRC))
-endif
+# Modify object file name to include `_rel` before `.o` extension.
+OBJ := $(patsubst %.cpp,%$(VEXT).o,$(SRC))
 
 LFLAGS += $(patsubst lib%,-l%,$(LIB))
 
 # Pattern rules.
-%_rel.o: %.cpp
+%$(VEXT).o: %.cpp
 	@echo "Compiling $<..."
-	@$(CC) -c $< $(PFLAGS) $(CFLAGS) -o $*_rel.o
-
-%_dbg.o: %.cpp
-	@echo "Compiling $<..."
-	@$(CC) -c $< $(PFLAGS) $(CFLAGS) -o $*_dbg.o
+	@$(CC) -c $< $(PFLAGS) $(CFLAGS) -o $*$(VEXT).o
 
 # Calculate Cpp include dependencies.
 #
@@ -98,13 +94,14 @@ LFLAGS += $(patsubst lib%,-l%,$(LIB))
 # `sed   `  Add colon at end of line.
 # --------  -------------------------------------------------
 #
-%.d: %.cpp
+%$(VEXT).d: %.cpp
 	@echo "Building dependency for $<..."
-	@$(CC) $(PFLAGS) -MM $*.cpp > $*.tempd
-	@sed -e 's|.*\.o:|$*.d $*.o:|' < $*.tempd > $*.d
-	@sed -e 's|.*:||' -e 's|\\$$||g' < $*.tempd | fmt -1 | \
-	 sed -e 's|^ *||' -e 's|$$|:|' >> $*.d
-	@rm $*.tempd
+	@$(CC) $(PFLAGS) -MM $*.cpp > $*$(VEXT).tempd
+	@sed -e 's|.*\.o:|$*$(VEXT).d $*$(VEXT).o:|' \
+	 < $*$(VEXT).tempd > $*$(VEXT).d
+	@sed -e 's|.*:||' -e 's|\\$$||g' < $*$(VEXT).tempd | fmt -1 | \
+	 sed -e 's|^ *||' -e 's|$$|:|' >> $*$(VEXT).d
+	@rm $*$(VEXT).tempd
 
 # Phony target.
 .PHONY: clean all
@@ -123,16 +120,16 @@ ifeq ($(ver),debug)
 endif
 
 # Include `.d` file only if target is not `clean`.
-ifneq ($(.DEFAULT_GOAL),clean)
+ifneq ($(MAKECMDGOALS),clean)
 
 # Include dependency (rule) description files.
--include $(patsubst %.cpp,%.d,$(SRC))
+-include $(patsubst %.cpp,%$(VEXT).d,$(SRC))
 
 endif
 
 # clean all the .o and executable files
 clean:
-	@for D in $(MODULES); do \
+	@-for D in $(MODULES); do \
 	   rm $$D/*.o $$D/*.d ;\
 	 done; \
 	 rm $(OUTPUT)
