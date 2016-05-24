@@ -51,7 +51,7 @@ int Cir::parse(const std::vector<const char*>& input_files,
                     err_code = parse_netlist_module(fin, circuit);
                 }
 
-                if (err_code) {
+                if (err_code) { // Error code is not 0.
                     goto clean_up;
                 }
             }

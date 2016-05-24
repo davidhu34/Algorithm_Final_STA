@@ -160,7 +160,8 @@ reread:
     return token;
 }
 
-// Parse module NAND2.
+// Parse module NAND2. Just try to get name of pins. Ignore everything
+// else.
 //
 // #### Input
 //
@@ -207,7 +208,8 @@ static int parse_module_NAND2(std::istream& fin, Cir::Circuit& cir) {
     return 0;
 }
 
-// Parse module NOR2.
+// Parse module NOR2. Just try to get name of pins. Ignore everything
+// else.
 //
 // #### Input
 //
@@ -254,7 +256,8 @@ static int parse_module_NOR2(std::istream& fin, Cir::Circuit& cir) {
     return 0;
 }
 
-// Parse module NOT1.
+// Parse module NOT1. Just try to get name of pins. Ignore everything
+// else.
 //
 // #### Input
 //
@@ -322,6 +325,9 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
 
     size_t number_of_wire = 0;
 
+    // Start parsing.
+
+    cir.name = get_token(fin);        // Get name of circuit ("case*").
     while (get_token(fin) != ";") { } // Ignore until ";".
 
     while (true) { // Parse things inside module definition.
