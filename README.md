@@ -4,10 +4,10 @@
 
 Group 24
 
--   劉典恆 b01901185
--   胡明衛 b01901133
--   許睿中 b01502119
--   張漢維 b01901181
+- 劉典恆 b01901185
+- 胡明衛 b01901133
+- 許睿中 b01502119
+- 張漢維 b01901181
 
 ## Schedule
 
@@ -125,7 +125,7 @@ and `src/foo/bar.h` and you want to test them. Here is the procedure:
 
 5.  Go to project root directory, open `Makefile` file. Make sure
     your module (`src/foo`) is listed on the `MODULES := ` line in
-    `debug` section. If you want to exclude other module, just
+    `utest` section. If you want to exclude other module, just
     delete it from that line.
 
 6.  At project root directory, type `make`. If will compile
