@@ -10,6 +10,9 @@ void test2(void);
 // test_util_hasher.cpp
 void test_hash_str(void);
 
+// test_util_prime.cpp
+void test_prime_gt(void);
+
 // test_util_hash_map.cpp
 void test_hash_map(void);
 
@@ -24,14 +27,17 @@ int main(int argc, const char* argv[]) {
     test1();
     test2();
     
-    //std::cerr << "\ntest_cir_circuit.cpp";
-    //test_circuit(argc, argv);
-
     std::cerr << "\ntest_util_hasher.cpp\n";
     test_hash_str();
 
+    std::cerr << "\ntest_util_prime.cpp\n";
+    test_prime_gt();
+
     std::cerr << "\ntest_util_hash_map.cpp\n";
     test_hash_map();
+
+    //std::cerr << "\ntest_cir_circuit.cpp";
+    //test_circuit(argc, argv);
 
     return 0;
 }
