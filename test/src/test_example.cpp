@@ -1,12 +1,13 @@
 #include <cassert>
 #include <iostream>
 
+#include "test/src/util/util.h"
 #include "test/src/util/myrand.h"
 
 void test1(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
-    using TestUtil::myrand();
+    using TestUtil::myrand;
 
     // Will I get 3 consecutive same number from myrand()?
     double a = myrand();
