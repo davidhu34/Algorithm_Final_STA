@@ -6,13 +6,11 @@
 
 #include "src/util/hasher.h"
 
-#include <cstdint>
-
-std::uint32_t Util::hash_str(const std::string& str) {
+uint32_t Util::hash_str(const std::string& str) {
     // #### Initialization
 
     // Get pointer to character array.
-    const std::uint8_t* data = &str[0];
+    const uint8_t* data = reinterpret_cast<const uint8_t*>(&str[0]);
 
     // String length in number of bytes.
     const size_t len = str.size();
@@ -22,17 +20,17 @@ std::uint32_t Util::hash_str(const std::string& str) {
     const size_t nblocks = len/4;
 
     // `h1` is a helper. 13 is a random seed.
-    std::uint32_t h1 = 13;
+    uint32_t h1 = 13;
 
     // Magic numbers that can help us to randomize our number.
-    const std::uint32_t c1 = 0xcc9e2d51;
-    const std::uint32_t c2 = 0x1b873593;
+    const uint32_t c1 = 0xcc9e2d51;
+    const uint32_t c2 = 0x1b873593;
 
     // #### Body
 
     // Point to last block that may or may not contain tail part of string.
     // It depends on whether `len` is multiple of 4.
-    const std::uint32_t* blocks = (const std::uint32_t*)(data + nblocks*4);
+    const uint32_t* blocks = (const uint32_t*)(data + nblocks*4);
 
     //                                 blocks
     //                                 v
@@ -41,7 +39,7 @@ std::uint32_t Util::hash_str(const std::string& str) {
     // blocks[i] where i is negative
     //
     for (int i = -nblocks; i; i++) {
-        std::uint32_t k1 = blocks[i];
+        uint32_t k1 = blocks[i];
 
         k1 *= c1;
         k1 = (k1 << 15) | (k1 >> (32 - 15)); // Rotate left for 15 bits.
@@ -55,9 +53,9 @@ std::uint32_t Util::hash_str(const std::string& str) {
     // #### Tail
 
     // Point to first byte of last block.
-    const std::uint8_t* tail = (const std::uint8_t*)(data + nblocks*4);
+    const uint8_t* tail = (const uint8_t*)(data + nblocks*4);
 
-    std::uint32_t k1 = 0;
+    uint32_t k1 = 0;
 
     // Get remainder (tail part of string) of len/4.
     switch(len & 3) {

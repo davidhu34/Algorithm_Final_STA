@@ -1,6 +1,7 @@
 #include <iostream>
-#include <sstream>
+#include <fstream>
 #include <map>
+#include <vector>
 #include <string>
 
 #include "test/src/util/util.h"
@@ -21,16 +22,16 @@ void test_hash_str(void) {
     ASSERT(fin.good(),
         << "Cannot open file \"" << filename);
 
-    typedef std::multimap<std::uint32_t, std::string>::value_type     Pair;
-    typedef std::multimap<std::uint32_t, std::string>::const_iterator Iterc;
+    typedef std::multimap<uint32_t, std::string>::value_type     Pair;
+    typedef std::multimap<uint32_t, std::string>::const_iterator Iterc;
 
-    std::multimap<std::uint32_t, std::string> dict;
-    std::vector<std::uint32_t>                vec;
+    std::multimap<uint32_t, std::string> dict;
+    std::vector<uint32_t>                vec;
 
     // Read each word and put them into `vec` and `dict`.
     std::string str;
     while (fin >> str) {
-        std::uint32_t n = Util::hash_str(str);
+        uint32_t n = Util::hash_str(str);
         dict.insert((Pair(n, str)));
         vec.push_back(n);
     }
