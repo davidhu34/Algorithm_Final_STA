@@ -15,8 +15,7 @@ Date  |Item
 ----- |----
 5/4   |Contest application deadline.
 5/24  |Progress report deadline.
-6/8   |Alpha test.
-6/14  |Project deadline.
+6/7   |Project deadline. Presentation.
 
 ## Problem
 

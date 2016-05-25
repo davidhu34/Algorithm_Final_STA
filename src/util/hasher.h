@@ -1,7 +1,12 @@
 #ifndef STA_UTIL_HASHER_H
 #define STA_UTIL_HASHER_H
 
-#include <cstdint>
+#include <string>
+
+// Since C++03 does not offer <cstdint>, I'll have to to define them
+// myself.
+typedef __UINT8_TYPE__  uint8_t;
+typedef __UINT32_TYPE__ uint32_t;
 
 namespace Util {
 
@@ -15,7 +20,7 @@ namespace Util {
 //
 // - An 32-bit integer.
 //
-std::uint32_t hash_str(const std::string& str);
+uint32_t hash_str(const std::string& str);
 
 } // namespace Util
 
