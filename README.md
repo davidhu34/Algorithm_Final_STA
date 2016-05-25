@@ -154,8 +154,16 @@ see scripts under `test/scripts`.
 
 ## How to Compile
 
-Type `make ver=dbg` for debug version and `make ver=rel` for release
-(optimized) version.
+Utility required to compile this project:
+
+- g++ (or maybe other C++ compiler?)
+- gnumake (or maybe other make?)
+- fmt (\*nix utility)
+- sed (\*nix utility)
+
+At project root directory, type `make ver=rel`. This will compile with
+optimization `-O3`. You can use `make ver=dbg` to compile with no
+optimization. `make` will only perform unit test.
 
 ## How to Run
 
