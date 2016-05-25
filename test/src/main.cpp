@@ -7,6 +7,9 @@
 void test1(void);
 void test2(void);
 
+// test_util_hash_map.cpp
+void test_hash_map(void);
+
 // test_cir_circuit.cpp
 int test_circuit(int argc, const char* argv[]);
 
@@ -17,9 +20,12 @@ int main(int argc, const char* argv[]) {
     std::cerr << "test_example.cpp\n";
     test1();
     test2();
-
+    
     //std::cerr << "\ntest_cir_circuit.cpp";
-    test_circuit(argc, argv);
+    //test_circuit(argc, argv);
+
+    std::cerr << "\ntest_util_hash_map.cpp\n";
+    test_hash_map();
 
     return 0;
 }
