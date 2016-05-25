@@ -138,6 +138,9 @@ dump them away after their test complete. This is a kind of waste.
 Try to write those functions in `test/src` so we can reuse them
 everytime after we modify our source code.
 
+If you don't want to compile certain test file, just add it into
+`test/src/module.mk` at `EXCLUDE` line.
+
 Please write a `print()` member function for each class you defined
 that print all data members' state. This is for debugging purpose.
 
