@@ -11,4 +11,4 @@ unsigned mt19937(void);
 /// Return seed
 unsigned mt19937init(unsigned seed);
 
-#endif
+#endif // TEST_UTIL_MYRAND_H
