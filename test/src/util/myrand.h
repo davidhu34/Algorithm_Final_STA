@@ -1,14 +1,28 @@
 #ifndef TEST_UTIL_MYRAND_H
 #define TEST_UTIL_MYRAND_H
 
-/// Return double value in [0, 1).
+namespace TestUtil {
+
+// Return a double value in range [0, 1).
+//
 double myrand(void);
 
-/// Return unsigned value in [0, 2^32 - 1]
+// Return an unsigned value in range [0, 2^32-1]
+//
 unsigned mt19937(void);
 
-/// Seed for mt19937
-/// Return seed
+// Seed for mt19937.
+//
+// #### Input
+//
+// - seed
+//
+// #### Output
+//
+// - Input seed.
+//
 unsigned mt19937init(unsigned seed);
+
+} // namespace TestUtil
 
 #endif // TEST_UTIL_MYRAND_H
