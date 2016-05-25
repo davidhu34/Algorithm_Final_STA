@@ -48,7 +48,7 @@ else ifeq ($(ver),dbg) # Debug version.
     # Version extension.
     VEXT := _dbg
 
-else ifeq ($(ver),utest) # Debug version.
+else ifeq ($(ver),utest) # Unit test version.
     $(info Building unit test.)
 
     # Directories.
