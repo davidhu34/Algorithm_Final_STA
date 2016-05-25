@@ -6,6 +6,7 @@
 #include "cir/circuit.h"
 #include "util/hash_map.h"
 #include "util/hasher.h"
+#include "util/prime.h"
 
 // Helper function for parser.cpp.
 
@@ -19,11 +20,6 @@ namespace {
         // Constructor
         explicit Wire(const std::string& _name): name(_name), from(0) { }
     };
-
-    // TODO: Temporary string hasher.
-    size_t hash_str(const std::string& str) {
-        return 0;
-    }
 }
 
 // Free all gates allocated in circuit.
@@ -320,8 +316,8 @@ static int parse_module_NOT1(std::istream& fin, Cir::Circuit& cir) {
 //  
 static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
     // Use hash_map for quick access using string as index.
-    typedef size_t (*Hasher)(const std::string&);
-    Util::hash_map<std::string, Wire, Hasher> wires(hash_str);
+    typedef uint32_t (*Hasher)(const std::string&);
+    Util::hash_map<std::string, Wire, Hasher> wires(Util::hash_str);
 
     size_t number_of_wire = 0;
 
@@ -381,7 +377,7 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
             // Rehash if wires is too cramp, i.e. too many wire cramp in
             // one bucket.
             if (wires.bucket.size() < number_of_wire) {
-                wires.rehash(number_of_wire * 2);
+                wires.rehash(Util::prime_gt(number_of_wire * 2));
             }
 
             token = get_token(fin); // Name of gate.
@@ -423,7 +419,7 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
             // Rehash if wires is too cramp, i.e. too many wire cramp in
             // one bucket.
             if (wires.bucket.size() < number_of_wire) {
-                wires.rehash(number_of_wire * 2);
+                wires.rehash(Util::prime_gt(number_of_wire * 2));
             }
 
             token = get_token(fin); // Name of gate.
@@ -465,7 +461,7 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
             // Rehash if wires is too cramp, i.e. too many wire cramp in
             // one bucket.
             if (wires.bucket.size() < number_of_wire) {
-                wires.rehash(number_of_wire * 2);
+                wires.rehash(Util::prime_gt(number_of_wire * 2));
             }
 
             token = get_token(fin); // Name of gate.
