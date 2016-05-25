@@ -1,5 +1,5 @@
-#ifndef MYRAND_H
-#define MYRAND_H
+#ifndef TEST_UTIL_MYRAND_H
+#define TEST_UTIL_MYRAND_H
 
 /// Return double value in [0, 1).
 double myrand(void);
@@ -11,4 +11,4 @@ unsigned mt19937(void);
 /// Return seed
 unsigned mt19937init(unsigned seed);
 
-#endif
+#endif // TEST_UTIL_MYRAND_H
