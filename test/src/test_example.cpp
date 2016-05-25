@@ -6,13 +6,18 @@
 void test1(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
+    using TestUtil::myrand();
+
     // Will I get 3 consecutive same number from myrand()?
     double a = myrand();
     double b = myrand();
     double c = myrand();
 
-    assert(!(a == b && b == c) && 
-        "Error: a = b = c, seems like myrand() have some problem");
+    ASSERT(!(a == b && b == c),
+        << "We got three consecutive same number:\n"
+        << "a = " << a << "\n"
+        << "b = " << b << "\n"
+        << "c = " << c << "\n");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
@@ -26,8 +31,8 @@ void test2(void) {
     b = a ^ b;
     a = a ^ b;
 
-    assert(a == 30 && "Error: a != 30, swap failed.");
-    assert(b == 13 && "Error: b != 13, swap failed.");
+    ASSERT(a == 30 && b == 13,
+        << "a = " << a << "\nb = " << b << "\nSwap failed.\n");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
