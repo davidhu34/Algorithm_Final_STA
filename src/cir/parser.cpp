@@ -49,6 +49,7 @@ int Cir::parse(const std::vector<const char*>& input_files,
                     err_code = parse_module_NOT1(fin, circuit);
                 }
                 else { // It is the netlist.
+                    circuit.name = token;
                     err_code = parse_netlist_module(fin, circuit);
                 }
 
