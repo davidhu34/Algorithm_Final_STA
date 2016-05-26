@@ -9,7 +9,7 @@ namespace Cir {
 struct Module {
     // Type of Module
     enum {
-        NAND2,
+        NAND2 = 0,
         NOR2,
         NOT1,
         PI,    // Primary input.
@@ -17,12 +17,12 @@ struct Module {
     };
 
     // Data Member
-    int                      type;
+    std::string              name;
     std::vector<std::string> input_names;
     std::string              output_name;
 
     // Constructor
-    explicit Module(int _type): type(_type) { }
+    explicit Module(const std::string& _name): name(_name) { }
 };
 
 struct Gate {
@@ -57,14 +57,16 @@ struct Circuit {
     std::vector<Gate*> primary_outputs;
     std::vector<Gate*> logic_gates;
     
-    Module module_NAND2;
-    Module module_NOR2;
-    Module module_NOT1;
+    Module modules[3];
 
     // Default Constructor
-    Circuit(): module_NAND2(Module::NAND2),
-               module_NOR2 (Module::NOR2),
-               module_NOT1 (Module::NOT1)  { }
+    Circuit(): modules({Module("NAND2"), 
+                        Module("NOR2" ), 
+                        Module("NOT1" )}) { }
+
+    // Free all gates allocated in circuit.
+    //
+    void clear();
 };
 
 } // namespace Cir

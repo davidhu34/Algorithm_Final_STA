@@ -71,28 +71,29 @@ void test_parse_module_NAND2(void) {
         "endmodule \n"
         "`endcelldefine\n");
 
-    Cir::Circuit circuit;
+    Cir::Circuit cir;
 
-    ASSERT(parse_module_NAND2(sin, circuit) == 0, );
+    ASSERT(parse_module_NAND2(sin, cir) == 0, );
 
-    ASSERT(circuit.module_NAND2.type == Cir::Module::NAND2,
-        << "circuit.module_NAND2.type = " << circuit.module_NAND2.type);
+    ASSERT(cir.modules[Cir::Module::NAND2].name == "NAND2",
+        << "cir.modules[Cir::Module::NAND2].name = "
+        << cir.modules[Cir::Module::NAND2].name);
            
-    ASSERT(circuit.module_NAND2.input_names.size() == 2,
-        << "circuit.module_NAND2.input_names.size() = "
-        << circuit.module_NAND2.input_names.size());
+    ASSERT(cir.modules[Cir::Module::NAND2].input_names.size() == 2,
+        << "cir.modules[Cir::Module::NAND2].input_names.size() = "
+        << cir.modules[Cir::Module::NAND2].input_names.size());
 
-    ASSERT(circuit.module_NAND2.input_names[0] == "A",
-        << "circuit.module_NAND2.input_names[0] = "
-        << circuit.module_NAND2.input_names[0]);
+    ASSERT(cir.modules[Cir::Module::NAND2].input_names[0] == "A",
+        << "cir.modules[Cir::Module::NAND2].input_names[0] = "
+        << cir.modules[Cir::Module::NAND2].input_names[0]);
 
-    ASSERT(circuit.module_NAND2.input_names[1] == "B",
-        << "circuit.module_NAND2.input_names[1] = "
-        << circuit.module_NAND2.input_names[1]);
+    ASSERT(cir.modules[Cir::Module::NAND2].input_names[1] == "B",
+        << "cir.modules[Cir::Module::NAND2].input_names[1] = "
+        << cir.modules[Cir::Module::NAND2].input_names[1]);
 
-    ASSERT(circuit.module_NAND2.output_name == "Y",
-        << "circuit.module_NAND2.output_name = "
-        << circuit.module_NAND2.output_name);
+    ASSERT(cir.modules[Cir::Module::NAND2].output_name == "Y",
+        << "cir.modules[Cir::Module::NAND2].output_name = "
+        << cir.modules[Cir::Module::NAND2].output_name);
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
@@ -123,28 +124,29 @@ void test_parse_module_NOR2(void) {
         "endmodule \n"
         "`endcelldefine\n");
 
-    Cir::Circuit circuit;
+    Cir::Circuit cir;
 
-    ASSERT(parse_module_NOR2(sin, circuit) == 0, );
+    ASSERT(parse_module_NOR2(sin, cir) == 0, );
 
-    ASSERT(circuit.module_NOR2.type == Cir::Module::NOR2,
-        << "circuit.module_NOR2.type = " << circuit.module_NOR2.type);
+    ASSERT(cir.modules[Cir::Module::NOR2].name == "NOR2",
+        << "cir.modules[Cir::Module::NOR2].name = "
+        << cir.modules[Cir::Module::NOR2].name);
            
-    ASSERT(circuit.module_NOR2.input_names.size() == 2,
-        << "circuit.module_NOR2.input_names.size() = "
-        << circuit.module_NOR2.input_names.size());
+    ASSERT(cir.modules[Cir::Module::NOR2].input_names.size() == 2,
+        << "cir.modules[Cir::Module::NOR2].input_names.size() = "
+        << cir.modules[Cir::Module::NOR2].input_names.size());
 
-    ASSERT(circuit.module_NOR2.input_names[0] == "A",
-        << "circuit.module_NOR2.input_names[0] = "
-        << circuit.module_NOR2.input_names[0]);
+    ASSERT(cir.modules[Cir::Module::NOR2].input_names[0] == "A",
+        << "cir.modules[Cir::Module::NOR2].input_names[0] = "
+        << cir.modules[Cir::Module::NOR2].input_names[0]);
 
-    ASSERT(circuit.module_NOR2.input_names[1] == "B",
-        << "circuit.module_NOR2.input_names[1] = "
-        << circuit.module_NOR2.input_names[1]);
+    ASSERT(cir.modules[Cir::Module::NOR2].input_names[1] == "B",
+        << "cir.modules[Cir::Module::NOR2].input_names[1] = "
+        << cir.modules[Cir::Module::NOR2].input_names[1]);
 
-    ASSERT(circuit.module_NOR2.output_name == "Y",
-        << "circuit.module_NOR2.output_name = "
-        << circuit.module_NOR2.output_name);
+    ASSERT(cir.modules[Cir::Module::NOR2].output_name == "Y",
+        << "cir.modules[Cir::Module::NOR2].output_name = "
+        << cir.modules[Cir::Module::NOR2].output_name);
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
@@ -171,24 +173,25 @@ void test_parse_module_NOT1(void) {
         "endmodule \n"
         "`endcelldefine\n");
 
-    Cir::Circuit circuit;
+    Cir::Circuit cir;
 
-    ASSERT(parse_module_NOT1(sin, circuit) == 0, );
+    ASSERT(parse_module_NOT1(sin, cir) == 0, );
 
-    ASSERT(circuit.module_NOT1.type == Cir::Module::NOT1,
-        << "circuit.module_NOT1.type = " << circuit.module_NOT1.type);
+    ASSERT(cir.modules[Cir::Module::NOT1].name == "NOT1",
+        << "cir.modules[Cir::Module::NOT1].name = " 
+        << cir.modules[Cir::Module::NOT1].name);
            
-    ASSERT(circuit.module_NOT1.input_names.size() == 1,
-        << "circuit.module_NOT1.input_names.size() = "
-        << circuit.module_NOT1.input_names.size());
+    ASSERT(cir.modules[Cir::Module::NOT1].input_names.size() == 1,
+        << "cir.modules[Cir::Module::NOT1].input_names.size() = "
+        << cir.modules[Cir::Module::NOT1].input_names.size());
 
-    ASSERT(circuit.module_NOT1.input_names[0] == "A",
-        << "circuit.module_NOT1.input_names[0] = "
-        << circuit.module_NOT1.input_names[0]);
+    ASSERT(cir.modules[Cir::Module::NOT1].input_names[0] == "A",
+        << "cir.modules[Cir::Module::NOT1].input_names[0] = "
+        << cir.modules[Cir::Module::NOT1].input_names[0]);
 
-    ASSERT(circuit.module_NOT1.output_name == "Y",
-        << "circuit.module_NOT1.output_name = "
-        << circuit.module_NOT1.output_name);
+    ASSERT(cir.modules[Cir::Module::NOT1].output_name == "Y",
+        << "cir.modules[Cir::Module::NOT1].output_name = "
+        << cir.modules[Cir::Module::NOT1].output_name);
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

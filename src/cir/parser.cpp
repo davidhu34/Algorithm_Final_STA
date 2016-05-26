@@ -12,16 +12,15 @@
 int Cir::parse(const std::vector<const char*>& input_files,
                Cir::Circuit&                   circuit     ) {
     
-    int err_code = 0;
-
     // Parse all input files.
     for (size_t i = 0; i < input_files.size(); ++i) {
         std::ifstream fin(input_files[i]);
         if (!fin.good()) {
             std::cerr << "Error: Cannot open file '"
                       << input_files[i] << "'\n";
-            err_code = 1;
-            goto clean_up;
+
+            circuit.clear();
+            return 1;
         }
 
         // Parse token by token, and take action depending on what token
@@ -36,6 +35,8 @@ int Cir::parse(const std::vector<const char*>& input_files,
                 while (get_token(fin, 1) != "\n") { }
             }
             else if (token == "module") {
+                int err_code = 0;
+
                 token = get_token(fin); // Read module name.
 
                 if (token == "NAND2") {
@@ -52,7 +53,8 @@ int Cir::parse(const std::vector<const char*>& input_files,
                 }
 
                 if (err_code) { // Error code is not 0.
-                    goto clean_up;
+                    circuit.clear();
+                    return err_code;
                 }
             }
             else { // Token not recognized or not important,
@@ -61,7 +63,5 @@ int Cir::parse(const std::vector<const char*>& input_files,
         }
     }
 
-clean_up:
-    clear_circuit(circuit);
-    return err_code;
+    return 0;
 }
