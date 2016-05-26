@@ -24,8 +24,12 @@ namespace Util {
 // }
 // ```
 //
+// You can use `Util::prime_gt(n)` to get a prime number greater
+// than `n`, and use that prime number as bucket size to rehash.
+// Prime number can help hash key to distribute more evenly.
+//
 template <typename Key, typename Value, typename Hash>
-struct hash_map {
+struct HashMap {
 
     // Key-value pair.
     struct Pair {
@@ -33,16 +37,15 @@ struct hash_map {
         Value value;
 
         // Constructor
-        explicit Pair(const Key& _key): key(_key) {}
-
         Pair(const Key& _key, const Value& _value):
-            key(_key),
+            key  (_key),
             value(_value) {}
     };
 
     // Data Member
     std::vector< std::vector<Pair> > bucket;
     Hash                             hash;
+    size_t                           size;
 
     // Constructor. Bucket size is initialized to 1.
     //
@@ -50,11 +53,14 @@ struct hash_map {
     //
     // - `hash`: A hash function for key.
     //
-    explicit hash_map(Hash _hash): bucket(1), hash(_hash) { }
+    explicit HashMap(Hash _hash): bucket(1), hash(_hash), size(0) { }
 
     // Member functions
 
-    // Insert a key-value pair.
+    // Insert a key-value pair. It won't check whether HashMap contain
+    // `key`. It just hash that key and insert that key-value pair into
+    // bucket directly. If you want to check whether HashMap contain
+    // `key` before insert, use `find_or_insert()`.
     //
     // #### Input
     //
@@ -64,6 +70,7 @@ struct hash_map {
     void insert(const Key& key, const Value& value) {
         size_t idx = hash(key) % bucket.size();
         bucket[idx].push_back((Pair(key, value)));
+        ++size;
     }
 
     // Remove a key-value pair.
@@ -76,11 +83,12 @@ struct hash_map {
     //
     // - `true` if key is found and removed, `false` otherwise
     //
-    bool erase(const Key& key) {
+    bool remove(const Key& key) {
         size_t idx = hash(key) % bucket.size();
         for (size_t i = 0; i < bucket[idx].size(); ++i) {
             if (key == bucket[idx][i].key) {
                 bucket[idx].erase(bucket[idx].begin() + i);
+                --size;
                 return true;
             }
         }
@@ -117,7 +125,33 @@ struct hash_map {
         assert(false && "Error: Can't find key.");
     }
 
-    // Check whether hash_map contains this key.
+    // Try to find value with key and return it. If key cannot be found,
+    // insert that key with value into HashMap.
+    //
+    // #### Input
+    //
+    // - `key`:
+    // - `value`:
+    //
+    // #### Output
+    //
+    // - Reference to value.
+    //
+    Value& find_or_insert(const Key& key, const Value& value = Value()) {
+        size_t       idx   = hash(key) % bucket.size();
+        const size_t bsize = bucket[idx].size();
+
+        for (size_t i = 0; i < bsize; ++i) {
+            if (key == bucket[idx][i].key) {
+                return bucket[idx][i].value;
+            }
+        }
+        bucket[idx].push_back((Pair(key, value)));
+        ++size;
+        return bucket[idx][bsize].value;
+    }
+
+    // Check whether HashMap contains this key.
     //
     // #### Input
     //
@@ -137,7 +171,7 @@ struct hash_map {
         return false;
     }
 
-    // Tell hash_map to rehash using with certain number of buckets.
+    // Tell HashMap to rehash using with certain number of buckets.
     // Number of bucket better be a prime number, so that two different
     // number, after dividing by it, will get two different remainder
     // with higher probability.
