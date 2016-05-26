@@ -53,16 +53,18 @@ struct Circuit {
     // Data Member
     std::string name;
 
-    std::vector<Gate*> primary_inputs;
-    std::vector<Gate*> primary_outputs;
-    std::vector<Gate*> logic_gates;
-    
-    Module modules[3];
+    std::vector<Gate*>  primary_inputs;
+    std::vector<Gate*>  primary_outputs;
+    std::vector<Gate*>  logic_gates;
+    std::vector<Module> modules;
 
     // Default Constructor
-    Circuit(): modules({Module("NAND2"), 
-                        Module("NOR2" ), 
-                        Module("NOT1" )}) { }
+    Circuit() {
+        modules.reserve(3);
+        modules.push_back(Module("NAND2"));
+        modules.push_back(Module("NOR2" ));
+        modules.push_back(Module("NOT1" ));
+    }
 
     // Free all gates allocated in circuit.
     //
