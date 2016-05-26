@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////
 
 
-module mul2 ( M3, M2, M1, M0, A1, A0, B1, B0 );     
+module case0 ( M3, M2, M1, M0, A1, A0, B1, B0 );     
     output M3, M2, M1, M0;
     input A1, A0;
     input B1, B0;

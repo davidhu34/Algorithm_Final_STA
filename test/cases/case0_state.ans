@@ -1,0 +1,31 @@
+-circuit_name          case0
+-pi_count              4
+-po_count              4
+-gate_count            17
+-nand2_input_pin_name  A B
+-nand2_output_pin_name Y
+-nor2_input_pin_name   A B
+-nor2_output_pin_name  Y
+-not1_input_pin_name   A
+-not1_output_pin_name  Y
+-U1/NOT1               A:U13
+-U2/NOT1               A:U16
+-U3/NOT1               A:U11
+-U4/NOT1               A:U17
+-U5/NOT1               A:B1
+-U6/NOR2               A:U8  B:U7
+-U7/NAND2              A:B1  B:B0
+-U8/NAND2              A:A1  B:A0
+-U9/NOR2               A:U5  B:U10
+-U10/NAND2             A:A1  B:U3
+-U11/NOR2              A:U15 B:U16
+-U12/NAND2             A:U14 B:U1
+-U13/NOR2              A:U15 B:U2
+-U14/NAND2             A:U2  B:U15
+-U15/NAND2             A:B1  B:A0
+-U16/NAND2             A:B0  B:A1
+-U17/NAND2             A:A0  B:B0
+-M0/PO                 U4
+-M1/PO                 U12
+-M2/PO                 U9
+-M3/PO                 U6
