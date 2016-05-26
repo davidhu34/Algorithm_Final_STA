@@ -19,31 +19,22 @@
     // - `message`  : Message to be printed if condition evaluated to
     //                false. It should start with `<<`. It can be empty.
     //
+    // Add `break` or `continue` after your message if you don't want
+    // to exit program after assertion failed, e.g.
+    // `ASSERT(1 == 0, << "1 != 0\n"; continue)`. You will continue
+    // to run current test function.
+    //
+    // Add return statement after your message if you just want to stop
+    // this test function, i.e. `ASSERT(1, ; return)`. You will leave
+    // this test function but continue to run other test function.
+    //
     #define ASSERT(condition, message)                                \
         do {                                                          \
             if (! (condition)) {                                      \
                 std::cerr << __FILE__ << ":" << __LINE__ << ":\n"     \
                              "Assertion '" #condition "' failed.\n"   \
-                             message << std::endl;                    \
+                             message;                                 \
                 exit(EXIT_FAILURE);                                   \
-            }                                                         \
-        } while (false)
-
-    // Same as `ASSERT(condition, message)` without exit when condition
-    // is failed.
-    //
-    // #### Input
-    //
-    // - `condition`: An expression to be evaluated.
-    // - `message`  : Message to be printed if condition evaluated to
-    //                false. It should start with `<<`. It can be empty.
-    //
-    #define EXPECT(condition, message)                                \
-        do {                                                          \
-            if (! (condition)) {                                      \
-                std::cerr << __FILE__ << ":" << __LINE__ << ":\n"     \
-                             "Expectation '" #condition "' unmet.\n"  \
-                             message << std::endl;                    \
             }                                                         \
         } while (false)
 
@@ -51,9 +42,6 @@
     // Define a dummy ASSERT()
     #define ASSERT(condition, message) do { } while (false)
     
-    // Define a dummy EXPECT()
-    #define EXPECT(condition, message) do { } while (false)
-
 #endif // NDEBUG
 
 namespace TestUtil {

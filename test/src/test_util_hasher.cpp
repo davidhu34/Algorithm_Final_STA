@@ -20,7 +20,7 @@ void test_hash_str(void) {
 
     std::ifstream fin(filename);
     ASSERT(fin.good(),
-        << "Cannot open file \"" << filename);
+        << "Cannot open file \"" << filename << "\n");
 
     typedef std::multimap<uint32_t, std::string>::value_type     Pair;
     typedef std::multimap<uint32_t, std::string>::const_iterator Iterc;
@@ -62,7 +62,7 @@ void test_hash_str(void) {
     }
 
     ASSERT(max_num_in_bucket < 3,
-        << "I think the implementation is wrong, too many collisions.");
+        << "I think the implementation is wrong, too many collisions.\n");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
