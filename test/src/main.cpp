@@ -22,6 +22,9 @@ void test_parse_module_NAND2(void);
 void test_parse_module_NOR2(void);
 void test_parse_module_NOT1(void);
 
+// test_cir_parser.cpp
+void test_parser(void);
+
 // test_cir_circuit.cpp
 int test_circuit(int argc, const char* argv[]);
 
@@ -47,6 +50,9 @@ int main(int argc, const char* argv[]) {
     test_parse_module_NAND2();
     test_parse_module_NOR2();
     test_parse_module_NOT1();
+
+    std::cerr << "\ntest_cir_parser.cpp\n";
+    test_parser();
 
     //std::cerr << "\ntest_cir_circuit.cpp";
     //test_circuit(argc, argv);
