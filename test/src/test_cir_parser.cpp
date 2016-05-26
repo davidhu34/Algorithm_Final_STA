@@ -245,8 +245,8 @@ static void basic_validate(const std::vector<const char*>& files,
 // -nor2_output_pin_name  Y
 // -not1_input_pin_name   A
 // -not1_output_pin_name  Y
-// -u1                    A:u7 B:u8
-// -u9                    A:u2 B:u7
+// -u1/NAND2              A:u7 B:u8
+// -u9/NOR2               A:u2 B:u7
 // ...
 // ```
 // 
@@ -292,24 +292,24 @@ static void print_circuit_state(Cir::Circuit& cir,
          << "-nor2_output_pin_name "
          << cir.modules[Cir::Module::NOR2].output_name << "\n"
          << "-not1_input_pin_name " 
-         << cir.modules[Cir::Module::NOT1].input_names[0] << " " 
+         << cir.modules[Cir::Module::NOT1].input_names[0] << "\n"
          << "-not1_output_pin_name "
          << cir.modules[Cir::Module::NOT1].output_name << "\n";
 
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
         const Cir::Gate* g = cir.primary_outputs[i];
-        fout << "-" << g->name << " ";
+        fout << "-" << g->name << "/PO ";
 
         for (size_t j = 0; j < g->froms.size(); ++j) {
-            fout << cir.modules[g->module].input_names[j] << ":"
-                 << g->froms[j]->name << " ";
+            fout << g->froms[j]->name << " ";
         }
         fout << "\n";
     }
 
     for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
         const Cir::Gate* g = cir.logic_gates[i];
-        fout << "-" << g->name << " ";
+        fout << "-" << g->name << "/"
+             << cir.modules[g->module].name << " ";
 
         for (size_t j = 0; j < g->froms.size(); ++j) {
             fout << cir.modules[g->module].input_names[j] << ":"
@@ -326,7 +326,7 @@ static void print_circuit_state(Cir::Circuit& cir,
 // - file1
 // - file2
 //
-static void validate(const std::string& file1
+static void validate(const std::string& file1,
                      const std::string& file2) {
     std::cerr << __FUNCTION__ << "():\n";
 
@@ -382,8 +382,8 @@ static void validate(const std::string& file1
     // Check token_map for non empty value token set. Issue an error
     // for each of them.
     //
-    fin.open(outfile);
-    ASSERT(fin.good(), << "Cannot open file \"" << outfile << "\".\n");
+    fin.open(file2.c_str());
+    ASSERT(fin.good(), << "Cannot open file \"" << file2 << "\".\n");
 
     while (fin >> token) {
         
@@ -394,13 +394,13 @@ static void validate(const std::string& file1
 
             ASSERT(it != token_map.end(),
                 << "Couldn't find key token " << key_token
-                << "in token_map.\n");
+                << " in token_map.\n");
         }
         else {
             SetIter it = token_map[key_token].find(token);
 
             ASSERT(it != token_map[key_token].end(),
-                << "Value token " << token << " does not exist in" 
+                << "Value token " << token << " does not exist in " 
                 << "token set of " << key_token << ".\n");
 
             token_map[key_token].erase(it);
