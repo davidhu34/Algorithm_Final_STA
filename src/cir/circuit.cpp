@@ -47,13 +47,14 @@ bool Circuit::parseFile ( ifstream &inf )
 		if ( type == "") return moduleERR(parsing_line);
 		
 		if ( inModel(type) ) {
-			if ( !parseGate( type, parsing_str ) )
+			if ( !parseGate( inf, type, parsing_str ) )
 				return moduleERR(parsing_line);
-			else getline( inf, parsing_str );
+			else parsing_line++;
 		} else if ( type == "endmodule") break;
 		else
 		{
 			vector<string> var_tmp = parseVars( parsing_str, inf, parsing_line );
+			
 			if ( var_tmp.empty() ) moduleERR(parsing_line);
 			if ( type == "input" ) {
 				for ( std::vector<string>::iterator it = var_tmp.begin();
@@ -91,8 +92,7 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 {
 	vector<string> vars;
 	string parsed_tmp;
-	bool flag = true;
-
+	bool flag = true;	// false flag: module ERR
 	while (flag)
 	{
 		if ( isalnum( parsing[0] ) )
@@ -119,15 +119,15 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 	return (flag)? vars: vector<string>();
 }
 
-bool Circuit::parseGate ( string model, string line )
+bool Circuit::parseGate ( ifstream &inf, string model, string &parsing )
 {
 	string gname, inputA, inputB, outputY;
-	gname = parseWord(line);
+	gname = parseWord(parsing);
 	if ( gname == "" ) return false;
-	inputA = trimWire( line, "A");
-	inputB = trimWire( line, "B");
-	outputY = trimWire ( line, "Y");
-	return newGate ( gname, model, inputA, inputB, outputY );
+	inputA = trimWire( parsing, "A");
+	inputB = trimWire( parsing, "B");
+	outputY = trimWire( parsing, "Y");
+	return newGate( gname, model, inputA, inputB, outputY ) && getline( inf, parsing );
 }
 
 string Circuit::trimWire ( string line, string pin )

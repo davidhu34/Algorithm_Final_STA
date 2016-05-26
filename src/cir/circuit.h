@@ -49,71 +49,64 @@ private:
 	};
 	string parseWord ( string &parsing );
 	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
-	bool parseGate ( string model, string line );
+	bool parseGate ( ifstream &inf, string model, string parsing );
 	string trimWire ( string line, string pin );
 
+	void newWire ( string wname )
+	{
+		_Wire[wname] = new Wire();
+	}
 	void newInput ( string gname )
 	{ 
 		_Inputs.push_back(gname);
-		_Gate[gname] = new INPUT(gname);
+		_Gate.push_back( new INPUT(gname) );
 	};
 	void newOutput ( string gname )
 	{
 		_Outputs.push_back(gname);
-		_Gate[gname] = new OUTPUT(gname);
+		_Gate.push_back( new OUTPUT(gname) );
 	};
 	bool newGate ( string gname, string model, string inA, string inB, string outY )
 	{
 		string m = case_model[model];
+		Gate* newGate;
+
 		if ( m == "not" ) {
 			if ( inA == "" || outY == "" ) return false;
 			else
 			{
-				_Gate[gname] = new NOT( gname, model );
-				wireIn( inA, gname, "A" );
-				wireOut( outY, gname );
+				newGate = new NOT( gname, model );
+				_Wire[inA]->setTo( newGate, "A" );
+				_Wire[outY]->setFrom(newGate);
 			}
 		} else if ( m == "nand" ) {
 			if ( inA == "" || inB == "" || outY == "" ) return false;
 			else
 			{
-				_Gate[gname] = new NAND( gname, model );
-				wireIn( inA, gname, "A" );
-				wireIn( inB, gname, "B" );
-				wireOut( outY, gname );
+				newGate = new NAND( gname, model );
+				_Wire[inA]->setTo( newGate, "A" );
+				_Wire[inB]->setTo( newGate, "B" );
+				_Wire[outY]->setFrom(newGate);
 			}
 		} else if ( m == "nor" ) {
 			if ( inA == "" || inB == "" || outY == "" ) return false;
 			else
 			{
-				_Gate[gname] = new NOR( gname, model );
-				wireIn( inA, gname, "A" );
-				wireIn( inB, gname, "B" );
-				wireOut( outY, gname );
+				newGate = new NOR( gname, model );
+				_Wire[inA]->setTo( newGate, "A" );
+				_Wire[inB]->setTo( newGate, "B" );
+				_Wire[outY]->setFrom(newGate);
 			}
 		} else return false;	// not in model
-	};
 
-	void wireOut ( string wname, string gname )
-	{
-		checkWire(wname);
-		_Wire[wname]->setFrom(_Gate[gname]);
-	};
-	void wireIn ( string wname, string gname, string pin )
-	{
-		checkWire(wname);
-		_Wire[wname]->setTo( _Gate[gname], pin );
-	};
-	void checkWire ( string wname )
-	{
-		if ( _Wire.find(wname) == _Wire.end() )
-			_Wire[wname] = new Wire(wname);
+		_Gate.push_back(newGate);
+		return true;
 	};
 
 	vector<string>		_Inputs;
 	vector<string>		_Outputs;
 	map< string, Wire*>	_Wire;
-	map< string, Gate*>	_Gate;
+	vector<Gate*>	_Gate;
 
 	string					case_name;
 	vector<string>			case_reg;

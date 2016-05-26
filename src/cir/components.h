@@ -19,7 +19,7 @@ class Gate;
 class Wire
 {
 public:
-	Wire ( string wname ) { _name = wname; _pin = "A"; }
+	Wire () { _pin = "A"; }
 	void setFrom ( Gate* from ) { _from = from; }
 	void setTo ( Gate* to, string pin ) { _to = to; _pin = pin; }
 	Gate* getFrom () { return _from; }
@@ -27,7 +27,6 @@ public:
 	string getToPin () { return _pin; }
 
 private:
-	string	_name;
 	Gate* 	_from;
 	Gate* 	_to;
 	string	_pin;
