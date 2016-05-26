@@ -15,4 +15,9 @@ void Cir::Circuit::clear() {
         delete logic_gates[i];
     }
     logic_gates.clear();
+
+    for (size_t i = 0; i < modules.size(); ++i) {
+        modules[i].input_names.clear();
+        modules[i].output_name.clear();
+    }
 }
