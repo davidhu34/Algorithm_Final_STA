@@ -298,7 +298,6 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
 
     // Start parsing.
 
-    cir.name = get_token(fin);        // Get name of circuit ("case*").
     while (get_token(fin) != ";") { } // Ignore until ";".
 
     while (true) { // Parse things inside module definition.
