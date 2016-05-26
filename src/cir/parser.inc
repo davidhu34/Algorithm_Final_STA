@@ -317,7 +317,7 @@ static int parse_module_NOT1(std::istream& fin, Cir::Circuit& cir) {
 static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
     // Use hash_map for quick access using string as index.
     typedef uint32_t (*Hasher)(const std::string&);
-    Util::hash_map<std::string, Wire, Hasher> wires(Util::hash_str);
+    Util::HashMap<std::string, Wire, Hasher> wires(Util::hash_str);
 
     size_t number_of_wire = 0;
 
