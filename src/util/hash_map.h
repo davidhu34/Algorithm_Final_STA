@@ -25,7 +25,7 @@ namespace Util {
 // ```
 //
 template <typename Key, typename Value, typename Hash>
-struct hash_map {
+struct HashMap {
 
     // Key-value pair.
     struct Pair {
@@ -50,7 +50,7 @@ struct hash_map {
     //
     // - `hash`: A hash function for key.
     //
-    explicit hash_map(Hash _hash): bucket(1), hash(_hash) { }
+    explicit HashMap(Hash _hash): bucket(1), hash(_hash) { }
 
     // Member functions
 
@@ -117,7 +117,7 @@ struct hash_map {
         assert(false && "Error: Can't find key.");
     }
 
-    // Check whether hash_map contains this key.
+    // Check whether HashMap contains this key.
     //
     // #### Input
     //
@@ -137,7 +137,7 @@ struct hash_map {
         return false;
     }
 
-    // Tell hash_map to rehash using with certain number of buckets.
+    // Tell HashMap to rehash using with certain number of buckets.
     // Number of bucket better be a prime number, so that two different
     // number, after dividing by it, will get two different remainder
     // with higher probability.
