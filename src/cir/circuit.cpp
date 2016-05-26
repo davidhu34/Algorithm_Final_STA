@@ -31,20 +31,24 @@ bool Circuit::parseFile ( ifstream &inf )
 	string type = "";   // input / output / modle name 
 
 	getline( inf, parsing_str );
-	type = parseWord(parsing_str);
+	cout<<parsing_str<<endl;
+	type = parseWord( inf, parsing_str );
 	if ( type != "module" )
 		return moduleERR(parsing_line); 
 	else    // module initialized
 	{   // get case name
-		type = parseWord(parsing_str);
+		cout<<parsing_str<<endl;
+		type = parseWord( inf, parsing_str );
 		if ( type == "" )   return moduleERR(parsing_line);
-		parseVars( parsing_str, inf, parsing_line); // register names
+		case_name = type;
+		if ( parseVars( parsing_str, inf, parsing_line).size() == 0 )
+			moduleERR(parsing_line);
 	}
 
 	while (1)
 	{
-		type = parseWord(parsing_str);
-		if ( type == "") return moduleERR(parsing_line);
+		type = parseWord( inf, parsing_str );
+		if ( type == "" ) return moduleERR(parsing_line);
 		
 		if ( inModel(type) ) {
 			if ( !parseGate( inf, type, parsing_str ) )
@@ -57,17 +61,11 @@ bool Circuit::parseFile ( ifstream &inf )
 			
 			if ( var_tmp.empty() ) moduleERR(parsing_line);
 			if ( type == "input" ) {
-				for ( std::vector<string>::iterator it = var_tmp.begin();
-					it != var_tmp.end(); it++ )
-					newInput(it.second);
+				for ( size_t i = 0; i < var_tmp.size(); i++ )	newInput( var_tmp[i] );
 			} else if ( type == "output" ) {
-				for ( std::vector<string>::iterator it = var_tmp.begin();
-					it != var_tmp.end(); it++ )
-					newOutput(it.second);
+				for ( size_t i = 0; i < var_tmp.size(); i++ )	newOutput( var_tmp[i] );
 			} else if ( type == "wire" ) {
-				for ( std::vector<string>::iterator it = var_tmp.begin();
-					it != var_tmp.end(); it++ )
-					newWire(it.second);
+				for ( size_t i = 0; i < var_tmp.size(); i++ )	newWire( var_tmp[i] );
 			} else return moduleERR(parsing_line);		// invalid type 
 		}
 	}
@@ -75,16 +73,17 @@ bool Circuit::parseFile ( ifstream &inf )
 	return true;
 }
 
-string Circuit::parseWord ( string &parsing )
+string Circuit::parseWord ( ifstream &inf, string &parsing )
 {
 	string word = "";
-	while ( isspace( parsing[0] ) )
-		parsing.erase(0,1);
+	while ( parsing == "" )	getline( inf, parsing );
+	while ( isspace( parsing[0] ) )	parsing.erase(0,1);
 	while ( isalnum( parsing[0] ) )
 	{
 		word += parsing[0];
 		parsing.erase(0,1);
 	}
+	cout<< "word: " << word << endl;
 	return word;    // empty word for ERR
 }
 
@@ -93,40 +92,43 @@ vector<string> Circuit::parseVars ( string &parsing, ifstream &inf, int &line )
 	vector<string> vars;
 	string parsed_tmp;
 	bool flag = true;	// false flag: module ERR
+
+	cout<<"vars: ";
 	while (flag)
 	{
 		if ( isalnum( parsing[0] ) )
 			parsed_tmp += parsing[0];
-		else if ( parsing[0] == ',' || parsing[0] == ';')
+		else if ( parsing[0] == ',' || parsing[0] == ';' )
 		{
-			case_reg.push_back(parsed_tmp);
+			vars.push_back(parsed_tmp);
+			//cout<<parsed_tmp<<parsing[0]<<" ";
 			parsed_tmp = "";
 			if ( parsing[0] == ';')
 			{
-				string nextLine = "";
-				if ( !getline( inf, nextLine ) )
+				if ( !getline( inf, parsing ) )
 					flag = false;
-				else parsing += nextLine;
+				else line++;
 				break;
 			}
-		} else if ( parsed_tmp != "" && isspace( parsing[0] ) )
-			flag = false;
+		}// else if ( parsed_tmp != "" && isspace( parsing[0] ) )	flag = false;
 
 		if ( parsing.length() > 1 ) parsing.erase(0,1);
 		else if ( getline( inf, parsing ) ) line++;
 		else flag = false;
 	}   // empty vector for ERR
+	cout<<endl;
 	return (flag)? vars: vector<string>();
 }
 
 bool Circuit::parseGate ( ifstream &inf, string model, string &parsing )
 {
 	string gname, inputA, inputB, outputY;
-	gname = parseWord(parsing);
+	gname = parseWord( inf, parsing );
 	if ( gname == "" ) return false;
 	inputA = trimWire( parsing, "A");
 	inputB = trimWire( parsing, "B");
 	outputY = trimWire( parsing, "Y");
+	cout<<"Y:" <<outputY<<endl;
 	return newGate( gname, model, inputA, inputB, outputY ) && getline( inf, parsing );
 }
 
@@ -135,9 +137,9 @@ string Circuit::trimWire ( string line, string pin )
 	size_t pStart, pEnd;
 	pStart = line.find( "." + pin +"(" );
 	if ( pStart == string::npos ) return "";
-	else pEnd = line.substr( cursor + 2 ).find( ")" );
+	else pEnd = line.find( ")", pStart + 3);
 	if ( pEnd == string::npos ) return "";
-	return line.substr( pStart + 3, pEnd - pStart + 3 );
+	return line.substr( pStart + 3, pEnd - pStart - 3 );
 }
 
 } // namespace Cir

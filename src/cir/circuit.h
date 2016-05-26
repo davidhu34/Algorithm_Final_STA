@@ -47,9 +47,9 @@ private:
 		return ( case_model.find(str) != case_model.end() )?
 			true: false;
 	};
-	string parseWord ( string &parsing );
+	string parseWord ( ifstream &inf, string &parsing );
 	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
-	bool parseGate ( ifstream &inf, string model, string parsing );
+	bool parseGate ( ifstream &inf, string model, string &parsing );
 	string trimWire ( string line, string pin );
 
 	void newWire ( string wname )
@@ -60,17 +60,21 @@ private:
 	{ 
 		_Inputs.push_back(gname);
 		_Gate.push_back( new INPUT(gname) );
+		_Wire[gname] = new Wire();
+		_Wire[gname]->setFrom( _Gate.back() );
 	};
 	void newOutput ( string gname )
 	{
 		_Outputs.push_back(gname);
 		_Gate.push_back( new OUTPUT(gname) );
+		_Wire[gname] = new Wire();
+		_Wire[gname]->setTo( _Gate.back(), "A" );
 	};
 	bool newGate ( string gname, string model, string inA, string inB, string outY )
 	{
 		string m = case_model[model];
 		Gate* newGate;
-
+//cout<< "new gaete: "<<endl;
 		if ( m == "not" ) {
 			if ( inA == "" || outY == "" ) return false;
 			else
