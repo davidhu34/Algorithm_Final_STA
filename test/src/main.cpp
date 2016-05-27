@@ -17,7 +17,7 @@ void test_prime_gt(void);
 void test_hash_map(void);
 
 // test_cir_circuit.cpp
-int test_circuit(int argc, const char* argv[]);
+void test_circuit(void);
 
 int main(int argc, const char* argv[]) {
     // Call test function here.
@@ -36,8 +36,8 @@ int main(int argc, const char* argv[]) {
     std::cerr << "\ntest_util_hash_map.cpp\n";
     test_hash_map();
 
-    //std::cerr << "\ntest_cir_circuit.cpp";
-    //test_circuit(argc, argv);
+    std::cerr << "\ntest_cir_circuit.cpp\n";
+    test_circuit();
 
     return 0;
 }
