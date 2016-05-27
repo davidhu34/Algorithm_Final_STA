@@ -23,7 +23,7 @@ static std::ostream& operator<<(std::ostream& output,
 }
 
 void TestUtil::cir_compare(const std::string& file1,
-                           const std::string& file2);
+                           const std::string& file2) {
 
     std::cout << "Start comparing " << file1 << " and " << file2 
               << "...\n";
