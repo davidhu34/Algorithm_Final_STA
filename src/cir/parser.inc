@@ -16,6 +16,7 @@ namespace {
         std::string             name;
         Cir::Gate*              from;
         std::vector<Cir::Gate*> tos;
+        std::vector<int>        tos_pin; // Connect to which pin?
 
         // Constructor
         explicit Wire(const std::string& _name): name(_name), from(0) { }
@@ -332,6 +333,7 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
                 // we can connect PO to gate later.
                 Wire wire(token);
                 wire.tos.push_back(po);
+                wire.tos_pin.push_back(0);
                 wires.insert(token, wire);
 
                 token = get_token(fin); // "," or ";"
@@ -366,15 +368,18 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
                 token                = get_token(fin); // Wire name.
                 
                 const Cir::Module* mod = &cir.modules[Cir::Module::NAND2];
+                Wire&              w   = wires[token];
 
                 if (pin_name == mod->input_names[0]) {
-                    wires[token].tos.push_back(gate);
+                    w.tos.push_back(gate);
+                    w.tos_pin.push_back(0);
                 }
                 else if (pin_name == mod->input_names[1]) {
-                    wires[token].tos.push_back(gate);
+                    w.tos.push_back(gate);
+                    w.tos_pin.push_back(1);
                 }
                 else if (pin_name == mod->output_name) {
-                    wires[token].from = gate;
+                    w.from = gate;
                 }
                 else {
                     std::cerr << "Error: Pin '" << token
@@ -410,15 +415,18 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
                 token                = get_token(fin); // Wire name.
                 
                 const Cir::Module* mod = &cir.modules[Cir::Module::NOR2];
+                Wire&              w   = wires[token];
 
                 if (pin_name == mod->input_names[0]) {
-                    wires[token].tos.push_back(gate);
+                    w.tos.push_back(gate);
+                    w.tos_pin.push_back(0);
                 }
                 else if (pin_name == mod->input_names[1]) {
-                    wires[token].tos.push_back(gate);
+                    w.tos.push_back(gate);
+                    w.tos_pin.push_back(1);
                 }
                 else if (pin_name == mod->output_name) {
-                    wires[token].from = gate;
+                    w.from = gate;
                 }
                 else {
                     std::cerr << "Error: Pin '" << token
@@ -454,12 +462,14 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
                 token                = get_token(fin); // Wire name.
                 
                 const Cir::Module* mod = &cir.modules[Cir::Module::NOT1];
+                Wire&              w   = wires[token];
 
                 if (pin_name == mod->input_names[0]) {
-                    wires[token].tos.push_back(gate);
+                    w.tos.push_back(gate);
+                    w.tos_pin.push_back(0);
                 }
                 else if (pin_name == mod->output_name) {
-                    wires[token].from = gate;
+                    w.from = gate;
                 }
                 else {
                     std::cerr << "Error: Pin '" << token
@@ -483,15 +493,19 @@ static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
     // Connect gates.
     for (size_t i = 0; i < wires.bucket.size(); ++i) {
         for (size_t j = 0; j < wires.bucket[i].size(); ++j) {
-            const Wire& wire = wires.bucket[i][j].value;
+            const Wire& w = wires.bucket[i][j].value;
 
-            // Connect "from" of wire and "to" of wire.
-            for (size_t k = 0; k < wire.tos.size(); ++k) { 
+            // Connect "from" of w and "to" of w.
+            for (size_t k = 0; k < w.tos.size(); ++k) { 
 
-                // If wire if not PI
-                if (wire.from) {
-                    wire.from  ->tos  .push_back(wire.tos[k]);
-                    wire.tos[k]->froms.push_back(wire.from  );
+                // If w if not PI
+                if (w.from) {
+                    w.from->tos.push_back(w.tos[k]);
+
+                    if (w.tos[k]->froms.size() < w.tos_pin[k] + 1) {
+                        w.tos[k]->froms.resize(w.tos_pin[k] + 1);
+                    }
+                    w.tos[k]->froms[w.tos_pin[k]] = w.from;
                 }
             }
         }
