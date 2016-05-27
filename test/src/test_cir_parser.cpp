@@ -7,22 +7,9 @@
 #include "cir/circuit.h"
 #include "cir/parser.h"
 #include "test/src/util/util.h"
+#include "test/src/util/cir_compare.h"
 
 // Helper functions
-
-// Print set of strings.
-//
-static std::ostream& operator<<(std::ostream& output, 
-                                const std::set<std::string>& strset) {
-
-    typedef std::set<std::string>::const_iterator Iter;
-
-    for (Iter it = strset.begin(); it != strset.end(); ++it) {
-        output << *it << " ";
-    }
-
-    return output;
-}
 
 // Only do content independent test, i.e. it should be true for all
 // circuit.
@@ -232,41 +219,9 @@ static void basic_validate(const std::vector<const char*>& files,
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 
-// Print circuit state in the following format:
+// Print circuit state in the format specified by `cir_compare()`.
+// Please refer to `cir_compare()`.
 //
-// ```
-// -circuit_name          case0
-// -pi_count              13
-// -po_count              30
-// -gate_count            78
-// -nand2_input_pin_name  A B
-// -nand2_output_pin_name Y
-// -nor2_input_pin_name   A B
-// -nor2_output_pin_name  Y
-// -not1_input_pin_name   A
-// -not1_output_pin_name  Y
-// -u1/NAND2              A:u7 B:u8
-// -u9/NOR2               A:u2 B:u7
-// ...
-// ```
-// 
-// A token is consecutive printable characters excluding whitespace.
-// You can put any number of whitespace between token. A token start
-// with `-` is key token. All other following tokens are value tokens.
-//
-// A validator will read this file. For each key token, validator put
-// all following value tokens into a set. Validator then map that
-// key token into the set. After that, validator read another file.
-// When it read a key token, it will find the value token set that 
-// is mapped by the key token. Then, for each following value token
-// read from file, validator remove it from value token set. If it read
-// a value token that it can't find in that value token set, it issues
-// error. At the end, it output all value token set that is not empty.
-// 
-// Major part of the key token are gates. All token following it are
-// fanins of it. `-U1 A:U13 B:U30` means U1 input from U13 through pin A,
-// input from U30 through pin B.
-// 
 // #### Input
 //
 // - cir
@@ -319,104 +274,6 @@ static void print_circuit_state(Cir::Circuit& cir,
     }
 }
 
-// Please see `print_circuit_state()`.
-//
-// #### Input
-//
-// - file1
-// - file2
-//
-static void validate(const std::string& file1,
-                     const std::string& file2) {
-    std::cerr << __FUNCTION__ << "():\n";
-
-    typedef std::string                       Str;
-    typedef std::set<Str>                     StrSet;
-    typedef std::set<Str>::iterator           SetIter;
-    typedef std::map<Str, StrSet>::value_type Pair;
-    typedef std::map<Str, StrSet>::iterator   MapIter;
-
-    // Map gate name to a set of gates that it is connected to.
-    std::map<Str, StrSet> token_map;
-    Str                   token;
-    Str                   key_token;
-
-    std::cerr << "Reading first file...\n";
-
-    // Read file1 and put all tokens into token_map, so that we
-    // can check whether there is a difference between two circuit.
-    //
-    std::ifstream fin(file1.c_str());
-    ASSERT(fin.good(), << "Cannot open file \"" << file1 << "\".\n");
-
-    while (fin >> token) {
-        if (token[0] == '-') {
-            key_token = token;
-
-            std::pair<MapIter, bool> p = 
-                token_map.insert((Pair(key_token, StrSet())));
-
-            ASSERT(p.second,
-                << "Key token " << p.first->first << " already "
-                << "existed.\n");
-        }
-        else {
-            std::pair<SetIter, bool> p = 
-                token_map[key_token].insert(token);
-
-            ASSERT(p.second,
-                << "Value token " << *p.first << " already existed "
-                << "in " << key_token << ".\n";);
-        }
-    }
-    fin.close();
-    fin.clear();
-
-    std::cerr << "Reading second file...\n";
-
-    // Read file2. For each key token, check whether it is inside
-    // token_map. For each value token of a key token, check whether
-    // it is inside token_map[key_token]. If it is, remove it from
-    // token_map[gate]. If it isn't, issue error message.
-    // At the end, token_map[gate] should be empty for all gate.
-    // Check token_map for non empty value token set. Issue an error
-    // for each of them.
-    //
-    fin.open(file2.c_str());
-    ASSERT(fin.good(), << "Cannot open file \"" << file2 << "\".\n");
-
-    while (fin >> token) {
-        
-        if (token[0] == '-') {
-            key_token = token;
-
-            MapIter it = token_map.find(key_token);
-
-            ASSERT(it != token_map.end(),
-                << "Couldn't find key token " << key_token
-                << " in token_map.\n");
-        }
-        else {
-            SetIter it = token_map[key_token].find(token);
-
-            ASSERT(it != token_map[key_token].end(),
-                << "Value token " << token << " does not exist in " 
-                << "token set of " << key_token << ".\n");
-
-            token_map[key_token].erase(it);
-        }
-    }
-
-    // token_map[key_token] should be empty for all key_token.
-    for (MapIter it = token_map.begin(); it != token_map.end(); ++it) {
-        ASSERT(it->second.empty(),
-            << "There are some value token left for " << it->first
-            << ": " << it->second << "\n");
-    }
-
-    std::cerr << __FUNCTION__ << "() passed.\n";
-}
-
 // Test two different cases: case0 and case1.
 //
 void test_parse(void) {
@@ -438,8 +295,8 @@ void test_parse(void) {
     print_circuit_state(cir, "test/cases/case0_state.out");
 
     cir.clear();
-    validate("test/cases/case0_state.ans",
-             "test/cases/case0_state.out");
+    TestUtil::cir_compare("test/cases/case0_state.ans",
+                          "test/cases/case0_state.out");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
