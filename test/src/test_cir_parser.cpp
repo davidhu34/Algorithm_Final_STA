@@ -436,6 +436,8 @@ void test_parse(void) {
 
     basic_validate(file_set_B, cir);
     print_circuit_state(cir, "test/cases/case0_state.out");
+
+    cir.clear();
     validate("test/cases/case0_state.ans",
              "test/cases/case0_state.out");
 
