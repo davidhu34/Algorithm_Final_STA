@@ -8,6 +8,20 @@
 
 #include "test/src/util/util.h"
 
+// Print set of strings.
+//
+static std::ostream& operator<<(std::ostream& output, 
+                                const std::set<std::string>& strset) {
+
+    typedef std::set<std::string>::const_iterator Iter;
+
+    for (Iter it = strset.begin(); it != strset.end(); ++it) {
+        output << *it << " ";
+    }
+
+    return output;
+}
+
 void TestUtil::cir_compare(const std::string& file1,
                            const std::string& file2);
 
