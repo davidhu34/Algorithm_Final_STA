@@ -7,8 +7,6 @@
 #include <map>
 #include <set>
 
-#include "cir/circuit.h"
-#include "cir/parser.h"
 #include "test/src/util/util.h"
 
 namespace TestUtil {
