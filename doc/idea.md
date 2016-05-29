@@ -2,24 +2,19 @@
 
 ## How to Find All Paths
 
-- Do depth first search from all input pins toward output pins.
+- Do depth first traverse from all input pins toward output pins.
 
 - Add the path to path list every time you reach an output pin.
 
 #### Time Complexity
 
-- Time complexity of doing depth first search on a single input pin
-  is O(|E|) where |E| is number of edges of entire circuit. This is
-  the worst case.
-
-- Time complexity of doing depth first search on all input pins is
-  O(|PI| * |E|) where |PI| is number of input pins.
+- ?
 
 ## How to Find All Paths Within Constraint
 
-- Do depth first search from all input pins toward output pins.
+- Do depth first traverse from all input pins toward output pins.
 
-- While doing depth first search, calculate arrival time at each
+- While doing depth first traverse, calculate arrival time at each
   node. If arrival time is greater than or equal to time constraint,
   stop moving down this path.
 
@@ -29,11 +24,13 @@
 
 #### Time Complexity
 
-- Time complexity is same as depth first search, i.e. O(|PI| * |E|).
+- ?
 
 ## How to Calculate Arrival Time of All Gates
 
-- From input pins, do breadth first search toward output pins.
+- From input pins, do breadth first traverse toward output pins. If a
+  node has unvisited predecessor, don't add its successor into queue,
+  and don't mark it as visited. Just pop it from queue.
 
 #### Time Complexity
 
@@ -41,16 +38,11 @@
 
 ## How to Calculate Value of All Points
 
-Given an input vector and a set of nodes sorted according to each node's
-arrival time, how to find value of all nodes?
-
-- For each node in the sorted set, get its input nodes' value, then
-  calculate its value.
+- Same process as calculating arrival time of all gates.
 
 #### Time Complexity
 
-- Since each node need to access its input nodes, the overall time
-  complexity should be O(|E|).
+- O(|E|).
 
 ## How to Find Sensitizable Paths
 
@@ -69,7 +61,7 @@ arrival time, how to find value of all nodes?
 
 #### Time Complexity
 
-- Find all paths within constaint: O(|PI| * |E|).
+- Find all paths within constaint: ?
 
 - Try all possible permutation: O(2^|PI|).
 
@@ -78,8 +70,8 @@ arrival time, how to find value of all nodes?
 - Check all paths in path list: O(|P| * |p|) where |P| is number of
   paths and |p| is average number of node in a path.
 
-- Overall time complexity is O(|PI| * |E|) + O(2^|PI| * |E|) + 
-  O(|P| * |p|), and O(2^|PI| * |E|) will probably dominate.
+- Overall time complexity is ? + O(2^|PI| * |E|) + O(|P| * |p|), and 
+  O(2^|PI| * |E|) will probably dominate.
 
 #### Note
 
@@ -97,13 +89,14 @@ arrival time, how to find value of all nodes?
 
 - Pseudo code:
 
-TODO: Parallelize it; How to check for confliction?
+TODO: Parallelize it.
 
 ```
 sensitizable_paths = vector()
 input_vecs = vector()
 
 path = vector()
+assumption = vector()
 
 for po in output_pins
     slack = time_constrain - gate.arrival_time
@@ -118,65 +111,103 @@ trace(gate)
         assert(gate.type == PO)
         path.pop()
         gate.value = 0
+        assumption.add(-gate.variable)
         trace(gate)
+        assumption.pop()
         gate.value = 1
+        assumption.add(gate.variable)
         trace(gate)
+        assumption.pop()
         gate.value = X
 
     else if gate.type == NAND
         # Try to make gate.from_a become a true path.
 
-        `start_code_block(basic_logic)
+        `new_code_block(nand_make_from_a_true_path)
         if gate.from_a.arrival_time < gate.from_b.arrival_time
             if gate.from_a.value == X
                 if gate.value == 1
                     gate.from_a.value = 0
+                    assumption.add(-gate.from_a.variable)
                     trace(gate.from_a)
                     gate.from_a.value = X
+                    assumption.pop()
 
         else if gate.from_a.arrival_time > gate.from_b.arrival_time
             if gate.from_b.value == X
                 gate.from_b.value = 1
-                gate.from_a.value = !gate.value
+                assumption.add(gate.from_b.variable)
+
+                if gate.value == 1
+                    gate.from_a.value = 0
+                    assumption.add(-gate.from_a.variable)
+                else # gate.value == 0
+                    gate.from_a.value = 1
+                    assumption.add(gate.from_a.variable)
+
                 trace(gate.from_a)
-                gate.from_b.value = X
                 gate.from_a.value = X
+                assumption.pop()
+                gate.from_b.value = X
+                assumption.pop()
 
         else # Both of them have same arrival time.
             if gate.from_a.value == X
                 if gate.value == 1
                     gate.from_a.value = 0
+                    assumption.add(-gate.from_a.variable)
                     trace(gate.from_a)
                     gate.from_a.value = X
+                    assumption.pop()
 
             if gate.from_b.value == X
                 gate.from_b.value = 1
-                gate.from_a.value = !gate.value
+                assumption.add(gate.from_b.variable)
+
+                if gate.value == 1
+                    gate.from_a.value = 0
+                    assumption.add(-gate.from_a.variable)
+                else # gate.value == 0
+                    gate.from_a.value = 1
+                    assumption.add(gate.from_a.variable)
+
                 trace(gate.from_a)
-                gate.from_b.value = X
                 gate.from_a.value = X
+                assumption.pop()
+                gate.from_b.value = X
+                assumption.pop()
         `end_code_block(basic_logic)
 
         # Try to make gate.from_b become a true path.
 
-        `print(swap("from_a", "from_b", basic_logic))
+        `print(swap("from_a", "from_b", nand_make_from_a_true_path))
 
     else if gate.type == NOR
         # Try to make gate.from_a become a true path.
 
-        `print(swap("0", "1", basic_logic))
+        `new_code_block(nor_make_from_a_true_path)
+        `print(swap("assumption.add(-gate", "assumption.add(gate", \
+               swap("0", "1", basic_logic)))
+        `end_code_block(nor_make_from_a_true_path)
 
         # Try to make gate.from_b become a true path.
 
-        `print(swap("0", "1", swap("from_a", "from_b", basic_logic)))
+        `print(swap("from_a", "from_b", nor_make_from_a_true_path))
 
     else if gate.type == NOT
         if gate.from.value == X
-            gate.from.value = !gate.value
+            if gate.value == 1
+                gate.from.value = 0
+                assumption.add(-gate.from.variable)
+            else # gate.value == 0
+                gate.from.value = 1
+                assumption.add(gate.from.variable)
+
             trace(gate.from)
             gate.from.value = X
+            assumption.pop()
 
-    else if gate.type == PI and no_conflict()
+    else if gate.type == PI and no_conflict(assumption)
         sensitizable_paths.add(reverse(path))
         input_vec = vector()
         for pi in input_pins
@@ -194,8 +225,7 @@ trace(gate)
 
 - Calculate arrival time: O(|E|).
 
-- Tracing: In worse case, it will traverse every edge once, so its
-  time complexity is O(|E|).
+- Tracing: ?
 
 - Check for confliction: ?
 
@@ -205,5 +235,9 @@ trace(gate)
 
 - To adapt parallel execution, every thread must have their own copy
   of `gate.value`. Other gate attribute can be shared.
+
+### Method 3 (UI-Timer)
+
+- TODO
 
 
