@@ -98,13 +98,14 @@ input_vecs = vector()
 path = vector()
 assumption = vector()
 
-for po in output_pins
-    slack = time_constrain - gate.arrival_time
+function main()
+    for po in output_pins
+        slack = time_constrain - gate.arrival_time
 
-    if po.arrival_time < time_constrain and slack < slack_constrain
-        trace(po.from)
+        if po.arrival_time < time_constrain and slack < slack_constrain
+            trace(po.from)
 
-trace(gate)
+function trace(gate)
     path.add(pair(gate, gate.value))
 
     if gate.value == X
