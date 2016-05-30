@@ -28,9 +28,9 @@
 
 ## How to Calculate Arrival Time of All Gates
 
-- From input pins, do breadth first traverse toward output pins. If a
-  node has unvisited predecessor, don't add its successor into queue,
-  and don't mark it as visited. Just pop it from queue.
+- From input pins, do breadth first traverse toward output pins. Add
+  a node to queue only if its fan-in has all arrived. Its arrival time
+  is known if it can be added into queue.
 
 #### Time Complexity
 
