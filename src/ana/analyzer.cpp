@@ -1,8 +1,19 @@
 #include "sta/src/ana/analyzer.h"
 
+#include <iostream>
 #include <queue>
+#include <stack>
 
-void Sta::Ana::assign_arrival_time(Cir::Circuit& cir) {
+#include "minisat_blbd/src/core/Solver.h"
+
+// Assign arrival time.
+//
+// #### Input
+//
+// - `circuit`
+//
+static void assign_arrival_time(Sta::Cir::Circuit& cir) {
+    using Sta::Cir::Gate;
 
     // Assign 0 to all gate's tag. It means the number of fan-in of
     // that gate which has arrived.
@@ -14,46 +25,185 @@ void Sta::Ana::assign_arrival_time(Cir::Circuit& cir) {
         cir.logic_gates[i]->tag = 0;
     }
 
-    // Queue store gates that all of its fan-in has arrived.
-    std::queue<Cir::Gate*> q;
+    // For all gate inside queue, all of its fan-in has arrived.
+    // Every gate inside queue has already known arrival time.
+    // This queue should be sorted according to arrival time.
+    //
+    std::queue<Gate*> q;
     
     // Add primary_inputs into queue.
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        Cir::Gate* pi = cir.primary_inputs[i];
+        Gate* pi = cir.primary_inputs[i];
+        pi->arrival_time = 0;
         q.push(pi);
     }
 
     // While queue is not empty
     while (!q.empty()) {
-        Cir::Gate* gate = q.front();
+        Gate* gate = q.front();
         q.pop();
         
         // Tell gate's fan-outs that it has arrived.
         for (size_t i = 0; i < gate->tos.size(); ++i) {
-            gate->tos[i]->tag += 1;
+            Gate* fanout = gate->tos[i];
+            fanout->tag += 1;
             
             // If that fan-out's fan-ins have all arrived
-            if (gate->tos[i]->tag == gate->froms.size()) {
+            if (fanout->tag == fanout->froms.size()) {
                 
+                // Assign arrival time to that fan-out.
+                fanout->arrival_time = gate->arrival_time + 1;
+
                 // Add that fan-out to queue.
                 q.push(gate->tos[i]);
             }
         }
-
-        // Assign arrival time to gate.
-        if (gate->module == Cir::Module::PI) {
-            gate->arrival_time = 0;
-        }
-        else {
-            gate->arrival_time = latest_input_arrival_time(gate) + 1;
-        }
     }
 }
 
+// Add NAND clause into solver.
+//
+// #### Input
+//
+// - `A`
+// - `B`
+// - `C`
+// - `solver`
+//
+// #### Output
+//
+// True if success, false otherwise.
+//
+static bool add_NAND_clause(Minisat::Var A, 
+                            Minisat::Var B, 
+                            Minisat::Var C, 
+                            Minisat::Solver& solver) {
+    using Minisat::mkLit;
+
+    if (!solver.addClause(mkLit(A), mkLit(C))) {
+        return false;
+    }
+    if (!solver.addClause(mkLit(B), mkLit(C))) {
+        return false;
+    }
+    if (!solver.addClause(mkLit(A, 1), mkLit(B, 1), mkLit(C, 1))) {
+        return false;
+    }
+
+    return true;
+}
+
+// Add NOR clause into solver.
+//
+// #### Input
+//
+// - `A`
+// - `B`
+// - `C`
+// - `solver`
+//
+// #### Output
+//
+// True if success, false otherwise.
+//
+static bool add_NOR_clause(Minisat::Var A, 
+                           Minisat::Var B, 
+                           Minisat::Var C, 
+                           Minisat::Solver& solver) {
+    using Minisat::mkLit;
+
+    if (!solver.addClause(mkLit(A, 1), mkLit(C, 1))) {
+        return false;
+    }
+    if (!solver.addClause(mkLit(B, 1), mkLit(C, 1))) {
+        return false;
+    }
+    if (!solver.addClause(mkLit(A), mkLit(B), mkLit(C))) {
+        return false;
+    }
+
+    return true;
+}
+
+// Add NOR clause into solver.
+//
+// #### Input
+//
+// - `A`
+// - `C`
+// - `solver`
+//
+// #### Output
+//
+// True if success, false otherwise.
+//
+static bool add_NOT_clause(Minisat::Var A, 
+                           Minisat::Var C, 
+                           Minisat::Solver& solver) {
+    using Minisat::mkLit;
+
+    if (!solver.addClause(mkLit(A), mkLit(C))) {
+        return false;
+    }
+    if (!solver.addClause(mkLit(A, 1), mkLit(C, 1))) {
+        return false;
+    }
+
+    return true;
+}
+
 int Sta::Ana::find_sensitizable_paths(
-    Cir::Circuit&               circuit,
+    Cir::Circuit&               cir,
     std::vector<Cir::Path>&     paths,
     std::vector<Cir::InputVec>& input_vecs) {
+
+    // Assign arrival time.
+    assign_arrival_time(cir);
+
+    Minisat::Solver solver;
+
+    // Assign SAT variable to gate.
+    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+        cir.primary_inputs[i]->var = solver.newVar();
+    }
+    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
+        cir.logic_gates[i]->var = solver.newVar();
+    }
+
+    // Add clauses into solver.
+    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
+        Cir::Gate* gate = cir.logic_gates[i];
+        bool       success;
+
+        switch (gate->module) {
+        case Cir::Module::NAND:
+            success = add_NAND_clause(gate->froms[0]->var,
+                                      gate->froms[1]->var,
+                                      gate->var,
+                                      solver);
+            break;
+
+        case Cir::Module::NOR:
+            success = add_NOR_clause(gate->froms[0]->var,
+                                     gate->froms[1]->var,
+                                     gate->var,
+                                     solver);
+            break;
+
+        case Cir::Module::NOT:
+            success = add_NOT_clause(gate->froms[0]->var,
+                                     gate->var,
+                                     solver);
+            break;
+        } // switch (gate->module)
+
+        if (!success) {
+            std::cerr << "Error: Clause conflicts while adding clause.\n";
+            return 1;
+        }
+    }
+
+    // Simplify
 
     return 0;
 }
