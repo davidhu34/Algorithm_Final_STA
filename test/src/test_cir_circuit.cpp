@@ -1,13 +1,15 @@
 #include <iostream>
 #include <fstream>
 
-#include "cir/circuit.h"
+#include "sta/src/cir/circuit.h"
 
 using namespace std;
 
 void test_circuit(void)
 {
     std::cerr << __FUNCTION__ << "():\n";
+
+    using namespace Sta;
 
     Cir::Circuit* Ckt = new Cir::Circuit();
     ifstream inf;
