@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 
+namespace Sta {
 namespace Util {
 
 // Hash map of key to value. Compare key using `operator==`.
@@ -201,6 +202,7 @@ struct HashMap {
 };
 
 } // namespace Util
+} // namespace Sta
 
 #endif // STA_UTIL_HASH_MAP_H
 
