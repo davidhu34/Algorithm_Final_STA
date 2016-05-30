@@ -3,8 +3,8 @@
 #include <sstream>
 #include <string>
 
-#include "test/src/util/util.h"
-#include "cir/parser.inc"
+#include "sta/test/src/util/util.h"
+#include "sta/src/cir/parser.inc"
 
 void test_get_token(void) {
     std::cerr << __FUNCTION__ << "():\n";
@@ -47,6 +47,8 @@ void test_get_token(void) {
 
 void test_parse_module_NAND2(void) {
     std::cerr << __FUNCTION__ << "():\n";
+
+    using namespace Sta;
 
     std::istringstream sin(
         "NAND2 (Y, A, B);\n"
@@ -101,6 +103,8 @@ void test_parse_module_NAND2(void) {
 void test_parse_module_NOR2(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
+    using namespace Sta;
+
     std::istringstream sin(
         "NOR2 (Y, A, B);\n"
         "output Y;\n"
@@ -153,6 +157,8 @@ void test_parse_module_NOR2(void) {
 
 void test_parse_module_NOT1(void) {
     std::cerr << __FUNCTION__ << "():\n";
+
+    using namespace Sta;
 
     std::istringstream sin(
         "module NOT1 (Y, A);\n"

@@ -4,10 +4,10 @@
 #include <map>
 #include <set>
 
-#include "cir/circuit.h"
-#include "cir/parser.h"
-#include "test/src/util/util.h"
-#include "test/src/util/cir_compare.h"
+#include "sta/src/cir/circuit.h"
+#include "sta/src/cir/parser.h"
+#include "sta/test/src/util/util.h"
+#include "sta/test/src/util/cir_compare.h"
 
 // Helper functions
 
@@ -38,9 +38,11 @@
 // - Parsed circuit.
 //
 static void basic_validate(const std::vector<const char*>& files,
-                           Cir::Circuit& cir) {
+                           Sta::Cir::Circuit& cir) {
 
     std::cerr << __FUNCTION__ << "():\n";
+
+    using namespace Sta;
 
     int ret = Cir::parse(files, cir);
     ASSERT(!ret, << "Cir::parse() return " << ret << "\n");
@@ -227,8 +229,10 @@ static void basic_validate(const std::vector<const char*>& files,
 // - cir
 // - filename
 //
-static void print_circuit_state(Cir::Circuit& cir,
+static void print_circuit_state(Sta::Cir::Circuit& cir,
                                 const std::string& filename) {
+    using namespace Sta;
+
     std::ofstream fout(filename.c_str());
     ASSERT(fout.good(), << "Cannot open " << filename << "\n");
 
@@ -278,6 +282,8 @@ static void print_circuit_state(Cir::Circuit& cir,
 //
 void test_parse(void) {
     std::cerr << __FUNCTION__ << "():\n";
+
+    using namespace Sta;
 
     Cir::Circuit cir;
     std::vector<const char*> file_set_A(2);
