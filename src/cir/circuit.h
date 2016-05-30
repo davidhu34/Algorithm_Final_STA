@@ -35,6 +35,9 @@ struct Gate {
     std::vector<Gate*> froms;
     std::vector<Gate*> tos;
 
+    // Data member needed when using some algorithms.
+    int tag;
+
     // Constructor
     Gate(int                _module, 
          const std::string& _name   ):
