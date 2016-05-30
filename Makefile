@@ -37,7 +37,7 @@ else ifeq ($(ver),dbg) # Debug version.
     # Directories.
     MODULES := src/main src/util src/cir src/ana
     LIB_DIR := lib/minisat_blbd/bin
-    LIB     := libminisat_blbd_rel.a
+    LIB     := libminisat_blbd_dbg.a
 
     PFLAGS += 
     CFLAGS += -O0 -g
@@ -55,12 +55,11 @@ else ifeq ($(ver),utest) # Unit test version.
     # Directories.
     MODULES := src/util src/cir test/src test/src/util
     LIB_DIR := test/lib lib/minisat_blbd/bin
-    LIB     := libminisat_blbd_rel.a
+    LIB     := libminisat_blbd_dbg.a
 
     PFLAGS += 
     CFLAGS += -O0 -g
     LFLAGS += 
-
 
     # Output file.
     OUTPUT := bin/unit_test
