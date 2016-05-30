@@ -19,6 +19,9 @@ void test_hash_map(void);
 // test_minisat_blbd.cpp
 void test_minisat(void);
 
+// test_cir_circuit.cpp
+void test_circuit(void);
+
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
@@ -38,6 +41,9 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_minisat_blbd.cpp";
     test_minisat();
+
+    std::cerr << "\ntest_cir_circuit.cpp\n";
+    test_circuit();
 
     return 0;
 }
