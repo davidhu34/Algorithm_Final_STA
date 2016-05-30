@@ -11,7 +11,6 @@
 void test_hash_map(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
-    using Sta::Util::HashMap;
     using Sta::Util::hash_str;
     using Sta::Util::prime_gt;
 
@@ -20,8 +19,8 @@ void test_hash_map(void) {
     ASSERT(fin.good(), << "Cannot open file \"" << filename << "\"\n");
 
     typedef uint32_t (*Hasher)(const std::string&);
-    typedef std::string               Str;
-    typedef HashMap<Str, int, Hasher> HashMap;
+    typedef std::string                          Str;
+    typedef Sta::Util::HashMap<Str, int, Hasher> HashMap;
 
     HashMap          dict(hash_str);
     std::vector<Str> words;
