@@ -262,6 +262,9 @@ class Solver {
 public:
     Var  newVar   (bool polarity = true, bool dvar = true);
     bool addClause(const vec<Lit>& literals);
+    bool addClause(Lit p);
+    bool addClause(Lit p, Lit q);
+    bool addClause(Lit p, Lit q, Lit r);
     bool simplify ();
     bool solve    ();
     bool solve    (const vec<Lit>& assumptions);
