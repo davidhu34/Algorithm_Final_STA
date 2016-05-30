@@ -5,4 +5,3 @@ DIR := test/src
 EXCLUDE := test_cir_circuit.cpp
 
 SRC += $(filter-out $(patsubst %,$(DIR)/%,$(EXCLUDE)),$(wildcard $(DIR)/*.cpp))
-LIB += 
