@@ -1,6 +1,6 @@
-#include "cir/circuit.h"
+#include "sta/src/cir/circuit.h"
 
-void Cir::Circuit::clear() {
+void Sta::Cir::Circuit::clear() {
     for (size_t i = 0; i < primary_inputs.size(); ++i) {
         delete primary_inputs[i];
     }

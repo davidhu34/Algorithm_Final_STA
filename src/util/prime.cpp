@@ -1,6 +1,6 @@
 #include "util/prime.h"
 
-size_t Util::prime_gt(size_t n) {
+size_t Sta::Util::prime_gt(size_t n) {
     const size_t arr[] = {
         0, 2, 5, 11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421,
         12853, 25717, 51437, 102877, 205759, 411527, 823117,

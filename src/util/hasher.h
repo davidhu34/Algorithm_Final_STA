@@ -1,13 +1,15 @@
 #ifndef STA_UTIL_HASHER_H
 #define STA_UTIL_HASHER_H
 
+#include <stdint.h>
 #include <string>
 
 // Since C++03 does not offer <cstdint>, I'll have to to define them
 // myself.
-typedef __UINT8_TYPE__  uint8_t;
-typedef __UINT32_TYPE__ uint32_t;
+//typedef __UINT8_TYPE__  uint8_t;
+//typedef __UINT32_TYPE__ uint32_t;
 
+namespace Sta {
 namespace Util {
 
 // String hash function. It is a modified version of MurmurHash3_x86_32.
@@ -23,5 +25,6 @@ namespace Util {
 uint32_t hash_str(const std::string& str);
 
 } // namespace Util
+} // namespace Sta
 
 #endif // STA_UTIL_HASHER_H

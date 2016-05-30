@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 
+namespace Sta {
 namespace Cir {
 
 struct Module {
@@ -72,5 +73,6 @@ struct Circuit {
 };
 
 } // namespace Cir
+} // namespace Sta
 
 #endif // STA_CIR_CIRCUIT_H

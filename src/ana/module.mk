@@ -1,4 +1,7 @@
 # from Makefile to here, no trailing space or slash
 DIR := src/ana
-SRC += $(wildcard $(DIR)/*.cpp)
-LIB += 
+
+# Test file that you don't want to compile.
+EXCLUDE := 
+
+SRC += $(filter-out $(patsubst %,$(DIR)/%,$(EXCLUDE)),$(wildcard $(DIR)/*.cpp))
