@@ -254,7 +254,8 @@ lbool toLbool(int v);
 ```
 
 `lbool` is lifted boolean. Lifted boolean has 3 possible values: true,
-false or undefined.
+false or undefined. Note that in 0 represent True and 1 represent
+False in internal of MiniSat.
 
 ```c++
 class Solver {
