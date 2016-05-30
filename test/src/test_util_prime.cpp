@@ -6,8 +6,9 @@
 void test_prime_gt(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
-    size_t n;
     using Sta::Util::prime_gt;
+
+    size_t n;
 
     ASSERT((n = prime_gt(1)) == 2,
         << "n = " << n << " != 2\n");
