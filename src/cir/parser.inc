@@ -16,7 +16,7 @@ namespace {
         std::string                  name;
         Sta::Cir::Gate*              from;
         std::vector<Sta::Cir::Gate*> tos;
-        std::vector<int>             tos_pin; // Connect to which pin?
+        std::vector<uint8_t>         tos_pin; // Connect to which pin?
 
         // Constructor
         explicit Wire(const std::string& _name): name(_name), from(0) { }
