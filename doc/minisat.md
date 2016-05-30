@@ -10,13 +10,13 @@
 <dt>Satisfiable</dt>
     <dd><p>If there is a way to assign value to variables of a formula,
     such that the formula evaluate to 1, then the formula is
-    satisfiable. E.g. "A&Bmacr;" is satisfiable, since when we assign
+    satisfiable. E.g. "AB'" is satisfiable, since when we assign
     (A, B) = (1, 0), that formula evaluate to 1.</p></dd>
 
 <dt>Unsatisfiable</dt>
     <dd><p>If there is no way to assign value to variables of a formula,
     such that the formula evaluate to 1, then the formula is
-    unsatisfiable. E.g. "A&Amacr;" is not satisfiable.</p></dd>
+    unsatisfiable. E.g. "AA'" is not satisfiable.</p></dd>
 
 <dt>Boolean Formula</dt>
     <dd><p>It is build from variables, operator AND, operator OR,
@@ -34,7 +34,7 @@
 <dt>Literal</dt>
     <dd><p>It is either a variable (then called positive literal), or
     the negation of a variable (then called negative literal). E.g.
-    "A" is a positive literal, "&Amacr;" is a negative literal.</dd></p>
+    "A" is a positive literal, "A'" is a negative literal.</dd></p>
 
 <dt>Clause</dt>
     <dd><p>It is either many literals ORed together, or one literal
@@ -42,8 +42,8 @@
 
 <dt>Conjunctive Normal Form</dt>
     <dd><p>It is a format of a formula. The format is, either many
-    clauses ANDed together, or one clause. E.g. "(A + &Bmacr;)(&Amacr; +
-    B + C)&Amacr;". This example is satisfiable. We can assign (A, B, C)
+    clauses ANDed together, or one clause. E.g. "(A + B')(A' +
+    B + C)A'". This example is satisfiable. We can assign (A, B, C)
     = (0, 0, X) where X can be 1 or 0. This will make the formula
     evaluate to 1.</dd></p>
 
@@ -91,16 +91,16 @@ ABC   |Is AND Gate
 111   |1
 
 Formula:  
-(&Amacr;&Bmacr;C + &Amacr;BC + A&Bmacr;C + AB&Cmacr;)'  
-= (A + B + &Cmacr;)(A + &Bmacr; + &Cmacr;)(&Amacr; + B + &Cmacr;)
-(&Amacr; + &Bmacr; + C)  
-= (A + &Cmacr;)(B + &Cmacr;)(&Amacr; + &Bmacr; + C)
+(A'B'C + A'BC + AB'C + ABC')'  
+= (A + B + C')(A + B' + C')(A' + B + C')
+(A' + B' + C)  
+= (A + C')(B + C')(A' + B' + C)
 
 This formula evaluate to 1 only when assignment to A, B, C matches
 behavior of an AND gate.
 
 We want C = 1, so we add a clause (C) to that formula:  
-(A + &Cmacr;)(B + &Cmacr;)(&Amacr; + &Bmacr; + C)(C)
+(A + C')(B + C')(A' + B' + C)(C)
 
 Now this formula evaluate to 1 only when assignment to A, B, C matches
 behavior of an AND gate, and C must equal to 1. So now it has become
@@ -124,11 +124,11 @@ Formula for AND, OR, NOT, NAND, NOR gates:
 
 Gate  |Formula
 ----- |-----------------------------------
-AND   |(A + &Cmacr;)(B + &Cmacr;)(&Amacr; + &Bmacr; + C)
-OR    |(A + B + &Cmacr;)(&Bmacr; + C)(&Amacr; + C)
-NOT   |(A + C)(&Amacr; + &Cmacr;)
-NAND  |(A + C)(B + C)(&Amacr; + &Bmacr; + &Cmacr;)
-NOR   |(A + B + C)(&Bmacr; + &Cmacr;)(&Amacr; + &Cmacr;)
+AND   |(A + C')(B + C')(A' + B' + C)
+OR    |(A + B + C')(B' + C)(A' + C)
+NOT   |(A + C)(A' + C')
+NAND  |(A + C)(B + C)(A' + B' + C')
+NOR   |(A + B + C)(B' + C')(A' + C')
 
 Another example:
 
@@ -150,10 +150,10 @@ E-----|      /                    -------
 The behavior of this circuit can be expressed with the following
 boolean formula:
 
-(B + C + &Fmacr;)(&Cmacr; + F)(&Bmacr; + F)  
-(D + G)(E + G)(&Dmacr; + &Emacr; + &Gmacr;)  
-(A + &Hmacr;)(F + &Hmacr;)(&Amacr; + &Fmacr; + H)  
-(H + &Imacr;)(G + &Imacr;)(&Hmacr; + &Gmacr; + I)  
+(B + C + F')(C' + F)(B' + F)  
+(D + G)(E + G)(D' + E' + G')  
+(A + H')(F + H')(A' + F' + H)  
+(H + I')(G + I')(H' + G' + I)  
 
 To ask whether there exist a assignment that can let I = 1, just add
 a unit clause (I) to that formula.
