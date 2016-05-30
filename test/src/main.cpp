@@ -25,9 +25,6 @@ void test_parse_module_NOT1(void);
 // test_cir_parser.cpp
 void test_parse(void);
 
-// test_cir_circuit.cpp
-int test_circuit(int argc, const char* argv[]);
-
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
@@ -53,9 +50,6 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_cir_parser.cpp\n";
     test_parse();
-
-    //std::cerr << "\ntest_cir_circuit.cpp";
-    //test_circuit(argc, argv);
 
     return 0;
 }
