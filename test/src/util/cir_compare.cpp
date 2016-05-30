@@ -1,4 +1,4 @@
-#include "test/src/util/cir_compare.h"
+#include "sta/test/src/util/cir_compare.h"
 
 #include <iostream>
 #include <fstream>
@@ -6,7 +6,7 @@
 #include <map>
 #include <set>
 
-#include "test/src/util/util.h"
+#include "sta/test/src/util/util.h"
 
 // Print set of strings.
 //
