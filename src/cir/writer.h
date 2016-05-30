@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "cir/circuit.h"
+#include "sta/src/cir/circuit.h"
 
+namespace Sta {
 namespace Cir {
 
 // Write paths and input vectors in format specified by requirement.md
@@ -25,10 +26,11 @@ namespace Cir {
 //     - 1: Cannot open file.
 //     - 2: Other.
 //
-int write(const std::vector<Cir::Path>&     paths,
-          const std::vector<Cir::InputVec>& input_vecs,
-          const std::string&                outfile = "");
+int write(const std::vector<Sta::Cir::Path>&     paths,
+          const std::vector<Sta::Cir::InputVec>& input_vecs,
+          const std::string&                     outfile = "");
 
-}
+} // namespace Cir
+} // namespace Sta
 
 #endif // STA_CIR_WRITER_H

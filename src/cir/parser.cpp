@@ -1,16 +1,16 @@
-#include "cir/parser.h"
+#include "sta/src/cir/parser.h"
 
 #include <fstream>
 #include <vector>
 
-#include "cir/circuit.h"
-#include "util/hash_map.h"
+#include "sta/src/cir/circuit.h"
+#include "sta/src/util/hash_map.h"
 
 // Include helper functions for parser.cpp
-#include "cir/parser.inc"
+#include "sta/src/cir/parser.inc"
 
-int Cir::parse(const std::vector<const char*>& input_files,
-               Cir::Circuit&                   circuit     ) {
+int Sta::Cir::parse(const std::vector<const char*>& input_files,
+                    Sta::Cir::Circuit&              circuit     ) {
     
     // Parse all input files.
     for (size_t i = 0; i < input_files.size(); ++i) {

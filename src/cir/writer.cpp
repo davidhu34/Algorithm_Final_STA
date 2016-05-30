@@ -1,9 +1,15 @@
-#include "cir/writer.h"
+#include "sta/src/cir/writer.h"
 
-int Cir::write(const std::vector<Cir::Path>&     paths,
-               const std::vector<Cir::InputVec>& input_vecs,
-               const std::string&                outfile)   {
+namespace Sta {
+namespace Cir {
 
-    return 0;
+int write(const std::vector<Sta::Cir::Path>&     paths,
+          const std::vector<Sta::Cir::InputVec>& input_vecs,
+          const std::string&                     outfile)   {
+
     // TODO
+    return 0;
 }
+
+} // namespace Cir
+} // namespace Sta

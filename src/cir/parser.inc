@@ -3,20 +3,20 @@
 #include <fstream>
 #include <vector>
 
-#include "cir/circuit.h"
-#include "util/hash_map.h"
-#include "util/hasher.h"
-#include "util/prime.h"
+#include "sta/src/cir/circuit.h"
+#include "sta/src/util/hash_map.h"
+#include "sta/src/util/hasher.h"
+#include "sta/src/util/prime.h"
 
 // Helper function for parser.cpp.
 
 namespace { 
     // Helper for building circuit.
     struct Wire { 
-        std::string             name;
-        Cir::Gate*              from;
-        std::vector<Cir::Gate*> tos;
-        std::vector<int>        tos_pin; // Connect to which pin?
+        std::string                  name;
+        Sta::Cir::Gate*              from;
+        std::vector<Sta::Cir::Gate*> tos;
+        std::vector<int>             tos_pin; // Connect to which pin?
 
         // Constructor
         explicit Wire(const std::string& _name): name(_name), from(0) { }
@@ -148,7 +148,9 @@ reread:
 //     - 0: Successful
 //     - 1: Error
 //  
-static int parse_module_NAND2(std::istream& fin, Cir::Circuit& cir) {
+static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
+    using namespace Sta;
+
     while (get_token(fin) != ";") { } // Ignore until ";".
 
     while (true) { // Parse things inside module definition.
@@ -196,7 +198,9 @@ static int parse_module_NAND2(std::istream& fin, Cir::Circuit& cir) {
 //     - 0: Successful
 //     - 1: Error
 //  
-static int parse_module_NOR2(std::istream& fin, Cir::Circuit& cir) {
+static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
+    using namespace Sta;
+
     while (get_token(fin) != ";") { } // Ignore until ";".
 
     while (true) { // Parse things inside module definition.
@@ -244,7 +248,9 @@ static int parse_module_NOR2(std::istream& fin, Cir::Circuit& cir) {
 //     - 0: Successful
 //     - 1: Error
 //  
-static int parse_module_NOT1(std::istream& fin, Cir::Circuit& cir) {
+static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
+    using namespace Sta;
+
     while (get_token(fin) != ";") { } // Ignore until ";".
 
     while (true) { // Parse things inside module definition.
@@ -292,7 +298,9 @@ static int parse_module_NOT1(std::istream& fin, Cir::Circuit& cir) {
 //     - 0: Successful
 //     - 1: Error
 //  
-static int parse_netlist_module(std::istream& fin, Cir::Circuit& cir) {
+static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
+    using namespace Sta;
+
     // Use hash_map for quick access using string as index.
     typedef uint32_t (*Hasher)(const std::string&);
     Util::HashMap<std::string, Wire, Hasher> wires(Util::hash_str);

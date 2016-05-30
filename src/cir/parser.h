@@ -3,8 +3,9 @@
 
 #include <vector>
 
-#include "cir/circuit.h"
+#include "sta/src/cir/circuit.h"
 
+namespace Sta {
 namespace Cir {
 
 // Parse verilog files into circuit. This parser can only read verilog
@@ -26,8 +27,9 @@ namespace Cir {
 //     - 2: Other.
 //
 int parse(const std::vector<const char*>& input_files,
-          Cir::Circuit&                   circuit     );
+          Sta::Cir::Circuit&              circuit     );
           
-}
+} // namespace Cir
+} // namespace Sta
 
 #endif // STA_CIR_PARSER_H
