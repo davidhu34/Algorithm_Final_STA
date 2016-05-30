@@ -16,6 +16,9 @@ void test_prime_gt(void);
 // test_util_hash_map.cpp
 void test_hash_map(void);
 
+// test_minisat_blbd.cpp
+void test_minisat(void);
+
 // test_cir_parser_inc.cpp
 void test_get_token(void);
 void test_parse_module_NAND2(void);
@@ -41,6 +44,9 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_util_hash_map.cpp\n";
     test_hash_map();
+
+    std::cerr << "\ntest_minisat_blbd.cpp";
+    test_minisat();
 
     std::cerr << "\ntest_cir_parser_inc.cpp\n";
     test_get_token();
