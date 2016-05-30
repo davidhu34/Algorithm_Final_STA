@@ -54,80 +54,80 @@ static std::string get_token(std::istream& fin, bool keep_newline = 0) {
 reread:
     if (fin.get(c).good()) { // No error or EOF.
         switch (c) {
-            case '.':
-            case ',':
-            case ':':
-            case ';':
-            case '(':
-            case ')':
-            case '[':
-            case ']':
-            case '=':
-            case '`': { // A token.
-                token.push_back(c);
-                break;
+        case '.':
+        case ',':
+        case ':':
+        case ';':
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '=':
+        case '`': { // A token.
+            token.push_back(c);
+            break;
+        }
+        case '*': {
+            token.push_back(c);
+            if (fin.get(c).good()) {   // No error or EOF.
+                if (c == '>') {        // It is "*>" token.
+                    token.push_back(c);
+                }
+                else {                 // It is just "*" token.
+                    fin.putback(c);
+                }
             }
-            case '*': {
+            break;
+        }
+        case '\n': {
+            if (keep_newline) {      // "\n" is token.
                 token.push_back(c);
-                if (fin.get(c).good()) {   // No error or EOF.
-                    if (c == '>') {        // It is "*>" token.
+            }
+            else {                   // "\n" is not token.
+                goto reread;
+            }
+            break;
+        }
+        case '/': {
+            if (fin.get(c).good() && c == '/') { // It is a comment.
+                // Ignore until newline.
+                while (fin.get(c).good() && c != '\n') { }
+                goto reread;
+            }
+            else {
+                fin.putback(c);
+                token.push_back('/');
+            }
+            break;
+        }
+        case ' ':
+        case '\t':
+        case '\r':
+        case '\v': {
+            goto reread;
+            break;
+        }
+        default: {
+            if (isalnum(c) || c == '_' || c == '$') {
+                token.push_back(c);
+                
+                // Read consecutive characters.
+                while (fin.get(c).good()) {
+                    if (isalnum(c) || c == '_' || c == '$') {
                         token.push_back(c);
                     }
-                    else {                 // It is just "*" token.
+                    else {
                         fin.putback(c);
+                        break;
                     }
                 }
-                break;
             }
-            case '\n': {
-                if (keep_newline) {      // "\n" is token.
-                    token.push_back(c);
-                }
-                else {                   // "\n" is not token.
-                    goto reread;
-                }
-                break;
-            }
-            case '/': {
-                if (fin.get(c).good() && c == '/') { // It is a comment.
-                    // Ignore until newline.
-                    while (fin.get(c).good() && c != '\n') { }
-                    goto reread;
-                }
-                else {
-                    fin.putback(c);
-                    token.push_back('/');
-                }
-                break;
-            }
-            case ' ':
-            case '\t':
-            case '\r':
-            case '\v': {
+            else { // Unrecognized character, reread.
                 goto reread;
-                break;
             }
-            default: {
-                if (isalnum(c) || c == '_' || c == '$') {
-                    token.push_back(c);
-                    
-                    // Read consecutive characters.
-                    while (fin.get(c).good()) {
-                        if (isalnum(c) || c == '_' || c == '$') {
-                            token.push_back(c);
-                        }
-                        else {
-                            fin.putback(c);
-                            break;
-                        }
-                    }
-                }
-                else { // Unrecognized character, reread.
-                    goto reread;
-                }
 
-                break;
-            }
+            break;
+        }
         } // switch (c)
     } // if (fin.get(c).good())
 
