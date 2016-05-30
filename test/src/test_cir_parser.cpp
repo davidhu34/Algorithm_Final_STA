@@ -287,16 +287,36 @@ void test_parse(void) {
     using TestUtil::cir_compare;
 
     Circuit cir;
-    std::vector<const char*> file_set_A(2);
-    file_set_A[0] = "test/cases/case1/input/cadcontest.v";
-    file_set_A[1] = "test/cases/case1/input/case1";
 
-    basic_validate(file_set_A, cir);
+    const char* case_num[10] = {
+        "test/cases/case1/input/cadcontest.v",
+        "test/cases/case1/input/case1",
+        "test/cases/case2/input/cadcontest.v",
+        "test/cases/case2/input/case2",
+        "test/cases/case3/input/cadcontest.v",
+        "test/cases/case3/input/case3",
+        "test/cases/case4/input/cadcontest.v",
+        "test/cases/case4/input/case4",
+        "test/cases/case5/input/cadcontest.v",
+        "test/cases/case5/input/case5"};
 
-    cir.clear();
+    for (int i = 0; i < 10; i += 2) {
+        std::cout << "Validating " << case_num[i + 1] << "...\n";
+
+        std::vector<const char*> file_set(2);
+        file_set[0] = case_num[i];
+        file_set[1] = case_num[i + 1];
+
+        basic_validate(file_set, cir);
+
+        cir.clear();
+    }
+
     std::vector<const char*> file_set_B(2);
     file_set_B[0] = "test/cases/case0_module.v";
     file_set_B[1] = "test/cases/case0_netlist.v";
+
+    std::cout << "Validating " << file_set_B[1] << "...\n";
 
     basic_validate(file_set_B, cir);
     print_circuit_state(cir, "test/cases/case0_state.out");
