@@ -7,8 +7,6 @@
 #include <map>
 #include <set>
 
-#include "sta/test/src/util/util.h"
-
 namespace TestUtil {
 
 // Check compare state files of two circuits. State file of a circuit

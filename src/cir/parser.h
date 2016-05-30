@@ -27,7 +27,7 @@ namespace Cir {
 //     - 2: Other.
 //
 int parse(const std::vector<const char*>& input_files,
-          Sta::Cir::Circuit&              circuit     );
+          Circuit&                        circuit     );
           
 } // namespace Cir
 } // namespace Sta

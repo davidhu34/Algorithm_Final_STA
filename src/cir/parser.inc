@@ -149,7 +149,7 @@ reread:
 //     - 1: Error
 //  
 static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
-    using namespace Sta;
+    using namespace Sta::Cir;
 
     while (get_token(fin) != ";") { } // Ignore until ";".
 
@@ -160,17 +160,17 @@ static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
             while (get_token(fin) != "(") { }; // Ignore until "(".
 
             token = get_token(fin); // Name of output pin.
-            cir.modules[Cir::Module::NAND2].output_name = token;
+            cir.modules[Module::NAND2].output_name = token;
 
             token = get_token(fin); // ","
             
             token = get_token(fin); // Name of input pin.
-            cir.modules[Cir::Module::NAND2].input_names.push_back(token);
+            cir.modules[Module::NAND2].input_names.push_back(token);
 
             token = get_token(fin); // ","
 
             token = get_token(fin); // Name of input pin.
-            cir.modules[Cir::Module::NAND2].input_names.push_back(token);
+            cir.modules[Module::NAND2].input_names.push_back(token);
 
             while (get_token(fin) != ";") { } // Ignore until ";".
         }
@@ -199,7 +199,7 @@ static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
 //     - 1: Error
 //  
 static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
-    using namespace Sta;
+    using namespace Sta::Cir;
 
     while (get_token(fin) != ";") { } // Ignore until ";".
 
@@ -210,17 +210,17 @@ static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
             while (get_token(fin) != "(") { }; // Ignore until "("
 
             token = get_token(fin); // Name of output pin.
-            cir.modules[Cir::Module::NOR2].output_name = token;
+            cir.modules[Module::NOR2].output_name = token;
 
             token = get_token(fin); // ","
             
             token = get_token(fin); // Name of input pin.
-            cir.modules[Cir::Module::NOR2].input_names.push_back(token);
+            cir.modules[Module::NOR2].input_names.push_back(token);
 
             token = get_token(fin); // ","
 
             token = get_token(fin); // Name of input pin.
-            cir.modules[Cir::Module::NOR2].input_names.push_back(token);
+            cir.modules[Module::NOR2].input_names.push_back(token);
 
             while (get_token(fin) != ";") { } // Ignore until ";".
         }
@@ -249,7 +249,7 @@ static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
 //     - 1: Error
 //  
 static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
-    using namespace Sta;
+    using namespace Sta::Cir;
 
     while (get_token(fin) != ";") { } // Ignore until ";".
 
@@ -260,12 +260,12 @@ static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
             while (get_token(fin) != "(") { }; // Ignore until "(".
 
             token = get_token(fin); // Name of output pin.
-            cir.modules[Cir::Module::NOT1].output_name = token;
+            cir.modules[Module::NOT1].output_name = token;
 
             token = get_token(fin); // ","
             
             token = get_token(fin); // Name of input pin.
-            cir.modules[Cir::Module::NOT1].input_names.push_back(token);
+            cir.modules[Module::NOT1].input_names.push_back(token);
 
             while (get_token(fin) != ";") { } // Ignore until ";".
         }
@@ -299,11 +299,14 @@ static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
 //     - 1: Error
 //  
 static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
-    using namespace Sta;
+    using namespace Sta::Cir;
+    using Sta::Util::HashMap;
+    using Sta::Util::hash_str;
+    using Sta::Util::prime_gt;
 
     // Use hash_map for quick access using string as index.
     typedef uint32_t (*Hasher)(const std::string&);
-    Util::HashMap<std::string, Wire, Hasher> wires(Util::hash_str);
+    HashMap<std::string, Wire, Hasher> wires(hash_str);
 
     // Start parsing.
 
@@ -317,7 +320,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 token = get_token(fin); // Name of input pin.
 
                 // Add new PI into circuit.
-                Cir::Gate* pi = new Cir::Gate(Cir::Module::PI, token);
+                Gate* pi = new Gate(Module::PI, token);
                 cir.primary_inputs.push_back(pi);
 
                 // Connect that PI to wire with the same name, so that
@@ -334,7 +337,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 token = get_token(fin); // Name of output pin.
 
                 // Add new PO into circuit.
-                Cir::Gate* po = new Cir::Gate(Cir::Module::PO, token);
+                Gate* po = new Gate(Module::PO, token);
                 cir.primary_outputs.push_back(po);
 
                 // Connect that PO to wire with the same name, so that
@@ -358,13 +361,13 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
             // Rehash if wires is too cramp, i.e. too many wire cramp in
             // one bucket.
             if (wires.bucket.size() < wires.size) {
-                wires.rehash(Util::prime_gt(wires.size * 2));
+                wires.rehash(prime_gt(wires.size * 2));
             }
 
             token = get_token(fin); // Name of gate.
 
             // Add new NAND2 gate to circuit.
-            Cir::Gate* gate = new Cir::Gate(Cir::Module::NAND2, token);
+            Gate* gate = new Gate(Module::NAND2, token);
             cir.logic_gates.push_back(gate);
 
             token = get_token(fin); // "("
@@ -375,8 +378,8 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 token                = get_token(fin); // "("
                 token                = get_token(fin); // Wire name.
                 
-                const Cir::Module* mod = &cir.modules[Cir::Module::NAND2];
-                Wire&              w   = wires[token];
+                const Module* mod = &cir.modules[Module::NAND2];
+                Wire&         w   = wires[token];
 
                 if (pin_name == mod->input_names[0]) {
                     w.tos.push_back(gate);
@@ -405,13 +408,13 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
             // Rehash if wires is too cramp, i.e. too many wire cramp in
             // one bucket.
             if (wires.bucket.size() < wires.size) {
-                wires.rehash(Util::prime_gt(wires.size * 2));
+                wires.rehash(prime_gt(wires.size * 2));
             }
 
             token = get_token(fin); // Name of gate.
 
             // Add new NOR2 gate to circuit.
-            Cir::Gate* gate = new Cir::Gate(Cir::Module::NOR2, token);
+            Gate* gate = new Gate(Module::NOR2, token);
             cir.logic_gates.push_back(gate);
 
             token = get_token(fin); // "("
@@ -422,8 +425,8 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 token                = get_token(fin); // "("
                 token                = get_token(fin); // Wire name.
                 
-                const Cir::Module* mod = &cir.modules[Cir::Module::NOR2];
-                Wire&              w   = wires[token];
+                const Module* mod = &cir.modules[Module::NOR2];
+                Wire&         w   = wires[token];
 
                 if (pin_name == mod->input_names[0]) {
                     w.tos.push_back(gate);
@@ -452,13 +455,13 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
             // Rehash if wires is too cramp, i.e. too many wire cramp in
             // one bucket.
             if (wires.bucket.size() < wires.size) {
-                wires.rehash(Util::prime_gt(wires.size * 2));
+                wires.rehash(prime_gt(wires.size * 2));
             }
 
             token = get_token(fin); // Name of gate.
 
             // Add new NOT1 gate to circuit.
-            Cir::Gate* gate = new Cir::Gate(Cir::Module::NOT1, token);
+            Gate* gate = new Gate(Module::NOT1, token);
             cir.logic_gates.push_back(gate);
 
             token = get_token(fin); // "("
@@ -469,8 +472,8 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 token                = get_token(fin); // "("
                 token                = get_token(fin); // Wire name.
                 
-                const Cir::Module* mod = &cir.modules[Cir::Module::NOT1];
-                Wire&              w   = wires[token];
+                const Module* mod = &cir.modules[Module::NOT1];
+                Wire&         w   = wires[token];
 
                 if (pin_name == mod->input_names[0]) {
                     w.tos.push_back(gate);

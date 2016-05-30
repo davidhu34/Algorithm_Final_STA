@@ -26,9 +26,9 @@ namespace Cir {
 //     - 1: Cannot open file.
 //     - 2: Other.
 //
-int write(const std::vector<Sta::Cir::Path>&     paths,
-          const std::vector<Sta::Cir::InputVec>& input_vecs,
-          const std::string&                     outfile = "");
+int write(const std::vector<Path>&     paths,
+          const std::vector<InputVec>& input_vecs,
+          const std::string&           outfile = "");
 
 } // namespace Cir
 } // namespace Sta

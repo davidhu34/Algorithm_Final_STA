@@ -42,25 +42,25 @@ static void basic_validate(const std::vector<const char*>& files,
 
     std::cerr << __FUNCTION__ << "():\n";
 
-    using namespace Sta;
+    using namespace Sta::Cir;
 
-    int ret = Cir::parse(files, cir);
-    ASSERT(!ret, << "Cir::parse() return " << ret << "\n");
+    int ret = parse(files, cir);
+    ASSERT(!ret, << "parse() return " << ret << "\n");
 
     // Make sure all modules has correct number of input and
     // output names.
     
-    const Cir::Module* mod = &cir.modules[Cir::Module::NAND2];
+    const Module* mod = &cir.modules[Module::NAND2];
     ASSERT(mod->input_names.size() == 2,
         << "Module NAND2 has " << mod->input_names.size() << " name.\n");
     ASSERT(mod->output_name != "", );
 
-    mod = &cir.modules[Cir::Module::NOR2];
+    mod = &cir.modules[Module::NOR2];
     ASSERT(mod->input_names.size() == 2,
         << "Module NOR2 has " << mod->input_names.size() << " name.\n");
     ASSERT(mod->output_name != "", );
 
-    mod = &cir.modules[Cir::Module::NOT1];
+    mod = &cir.modules[Module::NOT1];
     ASSERT(mod->input_names.size() == 1,
         << "Module NOT1 has " << mod->input_names.size() << " name.\n");
     ASSERT(mod->output_name != "", );
@@ -70,10 +70,10 @@ static void basic_validate(const std::vector<const char*>& files,
 
     // For each pi in primary_inputs,
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        const Cir::Gate* pi = cir.primary_inputs[i];
+        const Gate* pi = cir.primary_inputs[i];
 
         // Make sure PI has correct type.
-        ASSERT(pi->module == Cir::Module::PI, 
+        ASSERT(pi->module == Module::PI, 
             << "PI " << pi->name << " has type " << pi->module << "\n");
 
         // Make sure PI has name.
@@ -113,10 +113,10 @@ static void basic_validate(const std::vector<const char*>& files,
 
     // For each po in primary_outputs,
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        const Cir::Gate* po = cir.primary_outputs[i];
+        const Gate* po = cir.primary_outputs[i];
 
         // Make sure PO has correct type.
-        ASSERT(po->module == Cir::Module::PO, 
+        ASSERT(po->module == Module::PO, 
             << "PO " << po->name << " has type " << po->module << "\n");
 
         // Make sure PO has name.
@@ -156,12 +156,12 @@ static void basic_validate(const std::vector<const char*>& files,
 
     // For each g in logic_gates,
     for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        const Cir::Gate* g = cir.logic_gates[i];
+        const Gate* g = cir.logic_gates[i];
 
         // Make sure gate has correct type.
-        ASSERT(g->module == Cir::Module::NAND2 ||
-               g->module == Cir::Module::NOR2  ||
-               g->module == Cir::Module::NOT1    ,
+        ASSERT(g->module == Module::NAND2 ||
+               g->module == Module::NOR2  ||
+               g->module == Module::NOT1    ,
             << "gate " << g->name << " has type " << g->module << "\n");
 
         // Make sure gate has name.
@@ -231,7 +231,7 @@ static void basic_validate(const std::vector<const char*>& files,
 //
 static void print_circuit_state(Sta::Cir::Circuit& cir,
                                 const std::string& filename) {
-    using namespace Sta;
+    using namespace Sta::Cir;
 
     std::ofstream fout(filename.c_str());
     ASSERT(fout.good(), << "Cannot open " << filename << "\n");
@@ -241,22 +241,22 @@ static void print_circuit_state(Sta::Cir::Circuit& cir,
          << "-po_count " << cir.primary_outputs.size() << "\n"
          << "-gate_count " << cir.logic_gates.size() << "\n"
          << "-nand2_input_pin_name " 
-         << cir.modules[Cir::Module::NAND2].input_names[0] << " " 
-         << cir.modules[Cir::Module::NAND2].input_names[1] << "\n" 
+         << cir.modules[Module::NAND2].input_names[0] << " " 
+         << cir.modules[Module::NAND2].input_names[1] << "\n" 
          << "-nand2_output_pin_name "
-         << cir.modules[Cir::Module::NAND2].output_name << "\n"
+         << cir.modules[Module::NAND2].output_name << "\n"
          << "-nor2_input_pin_name " 
-         << cir.modules[Cir::Module::NOR2].input_names[0] << " " 
-         << cir.modules[Cir::Module::NOR2].input_names[1] << "\n" 
+         << cir.modules[Module::NOR2].input_names[0] << " " 
+         << cir.modules[Module::NOR2].input_names[1] << "\n" 
          << "-nor2_output_pin_name "
-         << cir.modules[Cir::Module::NOR2].output_name << "\n"
+         << cir.modules[Module::NOR2].output_name << "\n"
          << "-not1_input_pin_name " 
-         << cir.modules[Cir::Module::NOT1].input_names[0] << "\n"
+         << cir.modules[Module::NOT1].input_names[0] << "\n"
          << "-not1_output_pin_name "
-         << cir.modules[Cir::Module::NOT1].output_name << "\n";
+         << cir.modules[Module::NOT1].output_name << "\n";
 
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        const Cir::Gate* g = cir.primary_outputs[i];
+        const Gate* g = cir.primary_outputs[i];
         fout << "-" << g->name << "/PO ";
 
         for (size_t j = 0; j < g->froms.size(); ++j) {
@@ -266,7 +266,7 @@ static void print_circuit_state(Sta::Cir::Circuit& cir,
     }
 
     for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        const Cir::Gate* g = cir.logic_gates[i];
+        const Gate* g = cir.logic_gates[i];
         fout << "-" << g->name << "/"
              << cir.modules[g->module].name << " ";
 
@@ -283,9 +283,10 @@ static void print_circuit_state(Sta::Cir::Circuit& cir,
 void test_parse(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
-    using namespace Sta;
+    using namespace Sta::Cir;
+    using TestUtil::cir_compare;
 
-    Cir::Circuit cir;
+    Circuit cir;
     std::vector<const char*> file_set_A(2);
     file_set_A[0] = "test/cases/case1/input/cadcontest.v";
     file_set_A[1] = "test/cases/case1/input/case1";
@@ -301,8 +302,8 @@ void test_parse(void) {
     print_circuit_state(cir, "test/cases/case0_state.out");
 
     cir.clear();
-    TestUtil::cir_compare("test/cases/case0_state.ans",
-                          "test/cases/case0_state.out");
+    cir_compare("test/cases/case0_state.ans",
+                "test/cases/case0_state.out");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

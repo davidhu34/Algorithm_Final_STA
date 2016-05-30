@@ -45,7 +45,7 @@ struct Gate {
 };
 
 // Path type.
-typedef std::vector<const Cir::Gate*> Path;
+typedef std::vector<const Gate*> Path;
 
 // Input vector type.
 typedef std::vector<bool> InputVec;

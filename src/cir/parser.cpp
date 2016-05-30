@@ -10,7 +10,7 @@
 #include "sta/src/cir/parser.inc"
 
 int Sta::Cir::parse(const std::vector<const char*>& input_files,
-                    Sta::Cir::Circuit&              circuit     ) {
+                    Circuit&                        circuit     ) {
     
     // Parse all input files.
     for (size_t i = 0; i < input_files.size(); ++i) {
