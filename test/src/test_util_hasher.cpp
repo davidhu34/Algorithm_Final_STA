@@ -16,6 +16,8 @@
 void test_hash_str(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
+    using Sta::Util::hash_str;
+
     const char* filename = "test/cases/words.txt";
 
     std::ifstream fin(filename);
@@ -31,7 +33,7 @@ void test_hash_str(void) {
     // Read each word and put them into `vec` and `dict`.
     std::string str;
     while (fin >> str) {
-        uint32_t n = Sta::Util::hash_str(str);
+        uint32_t n = hash_str(str);
         dict.insert((Pair(n, str)));
         vec.push_back(n);
     }
