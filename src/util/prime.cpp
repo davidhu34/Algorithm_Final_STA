@@ -1,4 +1,4 @@
-#include "util/prime.h"
+#include "sta/src/util/prime.h"
 
 size_t Sta::Util::prime_gt(size_t n) {
     const size_t arr[] = {

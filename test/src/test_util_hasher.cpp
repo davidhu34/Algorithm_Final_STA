@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "sta/src/test/src/util/util.h"
+#include "sta/test/src/util/util.h"
 
 #include "sta/src/util/hasher.h"
 
