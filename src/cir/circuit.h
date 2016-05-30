@@ -1,6 +1,7 @@
 #ifndef STA_CIR_CIRCUIT_H
 #define STA_CIR_CIRCUIT_H
 
+#include <stdint.h>
 #include <vector>
 #include <string>
 
@@ -19,8 +20,8 @@ struct Module {
 
     // Data Member
     std::string              name;
-    std::vector<std::string> input_names;
     std::string              output_name;
+    std::vector<std::string> input_names;
 
     // Constructor
     explicit Module(const std::string& _name): name(_name) { }
@@ -28,23 +29,20 @@ struct Module {
 
 struct Gate {
     // Data Member
-    int                module;       // NAND2, NOR2, NOT1, PI or PO
+    uint8_t            module;       // NAND2, NOR2, NOT1, PI or PO
+    uint8_t            value;        // 1, 0 or 2 (floating).
+    uint16_t           tag;          // Needed when using some algo.
+    uint32_t           arrival_time; 
+    int                var;          // SAT variable.
     std::string        name;
-    int                value;        // 1, 0 or -1 (floating).
-    int                arrival_time; // -1 represent unknown.
     std::vector<Gate*> froms;
     std::vector<Gate*> tos;
-
-    // Data member needed when using some algorithms.
-    int tag;
 
     // Constructor
     Gate(int                _module, 
          const std::string& _name   ):
-        module      (_module),
-        name        (_name),
-        value       (-1),
-        arrival_time(-1) { }
+        module (_module),
+        name   (_name)    { }
 };
 
 // Path type.
