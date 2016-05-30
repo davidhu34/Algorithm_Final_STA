@@ -1,8 +1,9 @@
 #ifndef STA_ANA_ANALYZER_H
 #define STA_ANA_ANALYZER_H
 
-#include "cir/circuit.h"
+#include "sta/src/cir/circuit.h"
 
+namespace Sta {
 namespace Ana {
 
 // Find sensitizable paths.
@@ -27,5 +28,6 @@ int find_sensitizable_paths(Cir::Circuit&               circuit,
 }
 
 } // namespace Ana
+} // namespace Sta
 
 #endif // STA_ANA_ANALYZER_H

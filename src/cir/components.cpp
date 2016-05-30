@@ -4,8 +4,10 @@
 #include <map>
 #include <string>
 
-#include "cir/components.h"
+#include "sta/src/cir/components.h"
 
+namespace Sta {
 namespace Cir {
 
-}
+} // namespace Cir
+} // namespace Sta

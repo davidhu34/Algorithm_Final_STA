@@ -4,21 +4,26 @@ CC := g++
 # Version can be `utest` (default), `dbg` or `rel`.
 ver := utest
 
+# Preprocessor flags.
+PFLAGS := -I.. -Ilib -Wall
+
+# Compiler flags.
+CFLAGS := -Wall -Wextra
+
+# Linker flags.
+LFLAGS := 
+
 ifeq ($(ver),rel) # Release version.
     $(info Building release version.)
 
     # Directories.
     MODULES := src/main src/util src/cir src/ana
-    LIB_DIR := lib
+    LIB_DIR := lib/minisat_blbd/bin
+    LIB     := libminisat_blbd_rel.a
 
-    # Preprocessor flags.
-    PFLAGS := -Isrc -Wall -DNDEBUG 
-
-    # Compiler flags.
-    CFLAGS := -Wall -Wextra -O3
-
-    # Linker flags.
-    LFLAGS := $(patsubst %,-L%,$(LIB_DIR))
+    PFLAGS += -DNDEBUG 
+    CFLAGS += -O3
+    LFLAGS += 
 
     # Output file.
     OUTPUT := bin/sta
@@ -31,16 +36,12 @@ else ifeq ($(ver),dbg) # Debug version.
 
     # Directories.
     MODULES := src/main src/util src/cir src/ana
-    LIB_DIR := lib
+    LIB_DIR := lib/minisat_blbd/bin
+    LIB     := libminisat_blbd_rel.a
 
-    # Preprocessor flags.
-    PFLAGS := -Isrc -Wall
-
-    # Compiler flags.
-    CFLAGS := -Wall -Wextra -O0 -g
-
-    # Linker flags.
-    LFLAGS := $(patsubst %,-L%,$(LIB_DIR))
+    PFLAGS += 
+    CFLAGS += -O0 -g
+    LFLAGS += 
 
     # Output file.
     OUTPUT := bin/sta
@@ -53,16 +54,13 @@ else ifeq ($(ver),utest) # Unit test version.
 
     # Directories.
     MODULES := src/util src/cir test/src test/src/util
-    LIB_DIR := lib test/lib
+    LIB_DIR := test/lib lib/minisat_blbd/bin
+    LIB     := libminisat_blbd_rel.a
 
-    # Preprocessor flags.
-    PFLAGS := -Isrc -I. -Wall
+    PFLAGS += 
+    CFLAGS += -O0 -g
+    LFLAGS += 
 
-    # Compiler flags.
-    CFLAGS := -Wall -Wextra -O0 -g
-
-    # Linker flags.
-    LFLAGS := $(patsubst %,-L%,$(LIB_DIR))
 
     # Output file.
     OUTPUT := bin/unit_test
@@ -76,15 +74,16 @@ else
 
 endif
 
+LFLAGS += $(patsubst %,-L%,$(LIB_DIR)) $(patsubst lib%.a,-l%,$(LIB))
+
 # Archiver.
 AR := ar
 
 # Archiver flags.
-ARFLAGS := rcv
+ARFLAGS := rcvs
 
 # Each modules' file will add to these variables
 SRC :=
-LIB :=
 
 # Include subdirectories' makefile.
 include $(patsubst %,%/module.mk,$(MODULES))
@@ -92,8 +91,6 @@ include $(patsubst %,%/module.mk,$(MODULES))
 # Modify object file name to include `_<version_extension>` before
 # `.o` extension.
 OBJ := $(patsubst %.cpp,%$(VEXT).o,$(SRC))
-
-LFLAGS += $(patsubst lib%,-l%,$(LIB))
 
 # Pattern rules.
 %$(VEXT).o: %.cpp

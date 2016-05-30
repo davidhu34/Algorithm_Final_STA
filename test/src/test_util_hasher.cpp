@@ -4,9 +4,9 @@
 #include <vector>
 #include <string>
 
-#include "test/src/util/util.h"
+#include "sta/test/src/util/util.h"
 
-#include "util/hasher.h"
+#include "sta/src/util/hasher.h"
 
 // Read in a file that contain many words. Take hash value of each of
 // these words. Save these hash value into a table. Use a multimap to
@@ -31,7 +31,7 @@ void test_hash_str(void) {
     // Read each word and put them into `vec` and `dict`.
     std::string str;
     while (fin >> str) {
-        uint32_t n = Util::hash_str(str);
+        uint32_t n = Sta::Util::hash_str(str);
         dict.insert((Pair(n, str)));
         vec.push_back(n);
     }

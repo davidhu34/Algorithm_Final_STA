@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 
-#include "cir/components.h"
-#include "cir/circuit.h"
+#include "sta/src/cir/components.h"
+#include "sta/src/cir/circuit.h"
 
 using namespace std;
 
@@ -22,6 +22,7 @@ static bool regERR ( int line )
 	return false;
 }
 
+namespace Sta {
 namespace Cir {
 
 bool Circuit::parseFile ( ifstream &inf )
@@ -143,3 +144,4 @@ string Circuit::trimWire ( string line, string pin )
 }
 
 } // namespace Cir
+} // namespace Sta

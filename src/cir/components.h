@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 
+namespace Sta {
 namespace Cir {
 
 using std::string;
@@ -110,5 +111,6 @@ public:
 };
 
 } // namespace Cir
+} // namespace Sta
 
 #endif // STA_CIR_COMPONENTS_H

@@ -93,11 +93,12 @@ Procedure for creating a new module:
     with `MODULES := `. 
 
 That's it. You can add whatever headers and sources in your new
-module. Please put all these functions and classes under namespace
-with the name same as your module, e.g. `Foo`.
+module. Please put all these functions and classes under project
+namespace e.g. `Sta`, then under namespace with the name same as
+your module, e.g. `Foo`.
 
-To include a header file, always prefix it with its module name.
-E.g. `#include "foo/parser.h"`.
+To include a header file, always use path start from project, e.g.
+`#include "sta/src/foo/parser.h"`.
 
 Any files under `src/main/` (e.g. main.cpp) won't be compiled while
 doing unit test. Testing has its own main function, so don't put
@@ -163,7 +164,7 @@ Utility required to compile this project:
 
 At project root directory, type `make ver=rel`. This will compile with
 optimization `-O3`. You can use `make ver=dbg` to compile with no
-optimization. `make` will only perform unit test.
+optimization. If you type `make` only, it will only perform unit test.
 
 ## How to Run
 

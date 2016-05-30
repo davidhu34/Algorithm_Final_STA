@@ -3,6 +3,7 @@
 
 #include <cstddef>
 
+namespace Sta {
 namespace Util {
 
 // Return a prime number greater than n. This prime number is not
@@ -23,5 +24,6 @@ namespace Util {
 size_t prime_gt(size_t n);
 
 } // namespace Util
+} // namespace Sta
 
 #endif // STA_UTIL_PRIME_H

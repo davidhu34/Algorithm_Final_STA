@@ -3,16 +3,18 @@
 #include <vector>
 
 
-#include <cir/parser.h>
-#include <cir/circuit.h>
-#include <ana/analyzer.h>
-#include <util/writer.h>
+#include "sta/src/cir/parser.h"
+#include "sta/src/cir/circuit.h"
+#include "sta/src/ana/analyzer.h"
+#include "sta/src/util/writer.h"
 
 static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
 
 int main( int argc, const char* argv[] ) {
+    using namespace Sta;
+
     Circuit* Ckt = new Circuit();
     ifstream inf ("../inputs/case1", ifstream::in);
     if ( Ckt->parseFile(inf) ) Ckt->connectGates();
