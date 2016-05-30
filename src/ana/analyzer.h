@@ -6,6 +6,14 @@
 namespace Sta {
 namespace Ana {
 
+// Assign arrival time.
+//
+// #### Input
+//
+// - `circuit`
+//
+void assign_arrival_time(Cir::Circuit& circuit);
+
 // Find sensitizable paths.
 //
 // #### Input
