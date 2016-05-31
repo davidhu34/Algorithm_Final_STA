@@ -43,6 +43,7 @@ public:
 	}
 	virtual void connectGate ( vector<Gate*> gate, vector<string> pin ) = 0;
 	virtual void printNames () = 0;
+	virtual void printState () = 0;
 	string getName() {return _name;}
 
 protected:
@@ -142,7 +143,7 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
-
+	void printState () { }
 };
 class OUTPUT: public Gate
 {

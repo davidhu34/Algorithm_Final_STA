@@ -51,9 +51,6 @@ public:
 
 		for ( size_t i = 0; i < _Gate.size(); i++ )
 			_Gate[i]->printState();
-
-		for ( size_t i = 0; i < _Outputs.size(); i++ )
-			_Outputs[i]->printState();
 	}
 
 private:
