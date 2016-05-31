@@ -21,11 +21,7 @@ namespace Ana {
 //
 int find_sensitizable_paths(Cir::Circuit&               circuit,
                             std::vector<Cir::Path>&     paths,
-                            std::vector<Cir::InputVec>& input_vecs) {
-
-    // TODO
-    return 0;
-}
+                            std::vector<Cir::InputVec>& input_vecs);
 
 } // namespace Ana
 } // namespace Sta
