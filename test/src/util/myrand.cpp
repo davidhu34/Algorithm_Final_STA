@@ -1,4 +1,4 @@
-#include "myrand.h"
+#include "sta/test/src/util/myrand.h"
 
 // Here's method of generating random number. 
 //

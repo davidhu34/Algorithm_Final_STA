@@ -2,7 +2,6 @@
 DIR := test/src
 
 # Test file that you don't want to compile.
-EXCLUDE := test_cir_circuit.cpp
+EXCLUDE := 
 
 SRC += $(filter-out $(patsubst %,$(DIR)/%,$(EXCLUDE)),$(wildcard $(DIR)/*.cpp))
-LIB += 

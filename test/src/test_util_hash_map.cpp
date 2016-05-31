@@ -3,23 +3,26 @@
 #include <vector>
 #include <string>
 
-#include "test/src/util/util.h"
-#include "util/hasher.h"
-#include "util/prime.h"
-#include "util/hash_map.h"
+#include "sta/test/src/util/util.h"
+#include "sta/src/util/hasher.h"
+#include "sta/src/util/prime.h"
+#include "sta/src/util/hash_map.h"
 
 void test_hash_map(void) {
     std::cerr << __FUNCTION__ << "():\n";
+
+    using Sta::Util::hash_str;
+    using Sta::Util::prime_gt;
 
     const char* filename = "test/cases/words.txt";
     std::ifstream fin(filename);
     ASSERT(fin.good(), << "Cannot open file \"" << filename << "\"\n");
 
     typedef uint32_t (*Hasher)(const std::string&);
-    typedef std::string                     Str;
-    typedef Util::HashMap<Str, int, Hasher> HashMap;
+    typedef std::string                          Str;
+    typedef Sta::Util::HashMap<Str, int, Hasher> HashMap;
 
-    HashMap          dict(Util::hash_str);
+    HashMap          dict(hash_str);
     std::vector<Str> words;
     Str              word;
     
@@ -29,7 +32,7 @@ void test_hash_map(void) {
         ASSERT(dict.size == words.size(), );
     }
 
-    dict.rehash(Util::prime_gt(dict.size));
+    dict.rehash(prime_gt(dict.size));
 
     for (size_t i = 0; i < words.size(); ++i) {
         dict[words[i]] = 30;

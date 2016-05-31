@@ -211,23 +211,23 @@ at [Official Problem Specification][].
 
 Some specifications:
 
--   Only 3 types of gate will be used in input: NAND2, NOR2, NOT1.
-    NAND2 and NOR2 are 2-input gates, while NOT1 is 1-input gate.
+- Only 3 types of gate will be used in input: NAND2, NOR2, NOT1.
+  NAND2 and NOR2 are 2-input gates, while NOT1 is 1-input gate.
 
--   Assume wire does not cause delay.
+- Assume wire does not cause delay.
 
--   All gate has delay of 1ns.
+- All gate has delay of 1ns.
 
--   The input and output pins of NAND2, NOR2, NOT1 will be named
-    as above (`A`, `B`, `Y`) in all cases. But to immitate real world
-    scenario, please get those names by parsing them.
+- The input and output pins of NAND2, NOR2, NOT1 will be named
+  as above (`A`, `B`, `Y`) in all cases. But to immitate real world
+  scenario, please get those names by parsing them.
 
--   The naming of each object (wire and gate) is random, not
-    necessarily (`U1`, `U2`, ...) and (`n1`, `n2`, ...).
+- The naming of each object (wire and gate) is random, not
+  necessarily (`U1`, `U2`, ...) and (`n1`, `n2`, ...).
 
--   While create object from module, "naming association" is the
-    only method we use in all cases. We won't use "positional
-    association" method to pass arguments.
+- While create object from module, "naming association" is the
+  only method we use in all cases. We won't use "positional
+  association" method to pass arguments.
 
 Please see [IEEE std 1346-1995][] for verilog's syntax. 
 
@@ -235,8 +235,8 @@ Please see [IEEE std 1346-1995][] for verilog's syntax.
 
 There are some open source verilog parser outside. You can refer to them.
 
--   Icarus <http://icarus.com/eda/verilog>
--   VBS <http://www.geda.seul.org/index.html>
+- Icarus <http://icarus.com/eda/verilog>
+- VBS <http://www.geda.seul.org/index.html>
 
 ## Output
 
@@ -350,27 +350,27 @@ Path block gives the order of true path start from 1.
 
 'A True Path List' block give a sensitizable path and its STA result.
 
--   The "Pin" column lists input pin and output pin of all gates along
+- The "Pin" column lists input pin and output pin of all gates along
     that true path. It starts from input port and ends at output port. 
--   The "type" column lists the type of gate of first column.
--   The "Incr" column lists the incremental delay.
--   The "Path delay" lists accumulated delay.
--   The fifth column lists logical value of that pin, r = 1 and f = 0.
--   "Data Required Time" gives the timing constraint.
--   "Data Arrival Time" is arrival time of signal at output pin.
--   Slack = Required - Arrival.
+- The "type" column lists the type of gate of first column.
+- The "Incr" column lists the incremental delay.
+- The "Path delay" lists accumulated delay.
+- The fifth column lists logical value of that pin, r = 1 and f = 0.
+- "Data Required Time" gives the timing constraint.
+- "Data Arrival Time" is arrival time of signal at output pin.
+- Slack = Required - Arrival.
 
 'Input Vector' block is the input that result in this true path.
 
 Some requirements:
 
--   One 'Input Vector' block for each 'A True Path List' block.
--   No duplicate 'A True Path List' block. Two 'A True Path List'
-    blocks is same if they have identical path with identical input.
-    (If their input is not same, then these two blocks are not same
-    and both of them must be listed.)
--   Output filename should be `case*_true_path_set` where `*` is the
-    case number.
+- One 'Input Vector' block for each 'A True Path List' block.
+- No duplicate 'A True Path List' block. Two 'A True Path List'
+  blocks is same if they have identical path with identical input.
+  (If their input is not same, then these two blocks are not same
+  and both of them must be listed.)
+- Output filename should be `case*_true_path_set` where `*` is the
+  case number.
     
 You can verify your output using a program provided by CIC.
 
@@ -421,12 +421,12 @@ Procedure of evaluating correctness:
 
 We will classify the result of correctness into grades:
 
--   Grade 1: All correct.
--   Grade 2: Contain false path in one case.
--   Grade 3: Contain false path in two cases.
--   Grade 4: Contain false path in three cases.
--   Grade 5: Contain false path in four cases.
--   and so on...
+- Grade 1: All correct.
+- Grade 2: Contain false path in one case.
+- Grade 3: Contain false path in two cases.
+- Grade 4: Contain false path in three cases.
+- Grade 5: Contain false path in four cases.
+- and so on...
 
 Grade 1 is better than Grade 2, no matter how they perform in performance.
 

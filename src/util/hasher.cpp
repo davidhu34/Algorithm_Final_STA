@@ -4,9 +4,9 @@
 // domain. The author hereby disclaims copyright to this source code.
 //-----------------------------------------------------------------------------
 
-#include "src/util/hasher.h"
+#include "sta/src/util/hasher.h"
 
-uint32_t Util::hash_str(const std::string& str) {
+uint32_t Sta::Util::hash_str(const std::string& str) {
     // #### Initialization
 
     // Get pointer to character array.
