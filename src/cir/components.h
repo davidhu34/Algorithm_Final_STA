@@ -72,6 +72,10 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
+	void printState ()
+	{
+		cout<<"-"<<_name<<"/"<<_model<<" A:"<<_inputA->getName()<<"\n";
+	}
 };
 class NAND: public Gate
 {
@@ -93,6 +97,11 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
+	void printState ()
+	{
+		cout<<"-"<<_name<<"/"<<_model<<" A:"<<_inputA->getName()
+			<<" B:"<<_inputB->getName()<<"\n";
+	}
 };
 class NOR: public Gate
 {
@@ -113,6 +122,11 @@ public:
 		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", B: "<<_inputB->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
+	}
+	void printState ()
+	{
+		cout<<"-"<<_name<<"/"<<_model<<" A:"<<_inputA->getName()
+			<<" B:"<<_inputB->getName()<<"\n";
 	}
 };
 
@@ -139,6 +153,10 @@ public:
 	void printNames ()
 	{
 		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<endl;
+	}
+	void printState ()
+	{
+		cout<<"-"<<_name<<"/"<<_model<<" "<<_inputA->getName()<<"\n";
 	}
 };
 

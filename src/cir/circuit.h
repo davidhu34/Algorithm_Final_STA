@@ -36,6 +36,25 @@ public:
 		for ( size_t i =0; i < _Gate.size(); i++ )
 		_Gate[i]->printNames();
 	};
+	void printState ()
+	{
+		std::cout<<"-circuit_name "<<case_name<<"\n"
+			     <<"-pi_count "<<_Inputs.size()<<"\n"
+				 <<"-po_count "<<_Outputs.size()<<"\n"
+				 <<"-gate_count "<<_Gate.size()<<"\n"
+				 <<"-nand2_input_pin_name A B\n"
+				 <<"-nand2_output_pin_name Y\n"
+				 <<"-nor2_input_pin_name A B\n"
+				 <<"-nor2_output_pin_name Y\n"
+				 <<"-not1_input_pin_name A\n"
+				 <<"-not1_output_pin_name Y\n";
+
+		for ( size_t i = 0; i < _Gate.size(); i++ )
+			_Gate[i]->printState();
+
+		for ( size_t i = 0; i < _Outputs.size(); i++ )
+			_Outputs[i]->printState();
+	}
 
 private:
 	void connectGates ()
