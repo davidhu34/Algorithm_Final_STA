@@ -11,7 +11,7 @@ namespace Cir {
 
 using std::string;
 using std::vector;
-
+using namespace std;
 // Forward declaration.
 class Wire;
 class Gate;
@@ -19,17 +19,17 @@ class Gate;
 class Wire
 {
 public:
-	Wire () { _pin = "A"; }
+	Wire () {}
 	void setFrom ( Gate* from ) { _from = from; }
-	void setTo ( Gate* to, string pin ) { _to = to; _pin = pin; }
+	void setTo ( Gate* to, string pin ) { _to.push_back(to); _pin.push_back(pin); }
 	Gate* getFrom () { return _from; }
-	Gate* getTo () { return _to; }
-	string getToPin () { return _pin; }
+	vector<Gate*> getTo () { return _to; }
+	vector<string> getToPin () { return _pin; }
 
 private:
 	Gate* 	_from;
-	Gate* 	_to;
-	string	_pin;
+	vector<Gate*>	_to;
+	vector<string>	_pin;
 };
 
 class Gate
@@ -40,7 +40,9 @@ public:
 		_name = gname;
 		_model = mname;
 	}
-	virtual void connectGate ( Gate* gate, string pin ) = 0;
+	virtual void connectGate ( vector<Gate*> gate, vector<string> pin ) = 0;
+	virtual void printNames () = 0;
+	string getName() {return _name;}
 
 protected:
 	string	 		_name;
@@ -48,49 +50,68 @@ protected:
 	Gate* 			_inputA;	// empty for INPUT
 	Gate* 			_inputB;	// empty for NOT / INPUT / OUTPUT
 	vector<Gate*>		_outputs;	// empty for OUTPUT
+	friend class Circuit;
 };
 
 class NOT: public Gate
 {
 public:
 	NOT ( string gname, string mname ): Gate ( gname, mname ) {};
-	void connectGate ( Gate* gate, string pin )
+	void connectGate ( vector<Gate*> gate, vector<string> pin )
 	{
-		if ( pin == "A" ) {
-			_inputA = gate;
-		} else if ( pin == "Y" ) {
-			_outputs.push_back(gate);
+		if ( pin[0] == "A" ) {
+			_inputA = gate[0];
+		} else if ( pin[0] == "Y" ) {
+			_outputs.push_back(gate[0]);
 		} else return;
+	}
+	void printNames ()
+	{
+		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", Y: ";
+		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
+		cout<<endl;
 	}
 };
 class NAND: public Gate
 {
 public:
 	NAND ( string gname, string mname ): Gate ( gname, mname ) {}
-	void connectGate ( Gate* gate, string pin )
+	void connectGate ( vector<Gate*> gate, vector<string> pin )
 	{
-		if ( pin == "A" ) {
-			_inputA = gate;
-		} else if ( pin == "B") {
-			_inputB = gate;
-		} else if ( pin == "Y" ) {
-			_outputs.push_back(gate);
+		if ( pin[0] == "A" ) {
+			_inputA = gate[0];
+		} else if ( pin[0] == "B") {
+			_inputB = gate[0];
+		} else if ( pin[0] == "Y" ) {
+			_outputs.push_back(gate[0]);
 		} else return;
+	}
+	void printNames ()
+	{
+		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", B: "<<_inputB->getName()<<", Y: ";
+		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
+		cout<<endl;
 	}
 };
 class NOR: public Gate
 {
 public:
 	NOR ( string gname, string mname ): Gate ( gname, mname ) {}
-	void connectGate ( Gate* gate, string pin )
+	void connectGate ( vector<Gate*> gate, vector<string> pin )
 	{
-		if ( pin == "A" ) {
-			_inputA = gate;
-		} else if ( pin == "B") {
-			_inputB = gate;
-		} else if ( pin == "Y" ) {
-			_outputs.push_back(gate);
+		if ( pin[0] == "A" ) {
+			_inputA = gate[0];
+		} else if ( pin[0] == "B") {
+			_inputB = gate[0];
+		} else if ( pin[0] == "Y" ) {
+			_outputs.push_back(gate[0]);
 		} else return;
+	}
+	void printNames ()
+	{
+		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", B: "<<_inputB->getName()<<", Y: ";
+		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
+		cout<<endl;
 	}
 };
 
@@ -98,15 +119,26 @@ class INPUT: public Gate
 {
 public:
 	INPUT ( string gname ): Gate ( gname ) {}
-	void connectGate ( Gate* gate, string pin )
-	{	if ( pin == "Y" )  _outputs.push_back(gate); }
+	void connectGate ( vector<Gate*> gate, vector<string> pin )
+	{	if ( pin[0] == "Y" )  _outputs.push_back(gate[0]); }
+	void printNames ()
+	{
+		cout<<_name<<":  "<<" Y: ";
+		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
+		cout<<endl;
+	}
+
 };
 class OUTPUT: public Gate
 {
 public:
 	OUTPUT ( string gname ): Gate ( gname ) {}
-	void connectGate ( Gate* gate, string pin )
-	{	if ( pin == "A" )  _inputA = gate; }
+	void connectGate ( vector<Gate*> gate, vector<string> pin )
+	{	if ( pin[0] == "A" )  _inputA = gate[0]; }
+	void printNames ()
+	{
+		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<endl;
+	}
 };
 
 } // namespace Cir
