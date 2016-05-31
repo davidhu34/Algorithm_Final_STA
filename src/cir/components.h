@@ -157,7 +157,7 @@ public:
 	}
 	void printState ()
 	{
-		cout<<"-"<<_name<<"/"<<_model<<" "<<_inputA->getName()<<"\n";
+		cout<<"-"<<_name<<"/PO "<<_inputA->getName()<<"\n";
 	}
 };
 
