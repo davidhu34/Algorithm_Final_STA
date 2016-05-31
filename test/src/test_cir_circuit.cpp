@@ -12,9 +12,12 @@ void test_circuit(void)
     using namespace Sta;
 
     Cir::Circuit* Ckt = new Cir::Circuit();
-    ifstream inf;
-    inf.open("../cases/case1/input/case1");	// input
-    Ckt->parseFile(inf);
+    ifstream inf ("test/cases/case1/input/case1", ifstream::in);
+    if ( Ckt->parseFile(inf) )
+    {
+        cout<<"success"<<endl;
+        Ckt->testPrint();
+    }
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
