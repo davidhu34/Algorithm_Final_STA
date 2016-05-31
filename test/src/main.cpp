@@ -21,6 +21,7 @@ void test_minisat(void);
 
 // test_cir_circuit.cpp
 void test_circuit(void);
+void test_circuit_state(void);
 
 int main(int argc, const char* argv[]) {
     // Call test function here.
@@ -44,6 +45,7 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_cir_circuit.cpp\n";
     test_circuit();
+    test_circuit_state();
 
     return 0;
 }
