@@ -31,6 +31,11 @@ public:
 	}
 	//void newModel ( string mname, string gtype ) { case_model[mname] = gtype; }
 	bool parseFile ( ifstream &inf );
+	void testPrint () 
+	{
+		for ( size_t i =0; i < _Gate.size(); i++ )
+		_Gate[i]->printNames();
+	};
 
 private:
 	void connectGates ()
@@ -38,9 +43,11 @@ private:
 		for ( map< string, Wire*>::iterator wit = _Wire.begin();
 			wit != _Wire.end(); wit++) {
 			Gate* from = wit->second->getFrom();
-			Gate* to = wit->second->getTo();
-			from->connectGate( to, "Y");
-			to->connectGate( from, wit->second->getToPin() );
+			vector<Gate*> to = wit->second->getTo();
+			vector<string> pin = wit->second->getToPin();
+			from->connectGate( to, vector<string>(to.size(), "Y") );
+			for ( size_t i = 0; i < to.size(); i++ )
+				to[i]->connectGate( vector<Gate*>(1, from), vector<string>(1, pin[i]) );
 		}
 	};
 	bool inModel ( string str )   
