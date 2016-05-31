@@ -230,51 +230,71 @@ static void basic_validate(const std::vector<const char*>& files,
 // - filename
 //
 static void print_circuit_state(Sta::Cir::Circuit& cir,
-                                const std::string& filename) {
+                                std::ostream& out      ) {
     using namespace Sta::Cir;
 
-    std::ofstream fout(filename.c_str());
-    ASSERT(fout.good(), << "Cannot open " << filename << "\n");
-
-    fout << "-circuit_name " << cir.name << "\n"
-         << "-pi_count " << cir.primary_inputs.size() << "\n"
-         << "-po_count " << cir.primary_outputs.size() << "\n"
-         << "-gate_count " << cir.logic_gates.size() << "\n"
-         << "-nand2_input_pin_name " 
-         << cir.modules[Module::NAND2].input_names[0] << " " 
-         << cir.modules[Module::NAND2].input_names[1] << "\n" 
-         << "-nand2_output_pin_name "
-         << cir.modules[Module::NAND2].output_name << "\n"
-         << "-nor2_input_pin_name " 
-         << cir.modules[Module::NOR2].input_names[0] << " " 
-         << cir.modules[Module::NOR2].input_names[1] << "\n" 
-         << "-nor2_output_pin_name "
-         << cir.modules[Module::NOR2].output_name << "\n"
-         << "-not1_input_pin_name " 
-         << cir.modules[Module::NOT1].input_names[0] << "\n"
-         << "-not1_output_pin_name "
-         << cir.modules[Module::NOT1].output_name << "\n";
-
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        const Gate* g = cir.primary_outputs[i];
-        fout << "-" << g->name << "/PO ";
-
-        for (size_t j = 0; j < g->froms.size(); ++j) {
-            fout << g->froms[j]->name << " ";
-        }
-        fout << "\n";
-    }
+    out << "-circuit_name " << cir.name << "\n"
+        << "-pi_count " << cir.primary_inputs.size() << "\n"
+        << "-po_count " << cir.primary_outputs.size() << "\n"
+        << "-gate_count " << cir.logic_gates.size() << "\n"
+        << "-nand2_input_pin_name " 
+        << cir.modules[Module::NAND2].input_names[0] << " " 
+        << cir.modules[Module::NAND2].input_names[1] << "\n" 
+        << "-nand2_output_pin_name "
+        << cir.modules[Module::NAND2].output_name << "\n"
+        << "-nor2_input_pin_name " 
+        << cir.modules[Module::NOR2].input_names[0] << " " 
+        << cir.modules[Module::NOR2].input_names[1] << "\n" 
+        << "-nor2_output_pin_name "
+        << cir.modules[Module::NOR2].output_name << "\n"
+        << "-not1_input_pin_name " 
+        << cir.modules[Module::NOT1].input_names[0] << "\n"
+        << "-not1_output_pin_name "
+        << cir.modules[Module::NOT1].output_name << "\n";
 
     for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
         const Gate* g = cir.logic_gates[i];
-        fout << "-" << g->name << "/"
-             << cir.modules[g->module].name << " ";
+        // Print fanin
+        out << "-" << g->name << "/"
+            << cir.modules[g->module].name << "/fanin ";
 
         for (size_t j = 0; j < g->froms.size(); ++j) {
-            fout << cir.modules[g->module].input_names[j] << ":"
-                 << g->froms[j]->name << " ";
+            out << cir.modules[g->module].input_names[j] << ":"
+                << g->froms[j]->name << " ";
         }
-        fout << "\n";
+        out << "\n";
+
+        // Print fanout
+        out << "-" << g->name << "/"
+            << cir.modules[g->module].name << "/fanout ";
+
+        for (size_t j = 0; j < g->tos.size(); ++j) {
+            out << cir.modules[g->module].output_name << ":"
+                << g->tos[j]->name << " ";
+        }
+        out << "\n";
+    }
+
+    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+        // Print fanin
+        const Gate* g = cir.primary_outputs[i];
+        out << "-" << g->name << "/PO/fanin ";
+
+        for (size_t j = 0; j < g->froms.size(); ++j) {
+            out << g->froms[j]->name << " ";
+        }
+        out << "\n";
+    }
+
+    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+        // Print fanout
+        const Gate* g = cir.primary_inputs[i];
+        out << "-" << g->name << "/PI/fanout ";
+
+        for (size_t j = 0; j < g->tos.size(); ++j) {
+            out << g->tos[j]->name << " ";
+        }
+        out << "\n";
     }
 }
 
@@ -319,11 +339,16 @@ void test_parse(void) {
     std::cout << "Validating " << file_set_B[1] << "...\n";
 
     basic_validate(file_set_B, cir);
-    print_circuit_state(cir, "test/cases/case0_state.out");
 
+    const char* filename = "test/cases/case0_state.out";
+    std::ofstream fout(filename);
+    ASSERT(fout.good(), << "Cannot open " << filename << "\n");
+
+    print_circuit_state(cir, fout);
+    fout.close();
     cir.clear();
-    cir_compare("test/cases/case0_state.ans",
-                "test/cases/case0_state.out");
+
+    cir_compare("test/cases/case0_state.ans", filename);
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
