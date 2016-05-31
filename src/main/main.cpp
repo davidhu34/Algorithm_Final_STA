@@ -1,22 +1,31 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 
-#include <cir/parser.h>
+//#include <cir/parser.h>
 #include <cir/circuit.h>
-#include <ana/analyzer.h>
-#include <util/writer.h>
+//#include <ana/analyzer.h>
+//#include <util/writer.h>
+
+using namespace std;
 
 static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
 
 int main( int argc, const char* argv[] ) {
-    Circuit* Ckt = new Circuit();
-    ifstream inf ("../inputs/case1", ifstream::in);
-    if ( Ckt->parseFile(inf) ) Ckt->connectGates();
+    Cir::Circuit* Ckt = new Cir::Circuit();
+    ifstream inf ("./input/case1", ifstream::in);
+    if ( Ckt->parseFile(inf) )
+    {
+        cout<<"success"<<endl;
+        Ckt->testPrint();
+    }
 
+    else cout<<"parse failed"<<endl;
+/*
     // Parse arguments.
     std::vector<const char*> infiles;
     const char*              outfile = 0;
@@ -85,6 +94,6 @@ int main( int argc, const char* argv[] ) {
         std::cerr << "Error: Write to file failed.\n";
         return 1;
     }
-
+*/
     return 0;
 }
