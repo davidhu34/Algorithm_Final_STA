@@ -23,8 +23,12 @@ namespace TestUtil {
 // -nor2_output_pin_name  Y
 // -not1_input_pin_name   A
 // -not1_output_pin_name  Y
-// -u1/NAND2              A:u7 B:u8
-// -u9/NOR2               A:u2 B:u7
+// -I1/PI/fanout          Y:u4
+// -O1/PO/fanin           A:u5    
+// -u1/NAND2/fanin        A:u7 B:u8
+// -u1/NAND2/fanout       Y:u13    
+// -u9/NOR2/fanin         A:u2 B:u7
+// -u9/NOR2/fanout        Y:u7     
 // ...
 // ```
 // 
@@ -42,6 +46,9 @@ namespace TestUtil {
 // a value token that it can't find in that value token set, it issues
 // error. At the end, it output all value token set that is not empty.
 // 
+// Order of key token is not important. Order of value token of a key
+// token is not important.
+//
 // Major part of the key token are gates. All token following it are
 // fanins of it. `-U1/NAND2 A:U13 B:U30` means U1 input from U13 through
 // pin A, input from U30 through pin B.
