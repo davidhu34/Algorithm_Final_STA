@@ -75,7 +75,16 @@ public:
 	}
 	void printState ()
 	{
-		cout<<"-"<<_name<<"/"<<_model<<" A:"<<_inputA->getName()<<"\n";
+		// Print fanin
+		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"
+			<<_inputA->getName()<<"\n";
+
+		// Print fanout
+		cout<<"-"<<_name<<"/"<<_model<<"/fanout ";
+		for ( size_t i = 0; i < _outputs.size(); i++ )
+			cout<<"Y:"<<_outputs[i]->getName()<<" ";
+
+		cout<<"\n";
 	}
 };
 class NAND: public Gate
@@ -100,8 +109,16 @@ public:
 	}
 	void printState ()
 	{
-		cout<<"-"<<_name<<"/"<<_model<<" A:"<<_inputA->getName()
+		// Print fanin
+		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputA->getName()
 			<<" B:"<<_inputB->getName()<<"\n";
+
+		// Print fanout
+		cout<<"-"<<_name<<"/"<<_model<<"/fanout ";
+		for ( size_t i = 0; i < _outputs.size(); i++ )
+			cout<<"Y:"<<_outputs[i]->getName()<<" ";
+
+		cout<<"\n";
 	}
 };
 class NOR: public Gate
@@ -126,8 +143,16 @@ public:
 	}
 	void printState ()
 	{
-		cout<<"-"<<_name<<"/"<<_model<<" A:"<<_inputA->getName()
+		// Print fanin
+		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputA->getName()
 			<<" B:"<<_inputB->getName()<<"\n";
+
+		// Print fanout
+		cout<<"-"<<_name<<"/"<<_model<<"/fanout ";
+		for ( size_t i = 0; i < _outputs.size(); i++ )
+			cout<<"Y:"<<_outputs[i]->getName()<<" ";
+
+		cout<<"\n";
 	}
 };
 
@@ -143,7 +168,14 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
-	void printState () { }
+	void printState ()
+	{
+		cout<<"-"<<_name<<"/PI/fanout ";
+		for ( size_t i = 0; i < _outputs.size(); i++ )
+			cout<<_outputs[i]->getName()<<" ";
+
+		cout<<"\n";
+	}
 };
 class OUTPUT: public Gate
 {
@@ -157,7 +189,7 @@ public:
 	}
 	void printState ()
 	{
-		cout<<"-"<<_name<<"/PO "<<_inputA->getName()<<"\n";
+		cout<<"-"<<_name<<"/PO/fanin "<<_inputA->getName()<<"\n";
 	}
 };
 
