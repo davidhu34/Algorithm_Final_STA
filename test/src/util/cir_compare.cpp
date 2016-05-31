@@ -59,12 +59,15 @@ void TestUtil::cir_compare(const std::string& file1,
                 << "existed.\n");
         }
         else {
+            ASSERT(!key_token.empty(),
+                << "Try to insert " << token << " into empty key token.\n");
+
             std::pair<SetIter, bool> p = 
                 token_map[key_token].insert(token);
 
             ASSERT(p.second,
                 << "Value token " << *p.first << " already existed "
-                << "in " << key_token << ".\n";);
+                << "in " << key_token << ".\n");
         }
     }
     fin.close();
@@ -84,7 +87,6 @@ void TestUtil::cir_compare(const std::string& file1,
     ASSERT(fin.good(), << "Cannot open file \"" << file2 << "\".\n");
 
     while (fin >> token) {
-        
         if (token[0] == '-') {
             key_token = token;
 
@@ -92,14 +94,14 @@ void TestUtil::cir_compare(const std::string& file1,
 
             ASSERT(it != token_map.end(),
                 << "Couldn't find key token " << key_token
-                << " in token_map.\n"; continue);
+                << " in token_map.\n");
         }
         else {
             SetIter it = token_map[key_token].find(token);
 
             ASSERT(it != token_map[key_token].end(),
                 << "Value token " << token << " does not exist in " 
-                << "token set of " << key_token << ".\n"; continue);
+                << "token set of " << key_token << ".\n");
 
             token_map[key_token].erase(it);
         }
@@ -109,7 +111,7 @@ void TestUtil::cir_compare(const std::string& file1,
     for (MapIter it = token_map.begin(); it != token_map.end(); ++it) {
         ASSERT(it->second.empty(),
             << "There are some value token left for " << it->first
-            << ": " << it->second << "\n"; continue);
+            << ": " << it->second << "\n");
     }
 
     std::cout << "End cir_compare.\n";
