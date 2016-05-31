@@ -41,7 +41,8 @@ public:
 		std::cout<<"-circuit_name "<<case_name<<"\n"
 			     <<"-pi_count "<<_Inputs.size()<<"\n"
 				 <<"-po_count "<<_Outputs.size()<<"\n"
-				 <<"-gate_count "<<_Gate.size()<<"\n"
+				 <<"-gate_count "<<_Gate.size()-
+				   _Inputs.size()-_Outputs.size()<<"\n"
 				 <<"-nand2_input_pin_name A B\n"
 				 <<"-nand2_output_pin_name Y\n"
 				 <<"-nor2_input_pin_name A B\n"
