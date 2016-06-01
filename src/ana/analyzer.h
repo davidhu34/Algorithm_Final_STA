@@ -16,7 +16,7 @@ namespace Ana {
 //
 // - `paths`     : Found sensitizable paths.
 // - `input_vecs`: Corresponding input vector that cause a path become
-//                 true path.
+//                 true path. Path start from PO, end at PI.
 // - Return an error code: 0 means successful; 1 means error encountered.
 //
 int find_sensitizable_paths(Cir::Circuit&               circuit,
