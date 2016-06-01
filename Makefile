@@ -53,7 +53,7 @@ else ifeq ($(ver),utest) # Unit test version.
     $(info Building unit test.)
 
     # Directories.
-    MODULES := src/util src/cir test/src test/src/util
+    MODULES := src/util src/cir src/ana test/src test/src/util
     LIB_DIR := test/lib lib/minisat_blbd/bin
     LIB     := libminisat_blbd_dbg.a
 
