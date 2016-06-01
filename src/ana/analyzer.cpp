@@ -1,5 +1,6 @@
 #include "sta/src/ana/analyzer.h"
 
+#include <cassert>
 #include <iostream>
 #include <queue>
 #include <stack>
@@ -181,6 +182,7 @@ static void trace(Sta::Cir::Gate*             po,
 
     using Sta::Cir::Gate;
     using Sta::Cir::Path;
+    using sta::Cir::InputVec;
     using Sta::Cir::Module;
     using Minisat::mkLit;
 
@@ -190,8 +192,8 @@ static void trace(Sta::Cir::Gate*             po,
     std::stack<int> continue_point;
 
     // Static variable of that fake function.
-    Minisat::vec<Minisat::Lit> assumptions;
     Path                       path(1, po);
+    Minisat::vec<Minisat::Lit> assumptions;
 
     // Temporary/helper variables.
     Gate* gate;
@@ -212,42 +214,51 @@ pop_function:
 start_function:
     gate = path.back();
 
-    // Function body.
-
     if (gate->value == 2) { // Floating
         assert(gate->module == Module::PO);
 
         gate->value = 0;
+        gate->froms[0]->value = 0;
         assumptions.push(mkLit(gate->var, 1));
+        path.push_back(gate->froms[0]);
 
         // Call function.
         continue_point.push(1);
         goto start_function;
     case 1:
 
+        path.pop_back();
         gate = path.back();
         assumptions.pop();
+        gate->froms[0]->value = 2;
+        gate->value = 2;
+
         gate->value = 1;
+        gate->froms[0]->value = 1;
         assumptions.push(mkLit(gate->var));
+        path.push_back(gate->froms[0]);
 
         // Call function
         continue_point.push(2);
         goto start_function;
     case 2:
 
+        path.pop_back();
         gate = path.back();
         assumptions.pop();
+        gate->froms[0]->value = 2;
         gate->value = 2;
-    }
+    } // if (gate->value == 2) Floating
 
     else if (gate->module == Module::NAND) {
         gA = gate->froms[0];
         gB = gate->froms[1];
-        
+
         // Try to make gA become a true path.
+        // new_code_block(nand_make_from_a_true_path)
         
         if (gA->arrival_time < gB->arrival_time) {
-            if (gA->value == 2) { // Hasn't been assigned any value.
+            if (gA->value == 2) { // Hasn't assign any value.
                 if (gate->value == 1) {
                     gA->value = 0;
                     assumptions.push(mkLit(gA->var, 1));
@@ -262,30 +273,497 @@ start_function:
                     gate = path.back();
                     gA = gate->froms[0];
                     gB = gate->froms[1];
-                    gA->value = 2;
                     assumptions.pop();
+                    gA->value = 2;
                 }
             }
-        }
+        } // if (gA->arrival_time < gB->arrival_time) 
 
         else if (gA->arrival_time > gB->arrival_time) {
+            if (gB->value == 2) {
+                gB->value = 1;
+                assumptions.push(mkLit(gB->var))
 
-    }
+                if (gate->value == 1) {
+                    gA->value = 0;
+                    assumptions.push(mkLit(gA->var, 1));
+                }
+                else { // gate->value == 0
+                    gA->value = 1;
+                    assumptions.push(mkLit(gA->var));
+                }
+
+                path.push_back(gA);
+
+                // Call function
+                continue_point.push(4);
+                goto start_function;
+            case 4:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gA->value = 2;
+                assumptions.pop();
+                gB->value = 2;
+            }
+        } // else if (gA->arrival_time > gB->arrival_time) 
+
+        else { // Both of them have same arrival time.
+            if (gA->value == 2) {
+                if (gate->value == 1) {
+                    gA->value = 0;
+                    assumptions.push(mkLit(gA->var, 1));
+                    path.push_back(gA);
+
+                    // Call function
+                    continue_point.push(5);
+                    goto start_function;
+                case 5:
+
+                    path.pop_back();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gA->value = 2;
+                }
+            }
+
+            if (gB->value == 2) {
+                gB->value = 1;
+                assumptions.push(gB->var);
+
+                if (gate->value == 1) {
+                    gA->value = 0;
+                    assumptions.push(mkLit(gA->var, 1));
+                }
+                else { // gate->value == 0
+                    gA->value = 1;
+                    assumptions.push(mkLit(gA->var));
+                }
+
+                path.push_back(gA);
+
+                // Call function
+                continue_point.push(6);
+                goto start_function;
+            case 6:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gA->value = 2;
+                assumptions.pop();
+                gB->value = 2;
+            }
+        } // else // Both of them have same arrival time.
+
+        // end_code_block(nand_make_from_a_true_path)
+
+        // Try to make gB become a true path.
+        //
+        // 1. Take code block nand_make_from_a_true_path.
+        // 2. Swap "gA->" and "gB->"
+        // 3. Replace "path.push_back(gA)" with "path.push_back(gB)"
+        //
+        // new_code_block(nand_make_from_b_true_path)
+
+        if (gB->arrival_time < gA->arrival_time) {
+            if (gB->value == 2) { // Hasn't assign any value.
+                if (gate->value == 1) {
+                    gB->value = 0;
+                    assumptions.push(mkLit(gB->var, 1));
+                    path.push_back(gB);
+
+                    // Call function
+                    continue_point.push(7);
+                    goto start_function;
+                case 7:
+
+                    path.pop();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gB->value = 2;
+                }
+            }
+        } // if (gB->arrival_time < gA->arrival_time)
+
+        else if (gB->arrival_time > gA->arrival_time) {
+            if (gA->value == 2) {
+                gA->value = 1;
+                assumptions.push(mkLit(gA->var))
+
+                if (gate->value == 1) {
+                    gB->value = 0;
+                    assumptions.push(mkLit(gB->var, 1));
+                }
+                else { // gate->value == 0
+                    gB->value = 1;
+                    assumptions.push(mkLit(gB->var));
+                }
+
+                path.push_back(gB);
+
+                // Call function
+                continue_point.push(8);
+                goto start_function;
+            case 8:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gB->value = 2;
+                assumptions.pop();
+                gA->value = 2;
+            }
+        } // else if (gB->arrival_time > gA->arrival_time)
+
+        else { // Both of them have same arrival time.
+            if (gB->value == 2) {
+                if (gate->value == 1) {
+                    gB->value = 0;
+                    assumptions.push(mkLit(gB->var, 1));
+                    path.push_back(gB);
+
+                    // Call function
+                    continue_point.push(9);
+                    goto start_function;
+                case 9:
+
+                    path.pop_back();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gB->value = 2;
+                }
+            }
+
+            if (gA->value == 2) {
+                gA->value = 1;
+                assumptions.push(gA->var);
+
+                if (gate->value == 1) {
+                    gB->value = 0;
+                    assumptions.push(mkLit(gB->var, 1));
+                }
+                else { // gate->value == 0
+                    gB->value = 1;
+                    assumptions.push(mkLit(gB->var));
+                }
+
+                path.push_back(gB);
+
+                // Call function
+                continue_point.push(10);
+                goto start_function;
+            case 10:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gB->value = 2;
+                assumptions.pop();
+                gA->value = 2;
+            }
+        } // else Both of them have same arrival time.
+
+        // end_code_block(nand_make_from_b_true_path)
+
+    } // if (gate->module == Module::NAND)
 
     else if (gate->module == Module::NOR) {
+        gA = gate->froms[0];
+        gB = gate->froms[1];
 
-    }
+        // Try to make gate->froms[0] become a true path.
+        //
+        // 1. Take code block nand_make_from_a_true_path.
+        // 2. Swap "mkLit(gA->var, 1)" and "mkLit(gA->var)".
+        // 3. Swap "mkLit(gB->var, 1)" and "mkLit(gB->var)".
+        // 4. Swap "value = 0" and "value = 1".
+        // 
+        // new_code_block(nor_make_from_a_true_path)
+        
+        if (gA->arrival_time < gB->arrival_time) {
+            if (gA->value == 2) { // Hasn't assign any value.
+                if (gate->value == 1) {
+                    gA->value = 1;
+                    assumptions.push(mkLit(gA->var));
+                    path.push_back(gA);
+
+                    // Call function
+                    continue_point.push(11);
+                    goto start_function;
+                case 11:
+
+                    path.pop();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gA->value = 2;
+                }
+            }
+        } // if (gA->arrival_time < gB->arrival_time) 
+
+        else if (gA->arrival_time > gB->arrival_time) {
+            if (gB->value == 2) {
+                gB->value = 0;
+                assumptions.push(mkLit(gB->var, 1))
+
+                if (gate->value == 1) {
+                    gA->value = 1;
+                    assumptions.push(mkLit(gA->var));
+                }
+                else { // gate->value == 0
+                    gA->value = 0;
+                    assumptions.push(mkLit(gA-var, 1));
+                }
+
+                path.push_back(gA);
+
+                // Call function
+                continue_point.push(12);
+                goto start_function;
+            case 12:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gA->value = 2;
+                assumptions.pop();
+                gB->value = 2;
+            }
+        } // else if (gA->arrival_time > gB->arrival_time)
+
+        else { // Both of them have same arrival time.
+            if (gA->value == 2) {
+                if (gate->value == 1) {
+                    gA->value = 1;
+                    assumptions.push(mkLit(gA->var));
+                    path.push_back(gA);
+
+                    // Call function
+                    continue_point.push(13);
+                    goto start_function;
+                case 13:
+
+                    path.pop_back();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gA->value = 2;
+                }
+            }
+
+            if (gB->value == 2) {
+                gB->value = 0;
+                assumptions.push(gB->var);
+
+                if (gate->value == 1) {
+                    gA->value = 1;
+                    assumptions.push(mkLit(gA->var));
+                }
+                else { // gate->value == 0
+                    gA->value = 0;
+                    assumptions.push(mkLit(gA-var, 1));
+                }
+
+                path.push_back(gA);
+
+                // Call function
+                continue_point.push(14);
+                goto start_function;
+            case 14:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gA->value = 2;
+                assumptions.pop();
+                gB->value = 2;
+            }
+        } // else // Both of them have same arrival time.
+
+        // end_code_block(nor_make_from_a_true_path)
+
+        // Try to make gate->froms[1] become a true path
+        //
+        // 1. Take code block nor_make_from_a_true_path.
+        // 2. Swap "gA->" and "gB->".
+        // 3. Replace "path.push_back(gA)" with "path.push_back(gB)".
+        // 4. Renew continue_point.
+        //
+        // new_code_block(nor_make_from_b_true_path)
+        
+        if (gB->arrival_time < gA->arrival_time) {
+            if (gB->value == 2) { // Hasn't assign any value.
+                if (gate->value == 1) {
+                    gB->value = 1;
+                    assumptions.push(mkLit(gB->var));
+                    path.push_back(gB);
+
+                    // Call function
+                    continue_point.push(15);
+                    goto start_function;
+                case 15:
+
+                    path.pop();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gB->value = 2;
+                }
+            }
+        } // if (gB->arrival_time < gA->arrival_time)
+
+        else if (gB->arrival_time > gA->arrival_time) {
+            if (gA->value == 2) {
+                gA->value = 0;
+                assumptions.push(mkLit(gA->var, 1))
+
+                if (gate->value == 1) {
+                    gB->value = 1;
+                    assumptions.push(mkLit(gB->var));
+                }
+                else { // gate->value == 0
+                    gB->value = 0;
+                    assumptions.push(mkLit(gA-var, 1));
+                }
+
+                path.push_back(gB);
+
+                // Call function
+                continue_point.push(16);
+                goto start_function;
+            case 16:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gB->value = 2;
+                assumptions.pop();
+                gA->value = 2;
+            }
+        } // else if (gB->arrival_time > gA->arrival_time)
+
+        else { // Both of them have same arrival time.
+            if (gB->value == 2) {
+                if (gate->value == 1) {
+                    gB->value = 1;
+                    assumptions.push(mkLit(gB->var));
+                    path.push_back(gB);
+
+                    // Call function
+                    continue_point.push(17);
+                    goto start_function;
+                case 17:
+
+                    path.pop_back();
+                    gate = path.back();
+                    gA = gate->froms[0];
+                    gB = gate->froms[1];
+                    assumptions.pop();
+                    gB->value = 2;
+                }
+            }
+
+            if (gA->value == 2) {
+                gA->value = 0;
+                assumptions.push(gA->var);
+
+                if (gate->value == 1) {
+                    gB->value = 1;
+                    assumptions.push(mkLit(gB->var));
+                }
+                else { // gate->value == 0
+                    gB->value = 0;
+                    assumptions.push(mkLit(gA-var, 1));
+                }
+
+                path.push_back(gB);
+
+                // Call function
+                continue_point.push(18);
+                goto start_function;
+            case 18:
+
+                path.pop_back();
+                gate = path.back();
+                gA = gate->froms[0];
+                gB = gate->froms[1];
+                assumptions.pop();
+                gB->value = 2;
+                assumptions.pop();
+                gA->value = 2;
+            }
+        } // else Both of them have same arrival time.
+
+        // end_code_block(nor_make_from_b_true_path)
+
+    } // else if (gate->module == Module::NOR)
 
     else if (gate->module == Module::NOT) {
+        gA = gate->froms[0];
 
-    }
+        if (gA->value == 2) {
+            if (gate->value == 1) {
+                gA->value = 0;
+                assumptions.push(mkLit(gA->var, 1));
+            }
+            else { // gate->value == 0
+                gA->value = 1;
+                assumptions.push(mkLit(gA->var));
+            }
+
+            path.push_back(gA);
+
+            // Call function
+            continue_point.push(19);
+            goto start_function;
+        case 19:
+
+            path.pop_back();
+            gate = path.back();
+            gA = gate->froms[0];
+            assumptions.pop();
+            gA->value = 2;
+        }
+    } // else if (gate->module == Module::NOT)
 
     else if (gate->module == Module::PI && solver.solve(assumptions)) {
+        paths.push_back(path);
 
+        InputVec input_vec(cir.primary_inputs.size());
+        for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+            input_vec[i] = solver.model[cir.primary_inputs[i]->var] ^ 1;
+        }
+
+        input_vecs.push_back(input_vec);
     }
 
     else {
-
+        assert(false, "Error: Unknown gate type.\n");
     }
 
     goto pop_function;
@@ -309,6 +787,14 @@ int Sta::Ana::find_sensitizable_paths(
     // Initialize gate value to undefined state.
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
         cir.primary_inputs[i]->value = 2;
+    }
+    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+        cir.primary_outputs[i]->value = 2;
+    }
+    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
+        cir.logic_gates[i]->value = 2;
+    }
+
     Minisat::Solver solver;
 
     // Assign SAT variable to gate.
