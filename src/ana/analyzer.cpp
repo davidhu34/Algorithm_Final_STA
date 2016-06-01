@@ -15,6 +15,7 @@
 //
 static void calculate_arrival_time(Sta::Cir::Circuit& cir) {
     using Sta::Cir::Gate;
+    using Sta::Cir::Module;
 
     // Assign 0 to all gate's tag. It means the number of fan-in of
     // that gate which has arrived.
@@ -175,14 +176,14 @@ static bool add_NOT_clause(Minisat::Var A,
 // Add sensitizable path to `paths` and an input vector that can make
 // that path sensitized.
 //
-static void trace(Sta::Cir::Gate*             po,
-                  Sta::Cir::Circuit&          cir,
-                  std::vector<Cir::Path>&     paths, 
-                  std::vector<Cir::InputVec>& input_vecs) {
+static void trace(Sta::Cir::Gate*                  po,
+                  Sta::Cir::Circuit&               cir,
+                  std::vector<Sta::Cir::Path>&     paths, 
+                  std::vector<Sta::Cir::InputVec>& input_vecs) {
 
     using Sta::Cir::Gate;
     using Sta::Cir::Path;
-    using sta::Cir::InputVec;
+    using Sta::Cir::InputVec;
     using Sta::Cir::Module;
     using Minisat::mkLit;
 
@@ -219,7 +220,7 @@ start_function:
 
         gate->value = 0;
         gate->froms[0]->value = 0;
-        assumptions.push(mkLit(gate->var, 1));
+        assumptions.push(mkLit(gate->froms[0]->var, 1));
         path.push_back(gate->froms[0]);
 
         // Call function.
@@ -235,7 +236,7 @@ start_function:
 
         gate->value = 1;
         gate->froms[0]->value = 1;
-        assumptions.push(mkLit(gate->var));
+        assumptions.push(mkLit(gate->froms[0]->var));
         path.push_back(gate->froms[0]);
 
         // Call function
@@ -250,7 +251,7 @@ start_function:
         gate->value = 2;
     } // if (gate->value == 2) Floating
 
-    else if (gate->module == Module::NAND) {
+    else if (gate->module == Module::NAND2) {
         gA = gate->froms[0];
         gB = gate->froms[1];
 
@@ -269,7 +270,7 @@ start_function:
                     goto start_function;
                 case 3:
 
-                    path.pop();
+                    path.pop_back();
                     gate = path.back();
                     gA = gate->froms[0];
                     gB = gate->froms[1];
@@ -282,7 +283,7 @@ start_function:
         else if (gA->arrival_time > gB->arrival_time) {
             if (gB->value == 2) {
                 gB->value = 1;
-                assumptions.push(mkLit(gB->var))
+                assumptions.push(mkLit(gB->var));
 
                 if (gate->value == 1) {
                     gA->value = 0;
@@ -334,7 +335,7 @@ start_function:
 
             if (gB->value == 2) {
                 gB->value = 1;
-                assumptions.push(gB->var);
+                assumptions.push(mkLit(gB->var));
 
                 if (gate->value == 1) {
                     gA->value = 0;
@@ -385,7 +386,7 @@ start_function:
                     goto start_function;
                 case 7:
 
-                    path.pop();
+                    path.pop_back();
                     gate = path.back();
                     gA = gate->froms[0];
                     gB = gate->froms[1];
@@ -398,7 +399,7 @@ start_function:
         else if (gB->arrival_time > gA->arrival_time) {
             if (gA->value == 2) {
                 gA->value = 1;
-                assumptions.push(mkLit(gA->var))
+                assumptions.push(mkLit(gA->var));
 
                 if (gate->value == 1) {
                     gB->value = 0;
@@ -450,7 +451,7 @@ start_function:
 
             if (gA->value == 2) {
                 gA->value = 1;
-                assumptions.push(gA->var);
+                assumptions.push(mkLit(gA->var));
 
                 if (gate->value == 1) {
                     gB->value = 0;
@@ -481,9 +482,9 @@ start_function:
 
         // end_code_block(nand_make_from_b_true_path)
 
-    } // if (gate->module == Module::NAND)
+    } // if (gate->module == Module::NAND2)
 
-    else if (gate->module == Module::NOR) {
+    else if (gate->module == Module::NOR2) {
         gA = gate->froms[0];
         gB = gate->froms[1];
 
@@ -508,7 +509,7 @@ start_function:
                     goto start_function;
                 case 11:
 
-                    path.pop();
+                    path.pop_back();
                     gate = path.back();
                     gA = gate->froms[0];
                     gB = gate->froms[1];
@@ -521,7 +522,7 @@ start_function:
         else if (gA->arrival_time > gB->arrival_time) {
             if (gB->value == 2) {
                 gB->value = 0;
-                assumptions.push(mkLit(gB->var, 1))
+                assumptions.push(mkLit(gB->var, 1));
 
                 if (gate->value == 1) {
                     gA->value = 1;
@@ -529,7 +530,7 @@ start_function:
                 }
                 else { // gate->value == 0
                     gA->value = 0;
-                    assumptions.push(mkLit(gA-var, 1));
+                    assumptions.push(mkLit(gA->var, 1));
                 }
 
                 path.push_back(gA);
@@ -573,15 +574,15 @@ start_function:
 
             if (gB->value == 2) {
                 gB->value = 0;
-                assumptions.push(gB->var);
+                assumptions.push(mkLit(gB->var, 1));
 
                 if (gate->value == 1) {
-                    gA->value = 1;
+                    gA->value = 1; ??
                     assumptions.push(mkLit(gA->var));
                 }
                 else { // gate->value == 0
                     gA->value = 0;
-                    assumptions.push(mkLit(gA-var, 1));
+                    assumptions.push(mkLit(gA->var, 1));
                 }
 
                 path.push_back(gA);
@@ -625,7 +626,7 @@ start_function:
                     goto start_function;
                 case 15:
 
-                    path.pop();
+                    path.pop_back();
                     gate = path.back();
                     gA = gate->froms[0];
                     gB = gate->froms[1];
@@ -638,7 +639,7 @@ start_function:
         else if (gB->arrival_time > gA->arrival_time) {
             if (gA->value == 2) {
                 gA->value = 0;
-                assumptions.push(mkLit(gA->var, 1))
+                assumptions.push(mkLit(gA->var, 1));
 
                 if (gate->value == 1) {
                     gB->value = 1;
@@ -646,7 +647,7 @@ start_function:
                 }
                 else { // gate->value == 0
                     gB->value = 0;
-                    assumptions.push(mkLit(gA-var, 1));
+                    assumptions.push(mkLit(gB->var, 1));
                 }
 
                 path.push_back(gB);
@@ -690,7 +691,7 @@ start_function:
 
             if (gA->value == 2) {
                 gA->value = 0;
-                assumptions.push(gA->var);
+                assumptions.push(mkLit(gA->var, 1));
 
                 if (gate->value == 1) {
                     gB->value = 1;
@@ -698,7 +699,7 @@ start_function:
                 }
                 else { // gate->value == 0
                     gB->value = 0;
-                    assumptions.push(mkLit(gA-var, 1));
+                    assumptions.push(mkLit(gB->var, 1));
                 }
 
                 path.push_back(gB);
@@ -721,9 +722,9 @@ start_function:
 
         // end_code_block(nor_make_from_b_true_path)
 
-    } // else if (gate->module == Module::NOR)
+    } // else if (gate->module == Module::NOR2)
 
-    else if (gate->module == Module::NOT) {
+    else if (gate->module == Module::NOT1) {
         gA = gate->froms[0];
 
         if (gA->value == 2) {
@@ -749,7 +750,7 @@ start_function:
             assumptions.pop();
             gA->value = 2;
         }
-    } // else if (gate->module == Module::NOT)
+    } // else if (gate->module == Module::NOT1)
 
     else if (gate->module == Module::PI && solver.solve(assumptions)) {
         paths.push_back(path);
@@ -763,7 +764,7 @@ start_function:
     }
 
     else {
-        assert(false, "Error: Unknown gate type.\n");
+        assert(false && "Error: Unknown gate type.\n");
     }
 
     goto pop_function;
