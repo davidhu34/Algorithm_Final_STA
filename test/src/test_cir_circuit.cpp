@@ -13,13 +13,17 @@ void test_circuit(void)
     using namespace Sta;
     Cir::Circuit* Ckt = new Cir::Circuit();
     ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
+    if ( !inf.good() ) {
+        cout<<"open fail";
+    } else {
+
     Cir::Parser* parser = new Cir::Parser( inf, Ckt );
     if ( parser->parseCase() )
     {
         cout<<"success"<<endl;
         Ckt->testPrint();
     }
-
+    }
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 

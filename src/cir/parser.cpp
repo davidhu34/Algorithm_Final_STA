@@ -14,13 +14,14 @@ bool Parser::moduleERR ()
 
 bool Parser::parseCase ()
 {
-	if ( getNextLine() )	return moduleERR();
+	if ( !getNextLine() )	return moduleERR();
+cout<<"got line 1"<<endl;
 	if ( parseWord() != "module" )	return moduleERR();	// module initialized
-
+cout<<"got \"module\""<<endl;
 	string caseName = parseWord();	// get case name
 	if ( caseName == "" )   return moduleERR();
 	_ckt->setCaseName(caseName);
-	
+cout<<"got case name"<<endl;
 	vector<string> varReg = parseVars();	// get parameters
 	if ( varReg.size() == 0 )	moduleERR();
 
@@ -28,7 +29,7 @@ bool Parser::parseCase ()
 	{
 		string token = parseWord();
 		if ( token == "" ) return moduleERR();
-		
+cout<<"got token: "<<token<<endl;
 		if ( inModel(token) ) {	
 			if ( !parseGate(token) )	return moduleERR();
 		} else if ( token == "endmodule") break;
@@ -119,8 +120,12 @@ bool Parser::getNextLine ()
 {
 	if ( getline( _inf, _parsingStr ) )
 	{
+		cout<<_parsingStr<<endl;
 		_parsingLine++;
 		size_t commentStart = _parsingStr.find("//");
+		cout<<"comment found at: ";
+		if( commentStart == string::npos ) cout<<"npos"<<endl;
+		else cout <<commentStart <<endl;
 		if ( commentStart != string::npos )
 			_parsingStr.erase( _parsingStr.begin() + commentStart, _parsingStr.end() );
 		else if ( commentStart == 0 ) return getNextLine();

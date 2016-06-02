@@ -21,6 +21,8 @@ public:
 	Parser ( ifstream &inf, Circuit* ckt ): _inf(inf)
 	{
 		_ckt = ckt;
+		_parsingLine = 0;
+		_parsingStr = "";
 		parseModel();
 	}
 	bool parseModel ()
