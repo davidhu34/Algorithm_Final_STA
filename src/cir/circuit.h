@@ -62,9 +62,11 @@ private:
 			Gate* from = wit->second->getFrom();
 			vector<Gate*> to = wit->second->getTo();
 			vector<string> pin = wit->second->getToPin();
-			from->connectGate( to, vector<string>(to.size(), "Y") );
 			for ( size_t i = 0; i < to.size(); i++ )
-				to[i]->connectGate( vector<Gate*>(1, from), vector<string>(1, pin[i]) );
+			{
+				from->connectGate( to[i], "Y" );
+				to[i]->connectGate( from, pin[i] );
+			}
 		}
 	};
 	bool inModel ( string str )   

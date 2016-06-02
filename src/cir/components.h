@@ -41,7 +41,7 @@ public:
 		_name = gname;
 		_model = mname;
 	}
-	virtual void connectGate ( vector<Gate*> gate, vector<string> pin ) = 0;
+	virtual void connectGate ( Gate* gate, string pin ) = 0;
 	virtual void printNames () = 0;
 	virtual void printState () = 0;
 	string getName() {return _name;}
@@ -59,12 +59,13 @@ class NOT: public Gate
 {
 public:
 	NOT ( string gname, string mname ): Gate ( gname, mname ) {};
-	void connectGate ( vector<Gate*> gate, vector<string> pin )
+	void connectGate ( Gate* gate, string pin )
 	{
-		if ( pin[0] == "A" ) {
-			_inputA = gate[0];
-		} else if ( pin[0] == "Y" ) {
-			_outputs.push_back(gate[0]);
+		cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+		if ( pin == "A" ) {
+			_inputA = gate;
+		} else if ( pin == "Y" ) {
+			_outputs.push_back(gate);
 		} else return;
 	}
 	void printNames ()
@@ -91,14 +92,14 @@ class NAND: public Gate
 {
 public:
 	NAND ( string gname, string mname ): Gate ( gname, mname ) {}
-	void connectGate ( vector<Gate*> gate, vector<string> pin )
-	{
-		if ( pin[0] == "A" ) {
-			_inputA = gate[0];
-		} else if ( pin[0] == "B") {
-			_inputB = gate[0];
-		} else if ( pin[0] == "Y" ) {
-			_outputs.push_back(gate[0]);
+	void connectGate ( Gate* gate, string pin )
+	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+		if ( pin == "A" ) {
+			_inputA = gate;
+		} else if ( pin == "B") {
+			_inputB = gate;
+		} else if ( pin == "Y" ) {
+			_outputs.push_back(gate);
 		} else return;
 	}
 	void printNames ()
@@ -125,14 +126,14 @@ class NOR: public Gate
 {
 public:
 	NOR ( string gname, string mname ): Gate ( gname, mname ) {}
-	void connectGate ( vector<Gate*> gate, vector<string> pin )
-	{
-		if ( pin[0] == "A" ) {
-			_inputA = gate[0];
-		} else if ( pin[0] == "B") {
-			_inputB = gate[0];
-		} else if ( pin[0] == "Y" ) {
-			_outputs.push_back(gate[0]);
+	void connectGate ( Gate* gate, string pin )
+	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+		if ( pin == "A" ) {
+			_inputA = gate;
+		} else if ( pin == "B") {
+			_inputB = gate;
+		} else if ( pin == "Y" ) {
+			_outputs.push_back(gate);
 		} else return;
 	}
 	void printNames ()
@@ -160,8 +161,9 @@ class INPUT: public Gate
 {
 public:
 	INPUT ( string gname ): Gate ( gname ) {}
-	void connectGate ( vector<Gate*> gate, vector<string> pin )
-	{	if ( pin[0] == "Y" )  _outputs.push_back(gate[0]); }
+	void connectGate ( Gate* gate, string pin )
+	{	cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+		if ( pin == "Y" )  _outputs.push_back(gate); }
 	void printNames ()
 	{
 		cout<<_name<<":  "<<" Y: ";
@@ -181,8 +183,9 @@ class OUTPUT: public Gate
 {
 public:
 	OUTPUT ( string gname ): Gate ( gname ) {}
-	void connectGate ( vector<Gate*> gate, vector<string> pin )
-	{	if ( pin[0] == "A" )  _inputA = gate[0]; }
+	void connectGate ( Gate* gate, string pin )
+	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+		if ( pin == "A" )  _inputA = gate; }
 	void printNames ()
 	{
 		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<endl;
