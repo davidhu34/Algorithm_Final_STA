@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include "sta/src/ana/analyzer.h"
 #include "sta/src/cir/circuit.h"
@@ -10,7 +11,7 @@ static void print_connection(const Sta::Cir::Gate*    g1,
                              const Sta::Cir::Circuit& cir) {
     using namespace Sta::Cir;
 
-    std::cout << g1->name;
+    std::cout << std::setw(3) << g1->name;
 
     if (g1->module == Module::NAND2 || 
         g1->module == Module::NOR2  ||
@@ -19,7 +20,7 @@ static void print_connection(const Sta::Cir::Gate*    g1,
         std::cout << "/" << cir.modules[g1->module].output_name;
     }
 
-    std::cout << " > " << g2->name;
+    std::cout << " > " << std::setw(3) << g2->name;
 
     if (g2->module == Module::NAND2 || 
         g2->module == Module::NOR2  ||
@@ -49,20 +50,27 @@ void test_find_sensitizable_paths(void) {
     int return_code = parse(files, cir);
     ASSERT(return_code == 0, << "Parse into circuit failed.\n");
 
-    std::vector<Path>     paths;
-    std::vector<InputVec> input_vecs;
+    std::vector<Path>                paths;
+    std::vector< std::vector<bool> > values;
+    std::vector<InputVec>            input_vecs;
     
-    return_code = find_sensitizable_paths(cir, 10, 7, paths, input_vecs);
+    return_code = find_sensitizable_paths(
+                      cir, 10, 7, paths, values, input_vecs);
     ASSERT(return_code == 0, << "Find answer failed.\n");
 
     // Print out all paths.
     for (size_t i = 0; i < paths.size(); ++i) {
-        std::cout << "paths[" << i << "]: ";
+        //std::cout << "paths[" << i << "]: ";
         
         // Print all gate except PO.
-        for (size_t j = paths[i].size(); j > 1; --j) {
-            print_connection(paths[i][j - 1], paths[i][j - 2], cir);
+        size_t j = paths[i].size();
+        std::cout << "(" << values[i][j - 1] << ") ";
+        print_connection(paths[i][j - 1], paths[i][j - 2], cir);
+
+        for (--j; j > 1; --j) {
             std::cout << " > ";
+            std::cout << "(" << values[i][j - 1] << ") ";
+            print_connection(paths[i][j - 1], paths[i][j - 2], cir);
         }
         std::cout << "\n";
     }
