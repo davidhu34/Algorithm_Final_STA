@@ -29,7 +29,10 @@ See `doc/requirement.md` for more information.
 ## Synopsys
 
 ```
-sta [-o <output_file>] <input_file> ...
+sta -t <time_constraint> 
+    -s <slack_constraint> 
+    [-o <output_file>] 
+    <input_files>
 ```
 
 ## Description
@@ -45,6 +48,12 @@ see `doc/requirement.md`.
 <dt><code>-o</code></dt>
 <dd><p>Output to this file.</p></dd>
 
+<dt><code>-t &lt;time_constraint&gt;</code></dt>
+<dd><p>Specify time constraint.</p></dd>
+
+<dt><code>-s &lt;slack_constraint&gt;</code></dt>
+<dd><p>Specify slack constraint.</p></dd>
+
 <dt><code>&lt;output_file&gt;</code></dt>
 <dd><p>If given, a true path set will be printed into it.</p></dd>
 
@@ -56,24 +65,67 @@ see `doc/requirement.md`.
 
 ## Directory
 
-Directory      |Put what kind of file?
--------------- |------------------------------------------------------
-bin/           |Executable, product.
-doc/           |Documentation, reports.
-lib/           |Library needed for this program, e.g. openMP.
-res/           |Resources needed for this program, such as images.
-src/           |Source code, grouped into modules.
-src/main/      |Main module, should contain only main function and utilities don't need to be tested.
-src/util/      |Utility module, can be used by other modules.
-src/cir/       |Circuit module, contain parser and circuits elements.
-src/ana/       |Analyzer module, contain anything about STA algo.
-test/          |Everything related to testing.
-test/doc/      |Testing documentation and results.
-test/cases/    |Input and output of all cases.
-test/lib/      |Library needed for testing.
-test/src/      |Source code of testing.
-test/src/util/ |Some utilities for testing.
-test/scripts/  |Scripts for testing.
+<table>
+
+<tr><th>Directory</th>
+<th>Put what kind of file?</th></tr>
+
+<tr><td>bin/</td>
+<td>Executable, library, product.</td></tr>
+
+<tr><td>doc/</td>
+<td>Documentation, design, reference.</td>
+
+<tr><td>lib/</td>
+<td>Library needed for this program. That include headers of that 
+library.</td>
+
+<tr><td>res/</td>
+<td>Resources needed for this program, such as images.</td>
+
+<tr><td>src/</td>
+<td>Source code, grouped into modules.</td>
+
+<tr><td>src/main/</td>
+<td>Main module, should contain only main function and utilities
+that don't need to perform unit test.</td>
+
+<tr><td>src/util/</td>
+<td>Utility module. Code inside here should not include other modules,
+but other module can include this this module. E.g. some container
+classes or general algorithms.</td>
+
+<tr><td>src/cir/</td>
+<td>Circuit module, contain parser, writer and circuits elements.</td>
+
+<tr><td>src/ana/</td>
+<td>Analyzer module, contain anything about STA algorithms.</td>
+
+<tr><td>test/</td>
+<td>Everything related to testing.</td>
+
+<tr><td>test/doc/</td>
+<td>Testing documentation and results, performance report.</td>
+
+<tr><td>test/cases/</td>
+<td>Input and output of all cases.</td>
+
+<tr><td>test/lib/</td>
+<td>Library needed for testing.</td>
+
+<tr><td>test/src/</td>
+<td>Source code for unit testing.</td>
+
+<tr><td>test/src/util/</td>
+<td>Some utilities for testing.</td>
+
+<tr><td>test/scripts/</td>
+<td>Scripts for testing.</td>
+
+<tr><td>test/cic_program/</td> 
+<td>Contain verification programs provided by Cadence.</td>
+
+</table>
 
 ### How to Work With It
 

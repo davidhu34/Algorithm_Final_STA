@@ -83,7 +83,7 @@
 
 - Basically the idea is trace from output pins toward input pins. Try
   every possibility (condition) that make a path become a true path.
-  Check whether our assumption has any contradiction.
+  Check whether our assumptions has any contradiction.
 
 - Monitor slack constraint and time constraint while tracing.
 
@@ -93,10 +93,11 @@ TODO: Parallelize it.
 
 ```
 sensitizable_paths = vector()
+values = vector()
 input_vecs = vector()
 
 path = vector()
-assumption = vector()
+assumptions = vector()
 
 gate = null
 
@@ -117,134 +118,190 @@ function trace()
 
         gate.value = 0
         gate.from.value = 0
-        assumption.push(-gate.from.var)
+        assumptions.push(-gate.from.var)
         path.push(gate.from)
         trace()
         path.pop()
         gate = path.back()
-        assumption.pop()
+        assumptions.pop()
         gate.from.value = X
         gate.value = X
 
         gate.value = 1
         gate.from.value = 1
-        assumption.push(gate.from.var)
+        assumptions.push(gate.from.var)
         path.push(gate.from)
         trace()
         path.pop()
         gate = path.back()
-        assumption.pop()
+        assumptions.pop()
         gate.from.value = X
         gate.value = X
 
     else if gate.type == NAND
         # Try to make gate.from_a become a true path.
 
-        `new_code_block(nand_make_from_a_true_path)
         if gate.from_a.arrival_time < gate.from_b.arrival_time
             if gate.from_a.value == X
                 if gate.value == 1
                     gate.from_a.value = 0
-                    assumption.push(-gate.from_a.var)
+                    assumptions.push(-gate.from_a.var)
                     path.push(gate.from_a)
                     trace()
                     path.pop()
                     gate = path.back()
-                    assumption.pop()
+                    assumptions.pop()
                     gate.from_a.value = X
 
         else if gate.from_a.arrival_time > gate.from_b.arrival_time
             if gate.from_b.value == X
                 gate.from_b.value = 1
-                assumption.push(gate.from_b.var)
+                assumptions.push(gate.from_b.var)
 
                 if gate.value == 1
                     gate.from_a.value = 0
-                    assumption.push(-gate.from_a.var)
+                    assumptions.push(-gate.from_a.var)
                 else # gate.value == 0
                     gate.from_a.value = 1
-                    assumption.push(gate.from_a.var)
+                    assumptions.push(gate.from_a.var)
 
                 path.push(gate.from_a)
                 trace()
                 path.pop()
                 gate = path.back()
-                assumption.pop()
+                assumptions.pop()
                 gate.from_a.value = X
-                assumption.pop()
+                assumptions.pop()
                 gate.from_b.value = X
 
         else # Both of them have same arrival time.
-            if gate.from_a.value == X
-                if gate.value == 1
+            if gate.value == 1
+                if gate.from_a.value == X
                     gate.from_a.value = 0
-                    assumption.push(-gate.from_a.var)
+                    assumptions.push(-gate.from_a.var)
                     path.push(gate.from_a)
                     trace()
                     path.pop()
                     gate = path.back()
-                    assumption.pop()
+                    assumptions.pop()
                     gate.from_a.value = X
 
+            else # gate.value == 0
+                if gate.from_b.value == X
+                    gate.from_b.value = 1
+                    assumptions.push(gate.from_b.var)
+                    gate.from_a.value = 1
+                    assumptions.push(gate.from_a.var)
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+                    assumptions.pop()
+                    gate.from_b.value = X
+
+        # Try to make gate.from_b become a true path.
+
+        # Same logic as above, just swap "from_a" and "from_b".
+
+    else if gate.type == NOR
+        # Try to make gate.from_a become a true path.
+
+        if gate.from_a.arrival_time < gate.from_b.arrival_time
+            if gate.from_a.value == X
+                if gate.value == 0
+                    gate.from_a.value = 1
+                    assumptions.push(gate.from_a.var)
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+
+        else if gate.from_a.arrival_time > gate.from_b.arrival_time
             if gate.from_b.value == X
-                gate.from_b.value = 1
-                assumption.push(gate.from_b.var)
+                gate.from_b.value = 0
+                assumptions.push(gate.from_b.var)
 
                 if gate.value == 1
                     gate.from_a.value = 0
-                    assumption.push(-gate.from_a.var)
+                    assumptions.push(-gate.from_a.var)
                 else # gate.value == 0
                     gate.from_a.value = 1
-                    assumption.push(gate.from_a.var)
+                    assumptions.push(gate.from_a.var)
 
                 path.push(gate.from_a)
                 trace()
                 path.pop()
                 gate = path.back()
-                assumption.pop()
+                assumptions.pop()
                 gate.from_a.value = X
-                assumption.pop()
+                assumptions.pop()
                 gate.from_b.value = X
-        `end_code_block(basic_logic)
+
+        else # Both of them have same arrival time.
+            if gate.value == 1
+                if gate.from_a.value == X
+                    gate.from_a.value = 0
+                    assumptions.push(-gate.from_a.var)
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+
+            else # gate.value == 0
+                if gate.from_b.value == X
+                    gate.from_b.value = 0
+                    assumptions.push(-gate.from_b.var)
+                    gate.from_a.value = 1
+                    assumptions.push(gate.from_a.var)
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+                    assumptions.pop()
+                    gate.from_b.value = X
 
         # Try to make gate.from_b become a true path.
 
-        `print(swap("from_a", "from_b", nand_make_from_a_true_path))
-
-    else if gate.type == NOR
-        # Try to make gate.from_a become a true path.
-
-        `new_code_block(nor_make_from_a_true_path)
-        `print(swap("assumption.push(-gate", "assumption.push(gate", \
-               swap("0", "1", basic_logic)))
-        `end_code_block(nor_make_from_a_true_path)
-
-        # Try to make gate.from_b become a true path.
-
-        `print(swap("from_a", "from_b", nor_make_from_a_true_path))
+        # Same logic as above, just swap "from_a" and "from_b".
 
     else if gate.type == NOT
         if gate.from.value == X
             if gate.value == 1
                 gate.from.value = 0
-                assumption.push(-gate.from.var)
+                assumptions.push(-gate.from.var)
             else # gate.value == 0
                 gate.from.value = 1
-                assumption.push(gate.from.var)
+                assumptions.push(gate.from.var)
 
             path.push(gate.from)
             trace()
             path.pop()
             gate = path.back()
-            assumption.pop()
+            assumptions.pop()
             gate.from.value = X
 
-    else if gate.type == PI and no_conflict(assumption)
-        sensitizable_paths.push(reverse(path))
-        input_vec = vector()
-        for pi in input_pins
-            input_vec.push(pi.value)
-        input_vecs.push(input_vec)
+    else if gate.type == PI 
+        if time_constraint - delay(path) < slack_constraint
+            if no_conflict(assumptions)
+                sensitizable_paths.push(path)
+
+                path_value = vector()
+                for g in path
+                    path_value.push(g.value)
+                values.push(path_value)
+
+                input_vec = vector()
+                for pi in input_pins
+                    input_vec.push(pi.value)
+                input_vecs.push(input_vec)
         
     else
         print("Error: Unknown gate type.\n")
