@@ -162,6 +162,12 @@ static bool add_NOT_clause(Minisat::Var A,
     return true;
 }
 
+// Calculate delay of a path.
+//
+static inline int delay(const Sta::Cir::Path& path) {
+    return path.size() - 2;
+}
+
 // Call function and create a return point. `n` is the return point
 // index. It must be a literal number without any operation. Each
 // return point index must be unique. Please do not put semicolon
@@ -219,6 +225,8 @@ static bool add_NOT_clause(Minisat::Var A,
 //
 static void trace(Sta::Cir::Gate*                   po,
                   Sta::Cir::Circuit&                cir,
+                  int                               time_constraint,
+                  int                               slack_constraint,
                   Minisat::Solver&                  solver,
                   std::vector<Sta::Cir::Path>&      paths, 
                   std::vector< std::vector<bool> >& values,
@@ -538,23 +546,25 @@ start_function:
     } // else if (gate->module == Module::NOT1)
 
     else if (gate->module == Module::PI) {
-        if (solver.solve(assumptions)) {
-            paths.push_back(path);
+        if (time_constraint - delay(path) < slack_constraint) {
+            if (solver.solve(assumptions)) {
+                paths.push_back(path);
 
-            // Record value of all gate along a path.
-            std::vector<bool> path_value(path.size());
-            for (size_t i = 0; i < path.size(); ++i) {
-                path_value[i] = path[i]->value;
-            }
-            values.push_back(path_value);
+                // Record value of all gate along a path.
+                std::vector<bool> path_value(path.size());
+                for (size_t i = 0; i < path.size(); ++i) {
+                    path_value[i] = path[i]->value;
+                }
+                values.push_back(path_value);
 
-            // Record input vector.
-            InputVec input_vec(cir.primary_inputs.size());
-            for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-                input_vec[i] = 
-                    toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
+                // Record input vector.
+                InputVec input_vec(cir.primary_inputs.size());
+                for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+                    input_vec[i] = 
+                        toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
+                }
+                input_vecs.push_back(input_vec);
             }
-            input_vecs.push_back(input_vec);
         }
     }
 
@@ -649,7 +659,8 @@ int Sta::Ana::find_sensitizable_paths(
         if (po->arrival_time < time_constraint &&
             slack            < slack_constraint  ) {
             
-            trace(po, cir, solver, paths, values, input_vecs);
+            trace(po, cir, time_constraint, slack_constraint,
+                  solver, paths, values, input_vecs);
         }
     }
 
