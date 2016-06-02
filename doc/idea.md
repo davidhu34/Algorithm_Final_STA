@@ -174,8 +174,8 @@ function trace()
                 gate.from_b.value = X
 
         else # Both of them have same arrival time.
-            if gate.from_a.value == X
-                if gate.value == 1
+            if gate.value == 1
+                if gate.from_a.value == X
                     gate.from_a.value = 0
                     assumptions.push(-gate.from_a.var)
                     path.push(gate.from_a)
@@ -185,25 +185,20 @@ function trace()
                     assumptions.pop()
                     gate.from_a.value = X
 
-            if gate.from_b.value == X
-                gate.from_b.value = 1
-                assumptions.push(gate.from_b.var)
-
-                if gate.value == 1
-                    gate.from_a.value = 0
-                    assumptions.push(-gate.from_a.var)
-                else # gate.value == 0
+            else # gate.value == 0
+                if gate.from_b.value == X
+                    gate.from_b.value = 1
+                    assumptions.push(gate.from_b.var)
                     gate.from_a.value = 1
                     assumptions.push(gate.from_a.var)
-
-                path.push(gate.from_a)
-                trace()
-                path.pop()
-                gate = path.back()
-                assumptions.pop()
-                gate.from_a.value = X
-                assumptions.pop()
-                gate.from_b.value = X
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+                    assumptions.pop()
+                    gate.from_b.value = X
 
         # Try to make gate.from_b become a true path.
 
@@ -246,8 +241,8 @@ function trace()
                 gate.from_b.value = X
 
         else # Both of them have same arrival time.
-            if gate.from_a.value == X
-                if gate.value == 1
+            if gate.value == 1
+                if gate.from_a.value == X
                     gate.from_a.value = 0
                     assumptions.push(-gate.from_a.var)
                     path.push(gate.from_a)
@@ -257,25 +252,20 @@ function trace()
                     assumptions.pop()
                     gate.from_a.value = X
 
-            if gate.from_b.value == X
-                gate.from_b.value = 0
-                assumptions.push(-gate.from_b.var)
-
-                if gate.value == 1
-                    gate.from_a.value = 0
-                    assumptions.push(-gate.from_a.var)
-                else # gate.value == 0
+            else # gate.value == 0
+                if gate.from_b.value == X
+                    gate.from_b.value = 0
+                    assumptions.push(-gate.from_b.var)
                     gate.from_a.value = 1
                     assumptions.push(gate.from_a.var)
-
-                path.push(gate.from_a)
-                trace()
-                path.pop()
-                gate = path.back()
-                assumptions.pop()
-                gate.from_a.value = X
-                assumptions.pop()
-                gate.from_b.value = X
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+                    assumptions.pop()
+                    gate.from_b.value = X
 
         # Try to make gate.from_b become a true path.
 
