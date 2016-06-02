@@ -14,6 +14,8 @@ bool Parser::moduleERR ()
 
 bool Parser::parseCase ()
 {
+	map< string, string> models = _ckt->getModels();
+
 	if ( !getNextLine() )	return moduleERR();
 cout<<"got line 1"<<endl;
 	if ( parseWord() != "module" )	return moduleERR();	// module initialized
@@ -30,7 +32,7 @@ cout<<"got case name"<<endl;
 		string token = parseWord();
 		if ( token == "" ) return moduleERR();
 cout<<"got token: "<<token<<endl;
-		if ( inModel(token) ) {	
+		if ( models.find(token) != models.end() ) {	
 			if ( !parseGate(token) )	return moduleERR();
 		} else if ( token == "endmodule") break;
 		else {

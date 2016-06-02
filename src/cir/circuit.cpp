@@ -52,7 +52,7 @@ void Circuit::newOutput ( string gname )
 };
 bool Circuit::newLogicGate ( string gname, string model, string inA, string inB, string outY )
 {
-	string m = case_model[model];
+	string m = case_models[model];
 	Gate* newGate;
 cout<< "new gate: "<<endl;
 	if ( m == "not" ) {

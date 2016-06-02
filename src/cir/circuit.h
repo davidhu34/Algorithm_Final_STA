@@ -23,12 +23,9 @@ typedef std::vector<bool>             InputVec;
 class Circuit
 {
 public:
-	Circuit ()
-	{
-		case_model["NOT1"] = "not";
-		case_model["NAND2"] = "nand";
-		case_model["NOR2"] = "nor";
-	}
+	Circuit () {}
+	void setModels ( map< string, string> models )		{ case_models = models; }
+	map<string, string> getModels () 	{ return case_models;}
 	void setCaseName ( string cname )	{ case_name = cname; }
 	void newWire ( string wname )		{ _Wire[wname] = new Wire(); }
 	
@@ -42,14 +39,17 @@ public:
 	void connectGates ();
 
 private:
+	//map< string, Wire*>	_Wires;
+	//vector<Gate*>		_Inputs;
+	//vector<Gate*>		_Outputs;
+	//vector<Gate*>		_LogicGates;
 	vector<string>		_Inputs;
 	vector<string>		_Outputs;
 	map< string, Wire*>	_Wire;
-	vector<Gate*>	_Gate;
+	vector<Gate*>		_Gate;
 
-	string					case_name;
-	vector<string>			case_reg;
-	map< string, string> 	case_model;	// < model, gate type> 
+	string			case_name;
+	map< string, string> 	case_models;	// < model, gate type> 
 };
 
 } // namespace Cir

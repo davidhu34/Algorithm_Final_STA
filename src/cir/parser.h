@@ -27,18 +27,16 @@ public:
 	}
 	bool parseModel ()
 	{
-		_models["NOT1"] = "not";
-		_models["NAND2"] = "nand";
-		_models["NOR2"] = "nor";
+		map< string, string> models;
+		models["NOT1"] = "not";
+		models["NAND2"] = "nand";
+		models["NOR2"] = "nor";
+		_ckt->setModels(models);
 		return true;
 	}
 	bool parseCase ();
+
 private:
-	bool inModel ( string str )
-	{
-		return ( _models.find(str) != _models.end() )?
-			true: false;
-	}
 	bool moduleERR ();
 	string parseWord ();
 	vector<string> parseVars ();
@@ -47,13 +45,10 @@ private:
 	bool getNextLine ();
 
 	Circuit*		_ckt;
-	map< string, string> 	_models;
 	ifstream&		_inf;
 	string			_parsingStr;
 	int			_parsingLine;
-
 };
-
 
 } // namespace Sta
 } // namespace Cir
