@@ -12,7 +12,7 @@ void test_circuit(void)
     using namespace Sta;
 
     Cir::Circuit* Ckt = new Cir::Circuit();
-    ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
+    ifstream inf ("test/cases/case0_netlist.v", ifstream::in);
     Cir::Parser* parser = new Cir::Parser( inf, Ckt );
 
     if ( parser->parseCase() )

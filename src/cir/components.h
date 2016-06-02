@@ -21,16 +21,16 @@ class Wire
 {
 public:
 	Wire () {}
-	void setFrom ( Gate* from ) { _from = from; }
-	void setTo ( Gate* to, string pin ) { _to.push_back(to); _pin.push_back(pin); }
-	Gate* getFrom () { return _from; }
-	vector<Gate*> getTo () { return _to; }
-	vector<string> getToPin () { return _pin; }
+	void setFrom ( Gate* from )		{ _from = from; }
+	void setTo ( Gate* to, string pin )	{ _to = to; _pin = pin; }
+	Gate* getFrom ()	{ return _from; }
+	Gate* getTo ()		{ return _to; }
+	string getToPin ()	{ return _pin; }
 
 private:
 	Gate* 	_from;
-	vector<Gate*>	_to;
-	vector<string>	_pin;
+	Gate*	_to;
+	string	_pin;
 };
 
 class Gate
@@ -42,15 +42,24 @@ public:
 		_model = mname;
 	}
 	virtual void connectGate ( Gate* gate, string pin ) = 0;
+	
 	virtual void printNames () = 0;
 	virtual void printState () = 0;
-	string getName() {return _name;}
+
+	string getName ()		{ return _name; }
+	string getModel ()		{ return _model; }
+	vector<Gate*> getFanIn ()	{ return _inputs; }
+	vector<Gate*> getFanOut ()	{ return _outputs; }
+
+	bool		_value;
+	int        		_tag;
+	int        		_var;
+	unsigned	_arrivalTime;
 
 protected:
 	string	 		_name;
 	string 			_model;
-	Gate* 			_inputA;	// empty for INPUT
-	Gate* 			_inputB;	// empty for NOT / INPUT / OUTPUT
+	vector<Gate*>		_inputs;
 	vector<Gate*>		_outputs;	// empty for OUTPUT
 	friend class Circuit;
 };
@@ -58,19 +67,20 @@ protected:
 class NOT: public Gate
 {
 public:
-	NOT ( string gname, string mname ): Gate ( gname, mname ) {};
+	NOT ( string gname, string mname ): Gate ( gname, mname )
+	{	_inputs.push_back(0); _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
 	{
 		cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
 		if ( pin == "A" ) {
-			_inputA = gate;
+			_inputs[0] = gate;
 		} else if ( pin == "Y" ) {
 			_outputs.push_back(gate);
 		} else return;
 	}
 	void printNames ()
 	{
-		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", Y: ";
+		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
@@ -78,7 +88,7 @@ public:
 	{
 		// Print fanin
 		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"
-			<<_inputA->getName()<<"\n";
+			<<_inputs[0]->getName()<<"\n";
 
 		// Print fanout
 		cout<<"-"<<_name<<"/"<<_model<<"/fanout ";
@@ -91,28 +101,29 @@ public:
 class NAND: public Gate
 {
 public:
-	NAND ( string gname, string mname ): Gate ( gname, mname ) {}
+	NAND ( string gname, string mname ): Gate ( gname, mname )
+	{	_inputs.push_back(0); _inputs.push_back(0); _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
 	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
 		if ( pin == "A" ) {
-			_inputA = gate;
+			_inputs[0] = gate;
 		} else if ( pin == "B") {
-			_inputB = gate;
+			_inputs[1] = gate;
 		} else if ( pin == "Y" ) {
 			_outputs.push_back(gate);
 		} else return;
 	}
 	void printNames ()
 	{
-		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", B: "<<_inputB->getName()<<", Y: ";
+		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<", B: "<<_inputs[1]->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
 	void printState ()
 	{
 		// Print fanin
-		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputA->getName()
-			<<" B:"<<_inputB->getName()<<"\n";
+		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputs[0]->getName()
+			<<" B:"<<_inputs[1]->getName()<<"\n";
 
 		// Print fanout
 		cout<<"-"<<_name<<"/"<<_model<<"/fanout ";
@@ -125,28 +136,29 @@ public:
 class NOR: public Gate
 {
 public:
-	NOR ( string gname, string mname ): Gate ( gname, mname ) {}
+	NOR ( string gname, string mname ): Gate ( gname, mname )
+	{	_inputs.push_back(0); _inputs.push_back(0); _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
 	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
 		if ( pin == "A" ) {
-			_inputA = gate;
+			_inputs[0] = gate;
 		} else if ( pin == "B") {
-			_inputB = gate;
+			_inputs[1] = gate;
 		} else if ( pin == "Y" ) {
 			_outputs.push_back(gate);
 		} else return;
 	}
 	void printNames ()
 	{
-		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<", B: "<<_inputB->getName()<<", Y: ";
+		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<", B: "<<_inputs[1]->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
 	void printState ()
 	{
 		// Print fanin
-		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputA->getName()
-			<<" B:"<<_inputB->getName()<<"\n";
+		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputs[0]->getName()
+			<<" B:"<<_inputs[1]->getName()<<"\n";
 
 		// Print fanout
 		cout<<"-"<<_name<<"/"<<_model<<"/fanout ";
@@ -182,17 +194,18 @@ public:
 class OUTPUT: public Gate
 {
 public:
-	OUTPUT ( string gname ): Gate ( gname ) {}
+	OUTPUT ( string gname ): Gate ( gname )	{ _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
 	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
-		if ( pin == "A" )  _inputA = gate; }
+		if ( pin == "A" )  _inputs[0] = gate; }
+	
 	void printNames ()
 	{
-		cout<<_name<<":  "<<"A: "<<_inputA->getName()<<endl;
+		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<endl;
 	}
 	void printState ()
 	{
-		cout<<"-"<<_name<<"/PO/fanin "<<_inputA->getName()<<"\n";
+		cout<<"-"<<_name<<"/PO/fanin "<<_inputs[0]->getName()<<"\n";
 	}
 };
 
