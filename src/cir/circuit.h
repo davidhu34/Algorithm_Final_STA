@@ -31,6 +31,7 @@ public:
 	}
 	//void newModel ( string mname, string gtype ) { case_model[mname] = gtype; }
 	bool parseFile ( ifstream &inf );
+	void setCaseName ( string cname ) { case_name = cname;}
 	void testPrint () 
 	{
 		for ( size_t i =0; i < _Gate.size(); i++ )
@@ -97,7 +98,7 @@ private:
 		_Wire[gname] = new Wire();
 		_Wire[gname]->setTo( _Gate.back(), "A" );
 	};
-	bool newGate ( string gname, string model, string inA, string inB, string outY )
+	bool newLogicGate ( string gname, string model, string inA, string inB, string outY )
 	{
 		string m = case_model[model];
 		Gate* newGate;

@@ -130,7 +130,7 @@ bool Circuit::parseGate ( ifstream &inf, string model, string &parsing )
 	inputB = trimWire( parsing, "B");
 	outputY = trimWire( parsing, "Y");
 	cout<<"Y:" <<outputY<<endl;
-	return newGate( gname, model, inputA, inputB, outputY ) && getline( inf, parsing );
+	return newLogicGate( gname, model, inputA, inputB, outputY ) && getline( inf, parsing );
 }
 
 string Circuit::trimWire ( string line, string pin )

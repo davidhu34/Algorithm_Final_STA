@@ -1,0 +1,52 @@
+-circuit_name case0
+-pi_count 4
+-po_count 4
+-gate_count 17
+-nand2_input_pin_name A B
+-nand2_output_pin_name Y
+-nor2_input_pin_name A B
+-nor2_output_pin_name Y
+-not1_input_pin_name A
+-not1_output_pin_name Y
+-M3/PO/fanin U6
+-M2/PO/fanin U9
+-M1/PO/fanin U12
+-M0/PO/fanin U4
+-A1/PI/fanout U8 U10 U16 
+-A0/PI/fanout U8 U15 U17 
+-B1/PI/fanout U5 U7 U15 
+-B0/PI/fanout U7 U16 U17 
+-U1/NOT1/fanin A:U13
+-U1/NOT1/fanout Y:U12 
+-U2/NOT1/fanin A:U16
+-U2/NOT1/fanout Y:U13 Y:U14 
+-U3/NOT1/fanin A:U11
+-U3/NOT1/fanout Y:U10 
+-U4/NOT1/fanin A:U17
+-U4/NOT1/fanout Y:M0 
+-U5/NOT1/fanin A:B1
+-U5/NOT1/fanout Y:U9 
+-U6/NOR2/fanin A:U8 B:U7
+-U6/NOR2/fanout Y:M3 
+-U7/NAND2/fanin A:B1 B:B0
+-U7/NAND2/fanout Y:U6 
+-U8/NAND2/fanin A:A1 B:A0
+-U8/NAND2/fanout Y:U6 
+-U9/NOR2/fanin A:U5 B:U10
+-U9/NOR2/fanout Y:M2 
+-U10/NAND2/fanin A:A1 B:U3
+-U10/NAND2/fanout Y:U9 
+-U11/NOR2/fanin A:U15 B:U16
+-U11/NOR2/fanout Y:U3 
+-U12/NAND2/fanin A:U14 B:U1
+-U12/NAND2/fanout Y:M1 
+-U13/NOR2/fanin A:U15 B:U2
+-U13/NOR2/fanout Y:U1 
+-U14/NAND2/fanin A:U2 B:U15
+-U14/NAND2/fanout Y:U12 
+-U15/NAND2/fanin A:B1 B:A0
+-U15/NAND2/fanout Y:U11 Y:U13 Y:U14 
+-U16/NAND2/fanin A:B0 B:A1
+-U16/NAND2/fanout Y:U2 Y:U11 
+-U17/NAND2/fanin A:A0 B:B0
+-U17/NAND2/fanout Y:U4 
