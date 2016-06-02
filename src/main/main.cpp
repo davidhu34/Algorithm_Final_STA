@@ -2,17 +2,22 @@
 #include <iostream>
 #include <vector>
 
-#include "sta/src/cir/parser.h"
 #include "sta/src/cir/circuit.h"
+#include "sta/src/cir/parser.h"
+#include "sta/src/cir/writer.h"
 #include "sta/src/ana/analyzer.h"
-#include "sta/src/util/writer.h"
 
 static void print_usage(void) {
     std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
 }
 
 int main(int argc, const char* argv[]) {
-    using namespace Sta;
+    using Sta::Cir::Circuit;
+    using Sta::Cir::Path;
+    using Sta::Cir::InputVec;
+    using Sta::Cir::parse;
+    using Sta::Cir::write;
+    using Sta::Ana::find_sensitizable_paths;
 
     // Parse arguments.
 
@@ -47,9 +52,9 @@ int main(int argc, const char* argv[]) {
 
     // Pass input files into circuit.
     
-    Cir::Circuit circuit;
+    Circuit circuit;
     
-    int errcode = Cir::parse(infiles, circuit);
+    int errcode = parse(infiles, circuit);
     if (errcode != 0) {
         std::cerr << "Error: Parsing failed.\n";
         return 1;
@@ -57,10 +62,16 @@ int main(int argc, const char* argv[]) {
 
     // Find all sensitizable paths.
     
-    std::vector<Cir::Path>     paths;
-    std::vector<Cir::InputVec> input_vecs;
+    std::vector<Path>                paths;
+    std::vector< std::vector<bool> > values;
+    std::vector<InputVec>            input_vecs;
 
-    errcode = Ana::find_sensitizable_paths(circuit, paths, input_vecs);
+    errcode = find_sensitizable_paths(circuit, 
+                                      TIME_CONSTRAINT,  // Macro
+                                      SLACK_CONSTRAINT, // Macro
+                                      paths, 
+                                      values, 
+                                      input_vecs);
     if (errcode != 0) {
         std::cerr << "Error: Finding failed.\n";
         return 1;
@@ -69,10 +80,21 @@ int main(int argc, const char* argv[]) {
     // Output those paths.
 
     if (outfile) { // User specify output file.
-        errcode = Cir::write(paths, input_vecs, outfile);
+        errcode = write(circuit, 
+                        TIME_CONSTRAINT, 
+                        SLACK_CONSTRAINT, 
+                        paths, 
+                        values, 
+                        input_vecs, 
+                        outfile);
     }
     else {
-        errcode = Cir::write(paths, input_vecs);
+        errcode = write(circuit, 
+                        TIME_CONSTRAINT, 
+                        SLACK_CONSTRAINT, 
+                        paths, 
+                        values, 
+                        input_vecs);
     }
 
     if (errcode != 0) {
