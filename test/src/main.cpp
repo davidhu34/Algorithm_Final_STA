@@ -28,6 +28,9 @@ void test_parse_module_NOT1(void);
 // test_cir_parser.cpp
 void test_parse(void);
 
+// test_ana_analyzer.cpp
+void test_find_sensitizable_paths(void);
+
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
@@ -56,6 +59,9 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_cir_parser.cpp\n";
     test_parse();
+
+    std::cerr << "\ntest_ana_analyzer.cpp\n";
+    test_find_sensitizable_paths();
 
     return 0;
 }
