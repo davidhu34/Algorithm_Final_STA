@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "sta/src/cir/circuit.h"
 #include "sta/test/src/util/cir_compare.h"
+#include "sta/src/cir/parser.h"
 
 using namespace std;
 
@@ -13,7 +13,7 @@ void test_circuit(void)
     using namespace Sta;
     Cir::Circuit* Ckt = new Cir::Circuit();
     ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
-    Cir::Parser parser = new Cir::Parser( inf, Ckt );
+    Cir::Parser* parser = new Cir::Parser( inf, Ckt );
     if ( parser->parseCase() )
     {
         cout<<"success"<<endl;

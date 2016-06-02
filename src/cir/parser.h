@@ -18,9 +18,8 @@ using namespace std;
 class Parser
 {
 public:
-	Parser ( ifstream &inf, Circuit* ckt )
+	Parser ( ifstream &inf, Circuit* ckt ): _inf(inf)
 	{
-		_inf = inf;
 		_ckt = ckt;
 		parseModel();
 	}
@@ -47,7 +46,7 @@ private:
 
 	Circuit*		_ckt;
 	map< string, string> 	_models;
-	ifstream		_inf;
+	ifstream&		_inf;
 	string			_parsingStr;
 	int			_parsingLine;
 
