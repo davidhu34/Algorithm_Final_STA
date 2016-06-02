@@ -62,10 +62,12 @@ struct Circuit {
 
     // Default Constructor
     Circuit() {
-        modules.reserve(3);
+        modules.reserve(5);
         modules.push_back(Module("NAND2"));
         modules.push_back(Module("NOR2" ));
         modules.push_back(Module("NOT1" ));
+        modules.push_back(Module("in"   ));
+        modules.push_back(Module("out"  ));
     }
 
     // Free all gates allocated in circuit.
