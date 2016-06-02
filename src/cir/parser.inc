@@ -156,21 +156,20 @@ static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
     while (true) { // Parse things inside module definition.
         std::string token = get_token(fin);
 
-        if (token == "nand") {
-            while (get_token(fin) != "(") { }; // Ignore until "(".
+        if (token == "input") {
+            token = get_token(fin); // Name of input pin.
+            cir.modules[Module::NAND2].input_names.push_back(token);
 
+            token = get_token(fin); // ","
+
+            token = get_token(fin); // Name of input pin.
+            cir.modules[Module::NAND2].input_names.push_back(token);
+
+            while (get_token(fin) != ";") { } // Ignore until ";".
+        }
+        else if (token == "output") {
             token = get_token(fin); // Name of output pin.
             cir.modules[Module::NAND2].output_name = token;
-
-            token = get_token(fin); // ","
-            
-            token = get_token(fin); // Name of input pin.
-            cir.modules[Module::NAND2].input_names.push_back(token);
-
-            token = get_token(fin); // ","
-
-            token = get_token(fin); // Name of input pin.
-            cir.modules[Module::NAND2].input_names.push_back(token);
 
             while (get_token(fin) != ";") { } // Ignore until ";".
         }
@@ -206,21 +205,20 @@ static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
     while (true) { // Parse things inside module definition.
         std::string token = get_token(fin);
 
-        if (token == "nor") {
-            while (get_token(fin) != "(") { }; // Ignore until "("
+        if (token == "input") {
+            token = get_token(fin); // Name of input pin.
+            cir.modules[Module::NOR2].input_names.push_back(token);
 
+            token = get_token(fin); // ","
+
+            token = get_token(fin); // Name of input pin.
+            cir.modules[Module::NOR2].input_names.push_back(token);
+
+            while (get_token(fin) != ";") { } // Ignore until ";".
+        }
+        else if (token == "output") {
             token = get_token(fin); // Name of output pin.
             cir.modules[Module::NOR2].output_name = token;
-
-            token = get_token(fin); // ","
-            
-            token = get_token(fin); // Name of input pin.
-            cir.modules[Module::NOR2].input_names.push_back(token);
-
-            token = get_token(fin); // ","
-
-            token = get_token(fin); // Name of input pin.
-            cir.modules[Module::NOR2].input_names.push_back(token);
 
             while (get_token(fin) != ";") { } // Ignore until ";".
         }
@@ -256,16 +254,15 @@ static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
     while (true) { // Parse things inside module definition.
         std::string token = get_token(fin);
 
-        if (token == "not") {
-            while (get_token(fin) != "(") { }; // Ignore until "(".
-
-            token = get_token(fin); // Name of output pin.
-            cir.modules[Module::NOT1].output_name = token;
-
-            token = get_token(fin); // ","
-            
+        if (token == "input") {
             token = get_token(fin); // Name of input pin.
             cir.modules[Module::NOT1].input_names.push_back(token);
+
+            while (get_token(fin) != ";") { } // Ignore until ";".
+        }
+        else if (token == "output") {
+            token = get_token(fin); // Name of output pin.
+            cir.modules[Module::NOT1].output_name = token;
 
             while (get_token(fin) != ";") { } // Ignore until ";".
         }
