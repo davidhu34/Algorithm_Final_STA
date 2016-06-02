@@ -93,6 +93,7 @@ TODO: Parallelize it.
 
 ```
 sensitizable_paths = vector()
+values = vector()
 input_vecs = vector()
 
 path = vector()
@@ -174,8 +175,8 @@ function trace()
                 gate.from_b.value = X
 
         else # Both of them have same arrival time.
-            if gate.from_a.value == X
-                if gate.value == 1
+            if gate.value == 1
+                if gate.from_a.value == X
                     gate.from_a.value = 0
                     assumptions.push(-gate.from_a.var)
                     path.push(gate.from_a)
@@ -185,25 +186,20 @@ function trace()
                     assumptions.pop()
                     gate.from_a.value = X
 
-            if gate.from_b.value == X
-                gate.from_b.value = 1
-                assumptions.push(gate.from_b.var)
-
-                if gate.value == 1
-                    gate.from_a.value = 0
-                    assumptions.push(-gate.from_a.var)
-                else # gate.value == 0
+            else # gate.value == 0
+                if gate.from_b.value == X
+                    gate.from_b.value = 1
+                    assumptions.push(gate.from_b.var)
                     gate.from_a.value = 1
                     assumptions.push(gate.from_a.var)
-
-                path.push(gate.from_a)
-                trace()
-                path.pop()
-                gate = path.back()
-                assumptions.pop()
-                gate.from_a.value = X
-                assumptions.pop()
-                gate.from_b.value = X
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+                    assumptions.pop()
+                    gate.from_b.value = X
 
         # Try to make gate.from_b become a true path.
 
@@ -246,8 +242,8 @@ function trace()
                 gate.from_b.value = X
 
         else # Both of them have same arrival time.
-            if gate.from_a.value == X
-                if gate.value == 1
+            if gate.value == 1
+                if gate.from_a.value == X
                     gate.from_a.value = 0
                     assumptions.push(-gate.from_a.var)
                     path.push(gate.from_a)
@@ -257,25 +253,20 @@ function trace()
                     assumptions.pop()
                     gate.from_a.value = X
 
-            if gate.from_b.value == X
-                gate.from_b.value = 0
-                assumptions.push(-gate.from_b.var)
-
-                if gate.value == 1
-                    gate.from_a.value = 0
-                    assumptions.push(-gate.from_a.var)
-                else # gate.value == 0
+            else # gate.value == 0
+                if gate.from_b.value == X
+                    gate.from_b.value = 0
+                    assumptions.push(-gate.from_b.var)
                     gate.from_a.value = 1
                     assumptions.push(gate.from_a.var)
-
-                path.push(gate.from_a)
-                trace()
-                path.pop()
-                gate = path.back()
-                assumptions.pop()
-                gate.from_a.value = X
-                assumptions.pop()
-                gate.from_b.value = X
+                    path.push(gate.from_a)
+                    trace()
+                    path.pop()
+                    gate = path.back()
+                    assumptions.pop()
+                    gate.from_a.value = X
+                    assumptions.pop()
+                    gate.from_b.value = X
 
         # Try to make gate.from_b become a true path.
 
@@ -298,12 +289,19 @@ function trace()
             gate.from.value = X
 
     else if gate.type == PI 
-        if no_conflict(assumptions)
-            sensitizable_paths.push(reverse(path))
-            input_vec = vector()
-            for pi in input_pins
-                input_vec.push(pi.value)
-            input_vecs.push(input_vec)
+        if time_constraint - delay(path) < slack_constraint
+            if no_conflict(assumptions)
+                sensitizable_paths.push(path)
+
+                path_value = vector()
+                for g in path
+                    path_value.push(g.value)
+                values.push(path_value)
+
+                input_vec = vector()
+                for pi in input_pins
+                    input_vec.push(pi.value)
+                input_vecs.push(input_vec)
         
     else
         print("Error: Unknown gate type.\n")
