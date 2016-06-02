@@ -55,31 +55,6 @@ public:
 			_Gate[i]->printState();
 	}
 
-private:
-	void connectGates ()
-	{
-		for ( map< string, Wire*>::iterator wit = _Wire.begin();
-			wit != _Wire.end(); wit++) {
-			Gate* from = wit->second->getFrom();
-			vector<Gate*> to = wit->second->getTo();
-			vector<string> pin = wit->second->getToPin();
-			for ( size_t i = 0; i < to.size(); i++ )
-			{
-				from->connectGate( to[i], "Y" );
-				to[i]->connectGate( from, pin[i] );
-			}
-		}
-	};
-	bool inModel ( string str )   
-	{
-		return ( case_model.find(str) != case_model.end() )?
-			true: false;
-	};
-	string parseWord ( ifstream &inf, string &parsing );
-	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
-	bool parseGate ( ifstream &inf, string model, string &parsing );
-	string trimWire ( string line, string pin );
-
 	void newWire ( string wname )
 	{
 		_Wire[wname] = new Wire();
@@ -134,6 +109,31 @@ private:
 		_Gate.push_back(newGate);
 		return true;
 	};
+	void connectGates ()
+	{
+		for ( map< string, Wire*>::iterator wit = _Wire.begin();
+			wit != _Wire.end(); wit++) {
+			Gate* from = wit->second->getFrom();
+			vector<Gate*> to = wit->second->getTo();
+			vector<string> pin = wit->second->getToPin();
+			for ( size_t i = 0; i < to.size(); i++ )
+			{
+				from->connectGate( to[i], "Y" );
+				to[i]->connectGate( from, pin[i] );
+			}
+		}
+	};
+
+private:
+	bool inModel ( string str )   
+	{
+		return ( case_model.find(str) != case_model.end() )?
+			true: false;
+	};
+	string parseWord ( ifstream &inf, string &parsing );
+	vector<string> parseVars ( string &parsing, ifstream &inf, int &line );
+	bool parseGate ( ifstream &inf, string model, string &parsing );
+	string trimWire ( string line, string pin );
 
 	vector<string>		_Inputs;
 	vector<string>		_Outputs;

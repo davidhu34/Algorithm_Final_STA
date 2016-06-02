@@ -29,20 +29,21 @@ public:
 		_models["NOT1"] = "not";
 		_models["NAND2"] = "nand";
 		_models["NOR2"] = "nor";
+		return true;
 	}
-	bool parseCase () {}
+	bool parseCase ();
 private:
 	bool inModel ( string str )
 	{
 		return ( _models.find(str) != _models.end() )?
 			true: false;
 	}
-	bool moduleERR () {}
-	string parseWord () {}
-	vector<string> parseVars () {}
-	bool parseGate ( string model ) {}
-	string trimWire ( string pin) {}
-	bool getNextLine () {}
+	bool moduleERR ();
+	string parseWord ();
+	vector<string> parseVars ();
+	bool parseGate ( string model );
+	string trimWire ( string pin );
+	bool getNextLine ();
 
 	Circuit*		_ckt;
 	map< string, string> 	_models;

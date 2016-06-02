@@ -17,7 +17,7 @@ bool Parser::parseCase ()
 	if ( getNextLine() )	return moduleERR();
 	if ( parseWord() != "module" )	return moduleERR();	// module initialized
 
-	string caseName = parsedTmp = parseWord( inf, _parsingStr );	// get case name
+	string caseName = parseWord();	// get case name
 	if ( caseName == "" )   return moduleERR();
 	_ckt->setCaseName(caseName);
 	
@@ -36,13 +36,13 @@ bool Parser::parseCase ()
 			vector<string> varTmp = parseVars();
 			if ( varTmp.empty() )	moduleERR();
 			
-			if ( type == "input" ) {
+			if ( token == "input" ) {
 				for ( size_t i = 0; i < varTmp.size(); i++ )	_ckt->newInput( varTmp[i] );
-			} else if ( type == "output" ) {
+			} else if ( token == "output" ) {
 				for ( size_t i = 0; i < varTmp.size(); i++ )	_ckt->newOutput( varTmp[i] );
-			} else if ( type == "wire" ) {
+			} else if ( token == "wire" ) {
 				for ( size_t i = 0; i < varTmp.size(); i++ )	_ckt->newWire( varTmp[i] );
-			} else return moduleERR();		// invalid type 
+			} else return moduleERR();		// invalid token 
 		}
 	}
 	_ckt->connectGates();
@@ -117,10 +117,11 @@ string Parser::trimWire ( string pin )
 
 bool Parser::getNextLine ()
 {
-	if ( getline( _inf, _parsingStr ) {
+	if ( getline( _inf, _parsingStr ) )
+	{
 		_parsingLine++;
 		size_t commentStart = _parsingStr.find("//");
-		if ( coommentStart != string::npos )
+		if ( commentStart != string::npos )
 			_parsingStr.erase( _parsingStr.begin() + commentStart, _parsingStr.end() );
 		else if ( commentStart == 0 ) return getNextLine();
 		return true;
