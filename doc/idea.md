@@ -93,6 +93,7 @@ TODO: Parallelize it.
 
 ```
 sensitizable_paths = vector()
+values = vector()
 input_vecs = vector()
 
 path = vector()
@@ -288,12 +289,19 @@ function trace()
             gate.from.value = X
 
     else if gate.type == PI 
-        if no_conflict(assumptions)
-            sensitizable_paths.push(reverse(path))
-            input_vec = vector()
-            for pi in input_pins
-                input_vec.push(pi.value)
-            input_vecs.push(input_vec)
+        if time_constraint - delay(path) < slack_constraint
+            if no_conflict(assumptions)
+                sensitizable_paths.push(path)
+
+                path_value = vector()
+                for g in path
+                    path_value.push(g.value)
+                values.push(path_value)
+
+                input_vec = vector()
+                for pi in input_pins
+                    input_vec.push(pi.value)
+                input_vecs.push(input_vec)
         
     else
         print("Error: Unknown gate type.\n")
