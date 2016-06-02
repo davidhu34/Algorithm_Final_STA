@@ -190,7 +190,7 @@ static bool add_NOT_clause(Minisat::Var A,
     gate->value = 2;
 
 #define PUSH_GATE(gate)                   \
-    path.push_back(gate);
+    path.push_back(gate);                 \
 
 #define POP_GATE_1()                      \
     path.pop_back();                      \
@@ -217,11 +217,12 @@ static bool add_NOT_clause(Minisat::Var A,
 // Add sensitizable path to `paths` and an input vector that can make
 // that path sensitized.
 //
-static void trace(Sta::Cir::Gate*                  po,
-                  Sta::Cir::Circuit&               cir,
-                  Minisat::Solver&                 solver,
-                  std::vector<Sta::Cir::Path>&     paths, 
-                  std::vector<Sta::Cir::InputVec>& input_vecs) {
+static void trace(Sta::Cir::Gate*                   po,
+                  Sta::Cir::Circuit&                cir,
+                  Minisat::Solver&                  solver,
+                  std::vector<Sta::Cir::Path>&      paths, 
+                  std::vector< std::vector<bool> >& values,
+                  std::vector<Sta::Cir::InputVec>&  input_vecs) {
 
     using Sta::Cir::Gate;
     using Sta::Cir::Path;
@@ -560,12 +561,19 @@ start_function:
         if (solver.solve(assumptions)) {
             paths.push_back(path);
 
+            // Record value of all gate along a path.
+            std::vector<bool> path_value(path.size());
+            for (size_t i = 0; i < path.size(); ++i) {
+                path_value[i] = path[i]->value;
+            }
+            values.push_back(path_value);
+
+            // Record input vector.
             InputVec input_vec(cir.primary_inputs.size());
             for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
                 input_vec[i] = 
                     toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
             }
-
             input_vecs.push_back(input_vec);
         }
     }
@@ -583,11 +591,12 @@ start_function:
 }
 
 int Sta::Ana::find_sensitizable_paths(
-    Cir::Circuit&               cir,
-    int                         time_constraint,
-    int                         slack_constraint,
-    std::vector<Cir::Path>&     paths,
-    std::vector<Cir::InputVec>& input_vecs) {
+    Cir::Circuit&                     cir,
+    int                               time_constraint,
+    int                               slack_constraint,
+    std::vector<Cir::Path>&           paths,
+    std::vector< std::vector<bool> >& values,
+    std::vector<Cir::InputVec>&       input_vecs) {
 
     // Calculate arrival time.
     calculate_arrival_time(cir);
@@ -660,7 +669,7 @@ int Sta::Ana::find_sensitizable_paths(
         if (po->arrival_time < time_constraint &&
             slack            < slack_constraint  ) {
             
-            trace(po, cir, solver, paths, input_vecs);
+            trace(po, cir, solver, paths, values, input_vecs);
         }
     }
 
