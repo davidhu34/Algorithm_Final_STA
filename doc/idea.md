@@ -297,12 +297,13 @@ function trace()
             assumptions.pop()
             gate.from.value = X
 
-    else if gate.type == PI and no_conflict(assumptions)
-        sensitizable_paths.push(reverse(path))
-        input_vec = vector()
-        for pi in input_pins
-            input_vec.push(pi.value)
-        input_vecs.push(input_vec)
+    else if gate.type == PI 
+        if no_conflict(assumptions)
+            sensitizable_paths.push(reverse(path))
+            input_vec = vector()
+            for pi in input_pins
+                input_vec.push(pi.value)
+            input_vecs.push(input_vec)
         
     else
         print("Error: Unknown gate type.\n")
