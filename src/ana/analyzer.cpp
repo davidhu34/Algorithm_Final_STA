@@ -556,16 +556,18 @@ start_function:
         }
     } // else if (gate->module == Module::NOT1)
 
-    else if (gate->module == Module::PI && solver.solve(assumptions)) {
-        paths.push_back(path);
+    else if (gate->module == Module::PI) {
+        if (solver.solve(assumptions)) {
+            paths.push_back(path);
 
-        InputVec input_vec(cir.primary_inputs.size());
-        for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-            input_vec[i] = 
-                toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
+            InputVec input_vec(cir.primary_inputs.size());
+            for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+                input_vec[i] = 
+                    toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
+            }
+
+            input_vecs.push_back(input_vec);
         }
-
-        input_vecs.push_back(input_vec);
     }
 
     else {
