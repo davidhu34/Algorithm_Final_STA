@@ -1,4 +1,5 @@
 #include <cstring>   // strcmp()
+#include <cstdlib>   // atoi()
 #include <iostream>
 #include <vector>
 
@@ -8,7 +9,11 @@
 #include "sta/src/ana/analyzer.h"
 
 static void print_usage(void) {
-    std::cerr << "Usage:\n  sta [-o <output_file>] <input_file> ...\n";
+    std::cerr << "Usage:\n"
+                 "    sta -t <time_constraint>\n"
+                 "        -s <slack_constraint>\n"
+                 "        [-o <output_file>]\n"
+                 "        <input_files>\n";
 }
 
 int main(int argc, const char* argv[]) {
@@ -23,9 +28,10 @@ int main(int argc, const char* argv[]) {
 
     std::vector<const char*> infiles;
     const char*              outfile = 0;
+    const char*              time_constraint_str = 0;
+    const char*              slack_constraint_str = 0;
 
     for (int i = 1; i < argc; ++i) {
-        // Read -o and its argument.
         if (strcmp(argv[i], "-o") == 0) {
             ++i;
             if (i >= argc) {
@@ -33,11 +39,27 @@ int main(int argc, const char* argv[]) {
                 print_usage();
                 return 1;
             }
-
             outfile = argv[i];
         }
-        // Read input file names.
-        else {
+        else if (strcmp(argv[i], "-t") == 0) {
+            ++i;
+            if (i >= argc) {
+                std::cerr << "Error: Missing argument after -t.\n";
+                print_usage();
+                return 1;
+            }
+            time_constraint_str = argv[i];
+        }
+        else if (strcmp(argv[i], "-s") == 0) {
+            ++i;
+            if (i >= argc) {
+                std::cerr << "Error: Missing argument after -s.\n";
+                print_usage();
+                return 1;
+            }
+            slack_constraint_str = argv[i];
+        }
+        else { // Read input file names.
             infiles.push_back(argv[i]);
         }
     }
@@ -49,6 +71,19 @@ int main(int argc, const char* argv[]) {
         print_usage();
         return 1;
     }
+    if (!time_constraint_str) {
+        std::cerr << "Error: Missing -t <time_constraint>.\n";
+        print_usage();
+        return 1;
+    }
+    int time_constraint = atoi(time_constraint_str);
+
+    if (!slack_constraint_str) {
+        std::cerr << "Error: Missing -s <slack_constraint>.\n";
+        print_usage();
+        return 1;
+    }
+    int slack_constraint = atoi(slack_constraint_str);
 
     // Pass input files into circuit.
     
@@ -67,8 +102,8 @@ int main(int argc, const char* argv[]) {
     std::vector<InputVec>            input_vecs;
 
     errcode = find_sensitizable_paths(circuit, 
-                                      TIME_CONSTRAINT,  // Macro
-                                      SLACK_CONSTRAINT, // Macro
+                                      time_constraint,  // Macro
+                                      slack_constraint, // Macro
                                       paths, 
                                       values, 
                                       input_vecs);
@@ -81,8 +116,8 @@ int main(int argc, const char* argv[]) {
 
     if (outfile) { // User specify output file.
         errcode = write(circuit, 
-                        TIME_CONSTRAINT, 
-                        SLACK_CONSTRAINT, 
+                        time_constraint, 
+                        slack_constraint, 
                         paths, 
                         values, 
                         input_vecs, 
@@ -90,8 +125,8 @@ int main(int argc, const char* argv[]) {
     }
     else {
         errcode = write(circuit, 
-                        TIME_CONSTRAINT, 
-                        SLACK_CONSTRAINT, 
+                        time_constraint, 
+                        slack_constraint, 
                         paths, 
                         values, 
                         input_vecs);
