@@ -31,11 +31,14 @@ void test_parse(void);
 // test_ana_analyzer.cpp
 void test_find_sensitizable_paths(void);
 
+// test_cir_writer.cpp
+void test_write(void);
+
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
     
-    /*std::cerr << "test_example.cpp\n";
+    std::cerr << "test_example.cpp\n";
     test1();
     test2();
     
@@ -58,10 +61,13 @@ int main(int argc, const char* argv[]) {
     test_parse_module_NOT1();
 
     std::cerr << "\ntest_cir_parser.cpp\n";
-    test_parse();*/
+    test_parse();
 
     std::cerr << "\ntest_ana_analyzer.cpp\n";
     test_find_sensitizable_paths();
+
+    std::cerr << "\ntest_cir_writer.cpp\n";
+    test_write();
 
     return 0;
 }
