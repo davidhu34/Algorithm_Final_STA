@@ -9,20 +9,16 @@ using namespace std;
 void test_circuit(void)
 {
     std::cerr << __FUNCTION__ << "():\n";
-
     using namespace Sta;
+
     Cir::Circuit* Ckt = new Cir::Circuit();
     ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
-    if ( !inf.good() ) {
-        cout<<"open fail";
-    } else {
-
     Cir::Parser* parser = new Cir::Parser( inf, Ckt );
+
     if ( parser->parseCase() )
     {
         cout<<"success"<<endl;
         Ckt->testPrint();
-    }
     }
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
@@ -35,7 +31,8 @@ void test_circuit_state(void)
 
     Cir::Circuit* Ckt = new Cir::Circuit();
     ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
-    if ( Ckt->parseFile(inf) )
+    Cir::Parser* parser = new Cir::Parser( inf, Ckt );
+    if ( parser->parseCase() )
     {
         // Trying to redirect all things to cout to fout.
 

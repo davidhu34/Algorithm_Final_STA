@@ -62,7 +62,7 @@ string Parser::parseWord ()
 		word += _parsingStr[0];
 		_parsingStr.erase(0,1);
 	}
-	cout<< "word: " << word << endl;
+cout<< "word: " << word << endl;
 	return word;    // empty word for ERR
 }
 
@@ -72,13 +72,14 @@ vector<string> Parser::parseVars ()
 	string parsedTmp;
 	bool flag = true;	// false flag: module ERR
 
-	cout<<"vars: ";
+cout<<"vars: ";
 	while (flag)
 	{
 		if ( isalnum( _parsingStr[0] ) )
 			parsedTmp += _parsingStr[0];
 		else if ( _parsingStr[0] == ',' || _parsingStr[0] == ';' )
 		{
+cout<< parsedTmp<<_parsingStr[0]<<" ";
 			vars.push_back(parsedTmp);
 			parsedTmp = "";
 			if ( _parsingStr[0] == ';' )
@@ -90,6 +91,7 @@ vector<string> Parser::parseVars ()
 		if ( _parsingStr.length() > 1 ) _parsingStr.erase(0,1);
 		else if ( !getNextLine() )	flag = false;
 	}   // empty vector for ERR
+cout<<endl;
 	return (flag)? vars: vector<string>();
 }
 
@@ -123,9 +125,9 @@ bool Parser::getNextLine ()
 		cout<<_parsingStr<<endl;
 		_parsingLine++;
 		size_t commentStart = _parsingStr.find("//");
-		cout<<"comment found at: ";
-		if( commentStart == string::npos ) cout<<"npos"<<endl;
-		else cout <<commentStart <<endl;
+cout<<"comment found at: ";
+if( commentStart == string::npos ) cout<<"npos"<<endl;
+else cout <<commentStart <<endl;
 		if ( commentStart != string::npos )
 			_parsingStr.erase( _parsingStr.begin() + commentStart, _parsingStr.end() );
 		else if ( commentStart == 0 ) return getNextLine();
