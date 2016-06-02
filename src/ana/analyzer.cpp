@@ -317,8 +317,8 @@ start_function:
         }
 
         else { // Both of them have same arrival time.
-            if (gA->value == 2) {
-                if (gate->value == 1) {
+            if (gate->value == 1) {
+                if (gA->value == 2) {
                     ASSIGN_FALSE(gA)
                     PUSH_GATE(gA)
                     CALL_FUNCTION(5)
@@ -327,21 +327,16 @@ start_function:
                 }
             }
 
-            if (gB->value == 2) {
-                ASSIGN_TRUE(gB)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gA)
-                }
-                else { // gate->value == 0
+            else { // gate->value == 0
+                if (gB->value == 2) {
+                    ASSIGN_TRUE(gB)
                     ASSIGN_TRUE(gA)
+                    PUSH_GATE(gA)
+                    CALL_FUNCTION(6)
+                    POP_GATE_2()
+                    UNDO_ASSIGN(gA)
+                    UNDO_ASSIGN(gB)
                 }
-
-                PUSH_GATE(gA)
-                CALL_FUNCTION(6)
-                POP_GATE_2()
-                UNDO_ASSIGN(gA)
-                UNDO_ASSIGN(gB)
             }
         }
 
@@ -381,8 +376,8 @@ start_function:
         }
 
         else { // Both of them have same arrival time.
-            if (gB->value == 2) {
-                if (gate->value == 1) {
+            if (gate->value == 1) {
+                if (gB->value == 2) {
                     ASSIGN_FALSE(gB)
                     PUSH_GATE(gB)
                     CALL_FUNCTION(9)
@@ -391,21 +386,16 @@ start_function:
                 }
             }
 
-            if (gA->value == 2) {
-                ASSIGN_TRUE(gA)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gB)
-                }
-                else { // gate->value == 0
+            else { // gate->value == 0
+                if (gA->value == 2) {
+                    ASSIGN_TRUE(gA)
                     ASSIGN_TRUE(gB)
+                    PUSH_GATE(gB)
+                    CALL_FUNCTION(10)
+                    POP_GATE_2()
+                    UNDO_ASSIGN(gB)
+                    UNDO_ASSIGN(gA)
                 }
-
-                PUSH_GATE(gB)
-                CALL_FUNCTION(10)
-                POP_GATE_2()
-                UNDO_ASSIGN(gB)
-                UNDO_ASSIGN(gA)
             }
         }
     } // else if (gate->module == Module::NAND2)
@@ -448,8 +438,8 @@ start_function:
         }
 
         else { // Both of them have same arrival time.
-            if (gA->value == 2) {
-                if (gate->value == 1) {
+            if (gate->value == 1) {
+                if (gA->value == 2) {
                     ASSIGN_FALSE(gA)
                     PUSH_GATE(gA)
                     CALL_FUNCTION(13)
@@ -458,21 +448,16 @@ start_function:
                 }
             }
 
-            if (gB->value == 2) {
-                ASSIGN_FALSE(gB)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gA)
-                }
-                else { // gate->value == 0
+            else { // gate->value == 0
+                if (gB->value == 2) {
+                    ASSIGN_FALSE(gB)
                     ASSIGN_TRUE(gA)
+                    PUSH_GATE(gA)
+                    CALL_FUNCTION(14)
+                    POP_GATE_2()
+                    UNDO_ASSIGN(gA)
+                    UNDO_ASSIGN(gB)
                 }
-
-                PUSH_GATE(gA)
-                CALL_FUNCTION(14)
-                POP_GATE_2()
-                UNDO_ASSIGN(gA)
-                UNDO_ASSIGN(gB)
             }
         }
 
@@ -512,8 +497,8 @@ start_function:
         }
 
         else { // Both of them have same arrival time.
-            if (gB->value == 2) {
-                if (gate->value == 1) {
+            if (gate->value == 1) {
+                if (gB->value == 2) {
                     ASSIGN_FALSE(gB)
                     PUSH_GATE(gB)
                     CALL_FUNCTION(17)
@@ -522,21 +507,16 @@ start_function:
                 }
             }
 
-            if (gA->value == 2) {
-                ASSIGN_FALSE(gA)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gB)
-                }
-                else { // gate->value == 0
+            else { // gate->value == 0
+                if (gA->value == 2) {
+                    ASSIGN_FALSE(gA)
                     ASSIGN_TRUE(gB)
+                    PUSH_GATE(gB)
+                    CALL_FUNCTION(18)
+                    POP_GATE_2()
+                    UNDO_ASSIGN(gB)
+                    UNDO_ASSIGN(gA)
                 }
-
-                PUSH_GATE(gB)
-                CALL_FUNCTION(18)
-                POP_GATE_2()
-                UNDO_ASSIGN(gB)
-                UNDO_ASSIGN(gA)
             }
         }
     } // else if (gate->module == Module::NOR2)
