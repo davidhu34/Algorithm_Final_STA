@@ -44,7 +44,7 @@ public:
 	virtual void connectGate ( Gate* gate, string pin ) = 0;
 	
 	virtual void printNames () = 0;
-	virtual void printState () = 0;
+	virtual void printState () const = 0;
 
 	string getName ()		{ return _name; }
 	string getModel ()		{ return _model; }
@@ -84,7 +84,7 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
-	void printState ()
+	void printState () const
 	{
 		// Print fanin
 		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"
@@ -119,7 +119,7 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
-	void printState ()
+	void printState () const
 	{
 		// Print fanin
 		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputs[0]->getName()
@@ -154,7 +154,7 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
-	void printState ()
+	void printState () const
 	{
 		// Print fanin
 		cout<<"-"<<_name<<"/"<<_model<<"/fanin A:"<<_inputs[0]->getName()
@@ -182,7 +182,7 @@ public:
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
 		cout<<endl;
 	}
-	void printState ()
+	void printState () const
 	{
 		cout<<"-"<<_name<<"/PI/fanout ";
 		for ( size_t i = 0; i < _outputs.size(); i++ )
@@ -203,7 +203,7 @@ public:
 	{
 		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<endl;
 	}
-	void printState ()
+	void printState () const
 	{
 		cout<<"-"<<_name<<"/PO/fanin "<<_inputs[0]->getName()<<"\n";
 	}
