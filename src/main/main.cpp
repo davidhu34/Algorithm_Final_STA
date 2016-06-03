@@ -1,5 +1,6 @@
 #include <cstring>   // strcmp()
 #include <cstdlib>   // atoi()
+#include <cctype>
 #include <iostream>
 #include <vector>
 
@@ -15,6 +16,25 @@ static void print_usage(void) {
                  "        [-o <output_file>]\n"
                  "        <input_files>\n";
 }
+
+// Check wheter a string is an integer (can be negative).
+// Do not accept a plus sign.
+// 
+// #### Input
+//
+// - `str`
+//
+// #### Output
+//
+// - True if it is an integer. False otherwise.
+// - Return false if `str` is empty.
+//
+static bool is_number(const char* str) {
+    if (str[0] == 0) { // Empty string.
+        return false;
+    }
+
+
 
 int main(int argc, const char* argv[]) {
     using Sta::Cir::Circuit;
