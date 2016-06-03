@@ -32,14 +32,23 @@ See `doc/requirement.md` for more information.
 sta -t <time_constraint> 
     -s <slack_constraint> 
     [-o <output_file>] 
-    <input_files>
+    <circuit_files>
+
+or
+
+sta -t <time_constraint>
+    -s <slack_constraint>
+    -v <true_path_set_file>
+    <circuit_files>
 ```
 
 ## Description
 
-It will print a true path set. If option `-o` is given, it will print
-into `<output_file>`. For more details about input and output,
-see `doc/requirement.md`.
+The first version will print a true path set. If option `-o` is given,
+it will print into `<output_file>`, otherwise it will print to stdout.
+For more details about input and output, see `doc/requirement.md`.
+
+The second version will verify a true path set. 
 
 ## Options
 
@@ -57,9 +66,13 @@ see `doc/requirement.md`.
 <dt><code>&lt;output_file&gt;</code></dt>
 <dd><p>If given, a true path set will be printed into it.</p></dd>
 
-<dt><code>&lt;input_file&gt;</code></dt>
+<dt><code>&lt;circuit_files&gt;</code></dt>
 <dd><p>Verilog file describing a gate-level netlist. Files will
-    concatenated before being parsed. </p></dd>
+concatenated before being parsed. The order of input files matters.
+Modules must be parsed before they are used.</p></dd>
+
+<dt><code>-v &lt;true_path_set_file&gt;</code></dt>
+<dd><p>Verify this true path set. </p></dd>
 
 </dl>
 
@@ -123,7 +136,7 @@ classes or general algorithms.</td>
 <td>Scripts for testing.</td>
 
 <tr><td>test/cic_program/</td> 
-<td>Contain verification programs provided by Cadence.</td>
+<td>Contain verification programs provided by CIC.</td>
 
 </table>
 
