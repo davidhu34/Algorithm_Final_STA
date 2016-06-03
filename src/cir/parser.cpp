@@ -17,13 +17,13 @@ bool Parser::parseCase ()
 	map< string, string> models = _ckt->getModels();
 
 	if ( !getNextLine() )	return moduleERR();
-cout<<"got line 1"<<endl;
+//cout<<"got line 1"<<endl;
 	if ( parseWord() != "module" )	return moduleERR();	// module initialized
-cout<<"got \"module\""<<endl;
+//cout<<"got \"module\""<<endl;
 	string caseName = parseWord();	// get case name
 	if ( caseName == "" )   return moduleERR();
 	_ckt->setCaseName(caseName);
-cout<<"got case name"<<endl;
+//cout<<"got case name"<<endl;
 	vector<string> varReg = parseVars();	// get parameters
 	if ( varReg.size() == 0 )	moduleERR();
 
@@ -31,7 +31,7 @@ cout<<"got case name"<<endl;
 	{
 		string token = parseWord();
 		if ( token == "" ) return moduleERR();
-cout<<"got token: "<<token<<endl;
+//cout<<"got token: "<<token<<endl;
 		if ( models.find(token) != models.end() ) {	
 			if ( !parseGate(token) )	return moduleERR();
 		} else if ( token == "endmodule") break;
@@ -64,7 +64,7 @@ string Parser::parseWord ()
 		word += _parsingStr[0];
 		_parsingStr.erase(0,1);
 	}
-cout<< "word: " << word << endl;
+//cout<< "word: " << word << endl;
 	return word;    // empty word for ERR
 }
 
@@ -74,14 +74,14 @@ vector<string> Parser::parseVars ()
 	string parsedTmp;
 	bool flag = true;	// false flag: module ERR
 
-cout<<"vars: ";
+//cout<<"vars: ";
 	while (flag)
 	{
 		if ( isalnum( _parsingStr[0] ) )
 			parsedTmp += _parsingStr[0];
 		else if ( _parsingStr[0] == ',' || _parsingStr[0] == ';' )
 		{
-cout<< parsedTmp<<_parsingStr[0]<<" ";
+//cout<< parsedTmp<<_parsingStr[0]<<" ";
 			vars.push_back(parsedTmp);
 			parsedTmp = "";
 			if ( _parsingStr[0] == ';' )
@@ -93,7 +93,7 @@ cout<< parsedTmp<<_parsingStr[0]<<" ";
 		if ( _parsingStr.length() > 1 ) _parsingStr.erase(0,1);
 		else if ( !getNextLine() )	flag = false;
 	}   // empty vector for ERR
-cout<<endl;
+//cout<<endl;
 	return (flag)? vars: vector<string>();
 }
 
@@ -127,9 +127,9 @@ bool Parser::getNextLine ()
 		cout<<_parsingStr<<endl;
 		_parsingLine++;
 		size_t commentStart = _parsingStr.find("//");
-cout<<"comment found at: ";
-if( commentStart == string::npos ) cout<<"npos"<<endl;
-else cout <<commentStart <<endl;
+//cout<<"comment found at: ";
+//if( commentStart == string::npos ) cout<<"npos"<<endl;
+//else cout <<commentStart <<endl;
 		if ( commentStart != string::npos )
 			_parsingStr.erase( _parsingStr.begin() + commentStart, _parsingStr.end() );
 		else if ( commentStart == 0 ) return getNextLine();

@@ -22,15 +22,15 @@ class Wire
 public:
 	Wire () {}
 	void setFrom ( Gate* from )		{ _from = from; }
-	void setTo ( Gate* to, string pin )	{ _to = to; _pin = pin; }
+	void setTo ( Gate* to, string pin )	{ _to.push_back(to); _pin.push_back(pin); }
 	Gate* getFrom ()	{ return _from; }
-	Gate* getTo ()		{ return _to; }
-	string getToPin ()	{ return _pin; }
+	vector<Gate*> getTo ()		{ return _to; }
+	vector<string> getToPin ()	{ return _pin; }
 
 private:
 	Gate* 	_from;
-	Gate*	_to;
-	string	_pin;
+	vector<Gate*>	_to;
+	vector<string>	_pin;
 };
 
 class Gate
@@ -68,10 +68,10 @@ class NOT: public Gate
 {
 public:
 	NOT ( string gname, string mname ): Gate ( gname, mname )
-	{	_inputs.push_back(0); _inputs.push_back(0); }
+	{	_inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
 	{
-		cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "A" ) {
 			_inputs[0] = gate;
 		} else if ( pin == "Y" ) {
@@ -102,9 +102,10 @@ class NAND: public Gate
 {
 public:
 	NAND ( string gname, string mname ): Gate ( gname, mname )
-	{	_inputs.push_back(0); _inputs.push_back(0); _inputs.push_back(0); }
+	{	_inputs.push_back(0); _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
-	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+	{
+cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "A" ) {
 			_inputs[0] = gate;
 		} else if ( pin == "B") {
@@ -137,9 +138,10 @@ class NOR: public Gate
 {
 public:
 	NOR ( string gname, string mname ): Gate ( gname, mname )
-	{	_inputs.push_back(0); _inputs.push_back(0); _inputs.push_back(0); }
+	{	_inputs.push_back(0); _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
-	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+	{
+cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "A" ) {
 			_inputs[0] = gate;
 		} else if ( pin == "B") {
@@ -174,7 +176,8 @@ class INPUT: public Gate
 public:
 	INPUT ( string gname ): Gate ( gname ) {}
 	void connectGate ( Gate* gate, string pin )
-	{	cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+	{
+cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "Y" )  _outputs.push_back(gate); }
 	void printNames ()
 	{
@@ -196,7 +199,8 @@ class OUTPUT: public Gate
 public:
 	OUTPUT ( string gname ): Gate ( gname )	{ _inputs.push_back(0); }
 	void connectGate ( Gate* gate, string pin )
-	{cout<<"connectGate print pin: "<<gate->getName()<<" "<<pin<<endl;
+	{
+cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "A" )  _inputs[0] = gate; }
 	
 	void printNames ()

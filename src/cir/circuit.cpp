@@ -104,10 +104,14 @@ void Circuit::connectGates ()
 	for ( map< string, Wire*>::iterator wit = _Wires.begin();
 		wit != _Wires.end(); wit++) {
 		Gate* from = wit->second->getFrom();
-		Gate* to = wit->second->getTo();
-		string pin = wit->second->getToPin();
-		from->connectGate( to, "Y" );
-		to->connectGate( from, pin );
+		vector<Gate*> to = wit->second->getTo();
+		vector<string> pin = wit->second->getToPin();
+		for ( size_t i = 0; i < to.size(); i++)
+		{
+			from->connectGate( to[i], "Y" );
+			to[i]->connectGate( from, pin[i] );
+		}
+		
 	}
 };
 } // namespace Cir
