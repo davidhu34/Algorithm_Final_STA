@@ -177,32 +177,28 @@ static bool add_NOT_clause(Minisat::Var A,
 //
 // CAUTION: SURROUND THEM WITH BRACES WHEN USE WITH BRANCH OR LOOP.
 //
-#define ASSIGN_TRUE(gate)                 \
-    gate->value = 1;                      \
-    assumptions.push(mkLit(gate->var));   
-    
-#define ASSIGN_FALSE(gate)                \
-    gate->value = 0;                      \
-    assumptions.push(mkLit(gate->var, 1));
+#define ASSIGN(gate, v)                    \
+    gate->value = v;                       \
+    assumptions.push(mkLit(gate->var, !v));
 
-#define UNDO_ASSIGN(gate)                 \
-    assumptions.pop();                    \
+#define UNASSIGN(gate)                     \
+    assumptions.pop();                     \
     gate->value = 2;
 
-#define PUSH_GATE(gate)                   \
-    path.push_back(gate);                 \
+#define PUSH_GATE(gate)                    \
+    path.push_back(gate);                  \
     slack -= 1;
 
-#define POP_GATE_1()                      \
-    path.pop_back();                      \
-    gate = path.back();                   \
+#define POP_GATE_1()                       \
+    path.pop_back();                       \
+    gate = path.back();                    \
     slack += 1;
 
-#define POP_GATE_2()                      \
-    path.pop_back();                      \
-    gate = path.back();                   \
-    gA = gate->froms[0];                  \
-    gB = gate->froms[1];                  \
+#define POP_GATE_2()                       \
+    path.pop_back();                       \
+    gate = path.back();                    \
+    gA = gate->froms[0];                   \
+    gB = gate->froms[1];                   \
     slack += 1;
 
 // Basically the idea is trace from output pins toward input pins. Try
@@ -273,19 +269,19 @@ start_function:
         assert(gate->module == Module::PO);
 
         gate->value = 0;
-        ASSIGN_FALSE(gate->froms[0])
+        ASSIGN(gate->froms[0], 0)
         PUSH_GATE(gate->froms[0])
         CALL_FUNCTION(1)
         POP_GATE_1()
-        UNDO_ASSIGN(gate->froms[0])
+        UNASSIGN(gate->froms[0])
         gate->value = 2;
 
         gate->value = 1;
-        ASSIGN_TRUE(gate->froms[0])
+        ASSIGN(gate->froms[0], 1)
         PUSH_GATE(gate->froms[0])
         CALL_FUNCTION(2)
         POP_GATE_1()
-        UNDO_ASSIGN(gate->froms[0])
+        UNASSIGN(gate->froms[0])
         gate->value = 2;
     }
 
@@ -293,121 +289,71 @@ start_function:
         gA = gate->froms[0];
         gB = gate->froms[1];
 
+    #define MAKE_TRUE_PATH(gA, gB, v0, v1, p1, p2, p3, p4)  \
+        if (gA->arrival_time < gB->arrival_time) {          \
+            if (gA->value == 2) {                           \
+                if (gate->value == v1) {                    \
+                    ASSIGN(gA, v0)                          \
+                    PUSH_GATE(gA)                           \
+                    CALL_FUNCTION(p1)                       \
+                    POP_GATE_2()                            \
+                    UNASSIGN(gA)                            \
+                }                                           \
+            }                                               \
+        }                                                   \
+                                                            \
+        else if (gA->arrival_time > gB->arrival_time) {     \
+            if (gB->value == 2) {                           \
+                ASSIGN(gB, v1)                              \
+                                                            \
+                if (gate->value == v1) {                    \
+                    ASSIGN(gA, v0)                          \
+                }                                           \
+                else { /* gate->value == v0 */              \
+                    ASSIGN(gA, v1)                          \
+                }                                           \
+                                                            \
+                PUSH_GATE(gA)                               \
+                CALL_FUNCTION(p2)                           \
+                POP_GATE_2()                                \
+                UNASSIGN(gA)                                \
+                UNASSIGN(gB)                                \
+            }                                               \
+        }                                                   \
+                                                            \
+        else { /* Both of them have same arrival time. */   \
+            if (gate->value == v1) {                        \
+                if (gA->value == 2) {                       \
+                    ASSIGN(gA, v0)                          \
+                    PUSH_GATE(gA)                           \
+                    CALL_FUNCTION(p3)                       \
+                    POP_GATE_2()                            \
+                    UNASSIGN(gA)                            \
+                }                                           \
+            }                                               \
+                                                            \
+            else { /* gate->value == v0 */                  \
+                if (gB->value == 2) {                       \
+                    ASSIGN(gB, v1)                          \
+                    ASSIGN(gA, v1)                          \
+                    PUSH_GATE(gA)                           \
+                    CALL_FUNCTION(p4)                       \
+                    POP_GATE_2()                            \
+                    UNASSIGN(gA)                            \
+                    UNASSIGN(gB)                            \
+                }                                           \
+            }                                               \
+        }
+
         // Try to make gA become a true path.
         
-        if (gA->arrival_time < gB->arrival_time) {
-            if (gA->value == 2) {
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gA)
-                    PUSH_GATE(gA)
-                    CALL_FUNCTION(3)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gA)
-                }
-            }
-        }
-
-        else if (gA->arrival_time > gB->arrival_time) {
-            if (gB->value == 2) {
-                ASSIGN_TRUE(gB)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gA)
-                }
-                else { // gate->value == 0
-                    ASSIGN_TRUE(gA)
-                }
-
-                PUSH_GATE(gA)
-                CALL_FUNCTION(4)
-                POP_GATE_2()
-                UNDO_ASSIGN(gA)
-                UNDO_ASSIGN(gB)
-            }
-        }
-
-        else { // Both of them have same arrival time.
-            if (gate->value == 1) {
-                if (gA->value == 2) {
-                    ASSIGN_FALSE(gA)
-                    PUSH_GATE(gA)
-                    CALL_FUNCTION(5)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gA)
-                }
-            }
-
-            else { // gate->value == 0
-                if (gB->value == 2) {
-                    ASSIGN_TRUE(gB)
-                    ASSIGN_TRUE(gA)
-                    PUSH_GATE(gA)
-                    CALL_FUNCTION(6)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gA)
-                    UNDO_ASSIGN(gB)
-                }
-            }
-        }
+        MAKE_TRUE_PATH(gA, gB, 0, 1, 3, 4, 5, 6)
 
         // Try to make gB become a true path.
 
         // Same logic as above, just swap "gA" and "gB"
+        MAKE_TRUE_PATH(gB, gA, 0, 1, 7, 8, 9, 10)
 
-        if (gB->arrival_time < gA->arrival_time) {
-            if (gB->value == 2) {
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gB)
-                    PUSH_GATE(gB)
-                    CALL_FUNCTION(7)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gB)
-                }
-            }
-        }
-
-        else if (gB->arrival_time > gA->arrival_time) {
-            if (gA->value == 2) {
-                ASSIGN_TRUE(gA)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gB)
-                }
-                else { // gate->value == 0
-                    ASSIGN_TRUE(gB)
-                }
-
-                PUSH_GATE(gB)
-                CALL_FUNCTION(8)
-                POP_GATE_2()
-                UNDO_ASSIGN(gB)
-                UNDO_ASSIGN(gA)
-            }
-        }
-
-        else { // Both of them have same arrival time.
-            if (gate->value == 1) {
-                if (gB->value == 2) {
-                    ASSIGN_FALSE(gB)
-                    PUSH_GATE(gB)
-                    CALL_FUNCTION(9)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gB)
-                }
-            }
-
-            else { // gate->value == 0
-                if (gA->value == 2) {
-                    ASSIGN_TRUE(gA)
-                    ASSIGN_TRUE(gB)
-                    PUSH_GATE(gB)
-                    CALL_FUNCTION(10)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gB)
-                    UNDO_ASSIGN(gA)
-                }
-            }
-        }
     } // else if (gate->module == Module::NAND2)
 
     else if (gate->module == Module::NOR2) {
@@ -416,134 +362,28 @@ start_function:
 
         // Try to make gA become a true path.
         
-        if (gA->arrival_time < gB->arrival_time) {
-            if (gA->value == 2) {
-                if (gate->value == 0) {
-                    ASSIGN_TRUE(gA)
-                    PUSH_GATE(gA)
-                    CALL_FUNCTION(11)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gA)
-                }
-            }
-        }
-
-        else if (gA->arrival_time > gB->arrival_time) {
-            if (gB->value == 2) {
-                ASSIGN_FALSE(gB)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gA)
-                }
-                else { // gate->value == 0
-                    ASSIGN_TRUE(gA)
-                }
-
-                PUSH_GATE(gA)
-                CALL_FUNCTION(12)
-                POP_GATE_2()
-                UNDO_ASSIGN(gA)
-                UNDO_ASSIGN(gB)
-            }
-        }
-
-        else { // Both of them have same arrival time.
-            if (gate->value == 1) {
-                if (gA->value == 2) {
-                    ASSIGN_FALSE(gA)
-                    PUSH_GATE(gA)
-                    CALL_FUNCTION(13)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gA)
-                }
-            }
-
-            else { // gate->value == 0
-                if (gB->value == 2) {
-                    ASSIGN_FALSE(gB)
-                    ASSIGN_TRUE(gA)
-                    PUSH_GATE(gA)
-                    CALL_FUNCTION(14)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gA)
-                    UNDO_ASSIGN(gB)
-                }
-            }
-        }
+        MAKE_TRUE_PATH(gA, gB, 1, 0, 11, 12, 13, 14)
 
         // Try to make gB become a true path
 
         // Same logic as above, just swap "gA" and "gB"
+        MAKE_TRUE_PATH(gA, gB, 1, 0, 15, 16, 17, 18)
         
-        if (gB->arrival_time < gA->arrival_time) {
-            if (gB->value == 2) {
-                if (gate->value == 0) {
-                    ASSIGN_TRUE(gB)
-                    PUSH_GATE(gB)
-                    CALL_FUNCTION(15)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gB)
-                }
-            }
-        }
-
-        else if (gB->arrival_time > gA->arrival_time) {
-            if (gA->value == 2) {
-                ASSIGN_FALSE(gA)
-
-                if (gate->value == 1) {
-                    ASSIGN_FALSE(gB)
-                }
-                else { // gate->value == 0
-                    ASSIGN_TRUE(gB)
-                }
-
-                PUSH_GATE(gB)
-                CALL_FUNCTION(16)
-                POP_GATE_2()
-                UNDO_ASSIGN(gB)
-                UNDO_ASSIGN(gA)
-            }
-        }
-
-        else { // Both of them have same arrival time.
-            if (gate->value == 1) {
-                if (gB->value == 2) {
-                    ASSIGN_FALSE(gB)
-                    PUSH_GATE(gB)
-                    CALL_FUNCTION(17)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gB)
-                }
-            }
-
-            else { // gate->value == 0
-                if (gA->value == 2) {
-                    ASSIGN_FALSE(gA)
-                    ASSIGN_TRUE(gB)
-                    PUSH_GATE(gB)
-                    CALL_FUNCTION(18)
-                    POP_GATE_2()
-                    UNDO_ASSIGN(gB)
-                    UNDO_ASSIGN(gA)
-                }
-            }
-        }
     } // else if (gate->module == Module::NOR2)
 
     else if (gate->module == Module::NOT1) {
         if (gate->froms[0]->value == 2) {
             if (gate->value == 1) {
-                ASSIGN_FALSE(gate->froms[0])
+                ASSIGN(gate->froms[0], 0)
             }
             else { // gate->value == 0
-                ASSIGN_TRUE(gate->froms[0])
+                ASSIGN(gate->froms[0], 1)
             }
 
             PUSH_GATE(gate->froms[0])
             CALL_FUNCTION(19)
             POP_GATE_1()
-            UNDO_ASSIGN(gate->froms[0])
+            UNASSIGN(gate->froms[0])
         }
     } // else if (gate->module == Module::NOT1)
 
