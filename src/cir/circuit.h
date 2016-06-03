@@ -35,7 +35,7 @@ public:
 	void connectGates ();
 	
 	void testPrint ();
-	void printState ();
+	void printState () const;
 	
 
 private:
