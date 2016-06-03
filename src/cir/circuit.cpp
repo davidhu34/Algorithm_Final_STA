@@ -33,7 +33,7 @@ void Circuit::printState () const
 	for ( size_t i = 0; i < _LogicGates.size(); i++ )
 		_LogicGates[i]->printState();
 
-    typedef map<string, Gate*>::iterator Iter;
+    typedef map<string, Gate*>::const_iterator Iter;
 	for ( Iter it = _Inputs.begin(); it != _Inputs.end(); ++it )
 		it->second->printState();
 
