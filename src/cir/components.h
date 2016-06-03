@@ -48,8 +48,8 @@ public:
 
 	string getName ()		{ return _name; }
 	string getModel ()		{ return _model; }
-	vector<Gate*> getFanIn ()	{ return _inputs; }
-	vector<Gate*> getFanOut ()	{ return _outputs; }
+	vector<Gate*> getFanIn ()				{ return _inputs; }
+	vector<Gate*> getFanOut ()				{ return _outputs; }
 
 	bool		_value;
 	int        		_tag;
