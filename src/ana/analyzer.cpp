@@ -162,12 +162,6 @@ static bool add_NOT_clause(Minisat::Var A,
     return true;
 }
 
-// Calculate delay of a path.
-//
-static inline int delay(const Sta::Cir::Path& path) {
-    return path.size() - 2;
-}
-
 // Call function and create a return point. `n` is the return point
 // index. It must be a literal number without any operation. Each
 // return point index must be unique. Please do not put semicolon
@@ -197,16 +191,19 @@ static inline int delay(const Sta::Cir::Path& path) {
 
 #define PUSH_GATE(gate)                   \
     path.push_back(gate);                 \
+    slack -= 1;
 
 #define POP_GATE_1()                      \
     path.pop_back();                      \
-    gate = path.back();
+    gate = path.back();                   \
+    slack += 1;
 
 #define POP_GATE_2()                      \
     path.pop_back();                      \
     gate = path.back();                   \
     gA = gate->froms[0];                  \
-    gB = gate->froms[1];
+    gB = gate->froms[1];                  \
+    slack += 1;
 
 // Basically the idea is trace from output pins toward input pins. Try
 // every possibility (condition) that make a path become a true path.
@@ -253,6 +250,7 @@ static void trace(Sta::Cir::Gate*                   po,
     Gate* gA;
     Gate* gB;
     int   point;
+    int   slack = time_constraint;
 
     // Call function
     continue_point.push(0);
@@ -266,6 +264,10 @@ pop_function:
 
 start_function:
     gate = path.back();
+
+    if (slack == 0 && gate->module != Module::PI) {
+        goto pop_function;
+    }
 
     if (gate->value == 2) { // Floating
         assert(gate->module == Module::PO);
@@ -546,7 +548,7 @@ start_function:
     } // else if (gate->module == Module::NOT1)
 
     else if (gate->module == Module::PI) {
-        if (time_constraint - delay(path) < slack_constraint) {
+        if (slack < slack_constraint) {
             if (solver.solve(assumptions)) {
                 paths.push_back(path);
 
@@ -654,14 +656,8 @@ int Sta::Ana::find_sensitizable_paths(
     // Find sensitizable path.
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
         Cir::Gate* po = cir.primary_outputs[i];
-
-        int slack = time_constraint - po->arrival_time;
-        if (po->arrival_time < time_constraint &&
-            slack            < slack_constraint  ) {
-            
-            trace(po, cir, time_constraint, slack_constraint,
-                  solver, paths, values, input_vecs);
-        }
+        trace(po, cir, time_constraint, slack_constraint,
+              solver, paths, values, input_vecs);
     }
 
     return 0;
