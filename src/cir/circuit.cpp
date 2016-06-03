@@ -114,5 +114,15 @@ void Circuit::connectGates ()
 		
 	}
 };
+
+vector<string> Circuit::getInputNames ()
+{
+	vector<string> names;
+	for ( map< string, Gate*>::iterator it = _Inputs.begin();
+		it != _Inputs.end(); it++) 
+		names.push_back( it->first );
+	return names;
+};
+
 } // namespace Cir
 } // namespace Sta
