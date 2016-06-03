@@ -30,12 +30,17 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 #else
 
-//#   include <stdint.h>
+#   include <stdint.h>
 #   include <inttypes.h>
 
 #endif
 
 #include <limits.h>
+
+// For older compiler
+#ifndef UINT32_MAX
+#define UINT32_MAX 0xffffffff
+#endif
 
 //=================================================================================================
 
