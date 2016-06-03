@@ -17,7 +17,7 @@ void Circuit::testPrint ()
 	for ( size_t i =0; i < _LogicGates.size(); i++ )
 	_LogicGates[i]->printNames();
 };
-void Circuit::printState ()
+void Circuit::printState () const
 {
 	std::cout<<"-circuit_name "<<case_name<<"\n"
 		     <<"-pi_count "<<_Inputs.size()<<"\n"
@@ -33,8 +33,9 @@ void Circuit::printState ()
 	for ( size_t i = 0; i < _LogicGates.size(); i++ )
 		_LogicGates[i]->printState();
 
-	for ( size_t i = 0; i < _Inputs.size(); i++ )
-		_Inputs[i]->printState();
+    typedef map<string, Gate*>::iterator Iter;
+	for ( Iter it = _Inputs.begin(); it != _Inputs.end(); ++it )
+		it->second->printState();
 
 	for ( size_t i = 0; i < _Outputs.size(); i++ )
 		_Outputs[i]->printState();
