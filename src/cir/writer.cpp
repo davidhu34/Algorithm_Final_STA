@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <sstream>
 
 #include "sta/src/cir/writer.h"
 
@@ -21,47 +20,46 @@ static void print_connection(int                      delay,
                              const Sta::Cir::Gate*    g1,
                              bool                     g1_val,
                              const Sta::Cir::Gate*    g2,
-                             bool                     g2_val,
                              const Sta::Cir::Circuit& cir,
                              std::ostream&            out) {
     using namespace Sta::Cir;
     using std::setw;
 
     // Print g1
-    std::ostringstream sout;
-    sout << g1->name;
+    std::string temp = g1->name;
 
     if (g1->module == Module::NAND2 || 
         g1->module == Module::NOR2  ||
         g1->module == Module::NOT1    ) {
 
-        sout << "/" << cir.modules[g1->module].output_name;
+        temp += "/";
+        temp += cir.modules[g1->module].output_name;
     }
 
-    out << setw(pin_fw)   << sout.str()
+    out << setw(pin_fw)   << temp
         << setw(type_fw)  << "(" + cir.modules[g1->module].name + ")"
         << setw(incr_fw)  << (g1->module == Module::PI ? 0 : 1)
         << setw(delay_fw) << delay
         << setw(value_fw) << (g1_val ? "r" : "f") << "\n";
 
     // Print g2
-    sout.clear();
-    sout.str("");
-    sout << g2->name;
+    temp = g2->name;
 
     if (g2->module == Module::NAND2 || 
         g2->module == Module::NOR2  ||
         g2->module == Module::NOT1    ) {
 
-        for (size_t i = 0; i < g2->froms.size(); ++i) {
-            if (g2->froms[i] == g1) {
-                sout << "/" << cir.modules[g2->module].input_names[i];
-                break;
-            }
+        temp += "/";
+
+        if (g2->froms[0] == g1) {
+            temp += cir.modules[g2->module].input_names[0];
+        }
+        else {
+            temp += cir.modules[g2->module].input_names[1];
         }
     }
 
-    out << setw(pin_fw)   << sout.str()
+    out << setw(pin_fw)   << temp
         << setw(type_fw)  << "(" + cir.modules[g2->module].name + ")"
         << setw(incr_fw)  << 0
         << setw(delay_fw) << delay
@@ -77,10 +75,12 @@ int Sta::Cir::write(
     const std::vector<InputVec>&            input_vecs,
     const std::string&                      outfile          ) {
 
+    using std::setw;
+
     // Output to file or stdout depends on outfile.
     //
     std::streambuf* buf;
-    std::ofstream fout;
+    std::ofstream   fout;
 
     if (outfile.empty()) {
         buf = std::cout.rdbuf();
@@ -110,11 +110,11 @@ int Sta::Cir::write(
         out << "A True Path List\n"
             << "{\n"
             << hline
-            << std::setw(pin_fw)   << "Pin"
-            << std::setw(type_fw)  << "Type"
-            << std::setw(incr_fw)  << "Incr"
-            << std::setw(delay_fw) << "Path Delay"
-            << std::setw(value_fw) << "" << "\n"
+            << setw(pin_fw)   << "Pin"
+            << setw(type_fw)  << "Type"
+            << setw(incr_fw)  << "Incr"
+            << setw(delay_fw) << "Path Delay"
+            << setw(value_fw) << "" << "\n"
             << hline;
 
         for (size_t j = paths[i].size(); j > 1; --j) {
@@ -122,7 +122,6 @@ int Sta::Cir::write(
                              paths[i][j - 1],
                              values[i][j - 1],
                              paths[i][j - 2],
-                             values[i][j - 2],
                              cir,
                              out                 );
         }
@@ -130,13 +129,13 @@ int Sta::Cir::write(
         int delay = paths[i].size() - 2;
 
         out << hline
-            << std::setw(timelbl_w) << "Data Required Time" << std::right
-            << std::setw(timeval_w) << time_constraint << "\n" << std::left
-            << std::setw(timelbl_w) << "Data Arrival Time" << std::right
-            << std::setw(timeval_w) << delay << "\n" << std::left
+            << setw(timelbl_w) << "Data Required Time" << std::right
+            << setw(timeval_w) << time_constraint << "\n" << std::left
+            << setw(timelbl_w) << "Data Arrival Time" << std::right
+            << setw(timeval_w) << delay << "\n" << std::left
             << hline
-            << std::setw(timelbl_w) << "Slack" << std::right
-            << std::setw(timeval_w) << time_constraint - delay << "\n"
+            << setw(timelbl_w) << "Slack" << std::right
+            << setw(timeval_w) << time_constraint - delay << "\n"
             << "}\n\n" << std::left;
         
         // Print input vector
@@ -144,9 +143,9 @@ int Sta::Cir::write(
             << "{\n";
 
         for (size_t j = 0; j < input_vecs[i].size(); ++j) {
-            out << std::setw(13) << cir.primary_inputs[j]->name
-                << std::setw(2)  << "="
-                << std::setw(15);
+            out << setw(13) << cir.primary_inputs[j]->name
+                << setw(2)  << "="
+                << setw(15);
 
             if (paths[i].back() != cir.primary_inputs[j]) {
                 out << static_cast<int>(input_vecs[i][j]);
