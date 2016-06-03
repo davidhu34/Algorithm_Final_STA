@@ -22,8 +22,7 @@ void Circuit::printState ()
 	std::cout<<"-circuit_name "<<case_name<<"\n"
 		     <<"-pi_count "<<_Inputs.size()<<"\n"
 			 <<"-po_count "<<_Outputs.size()<<"\n"
-			 <<"-gate_count "<<_LogicGates.size()-
-			   _Inputs.size()-_Outputs.size()<<"\n"
+			 <<"-gate_count "<<_LogicGates.size()<<"\n"
 			 <<"-nand2_input_pin_name A B\n"
 			 <<"-nand2_output_pin_name Y\n"
 			 <<"-nor2_input_pin_name A B\n"
@@ -33,6 +32,12 @@ void Circuit::printState ()
 
 	for ( size_t i = 0; i < _LogicGates.size(); i++ )
 		_LogicGates[i]->printState();
+
+	for ( size_t i = 0; i < _Inputs.size(); i++ )
+		_Inputs[i]->printState();
+
+	for ( size_t i = 0; i < _Outputs.size(); i++ )
+		_Outputs[i]->printState();
 
 }
 
