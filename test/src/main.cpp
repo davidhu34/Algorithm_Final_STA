@@ -45,7 +45,7 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_cir_circuit.cpp\n";
     test_circuit();
-//    test_circuit_state();
+    test_circuit_state();
 
     return 0;
 }
