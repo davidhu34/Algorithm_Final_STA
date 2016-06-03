@@ -79,7 +79,7 @@
 
 ### Method 2 (Backtracking)
 
-- Calculate arrival time of all gates.
+- Calculate max and min arrival time of all gates.
 
 - Basically the idea is trace from output pins toward input pins. Try
   every possibility (condition) that make a path become a true path.
@@ -208,65 +208,7 @@ function trace()
     else if gate.type == NOR
         # Try to make gate.from_a become a true path.
 
-        if gate.from_a.arrival_time < gate.from_b.arrival_time
-            if gate.from_a.value == X
-                if gate.value == 0
-                    gate.from_a.value = 1
-                    assumptions.push(gate.from_a.var)
-                    path.push(gate.from_a)
-                    trace()
-                    path.pop()
-                    gate = path.back()
-                    assumptions.pop()
-                    gate.from_a.value = X
-
-        else if gate.from_a.arrival_time > gate.from_b.arrival_time
-            if gate.from_b.value == X
-                gate.from_b.value = 0
-                assumptions.push(gate.from_b.var)
-
-                if gate.value == 1
-                    gate.from_a.value = 0
-                    assumptions.push(-gate.from_a.var)
-                else # gate.value == 0
-                    gate.from_a.value = 1
-                    assumptions.push(gate.from_a.var)
-
-                path.push(gate.from_a)
-                trace()
-                path.pop()
-                gate = path.back()
-                assumptions.pop()
-                gate.from_a.value = X
-                assumptions.pop()
-                gate.from_b.value = X
-
-        else # Both of them have same arrival time.
-            if gate.value == 1
-                if gate.from_a.value == X
-                    gate.from_a.value = 0
-                    assumptions.push(-gate.from_a.var)
-                    path.push(gate.from_a)
-                    trace()
-                    path.pop()
-                    gate = path.back()
-                    assumptions.pop()
-                    gate.from_a.value = X
-
-            else # gate.value == 0
-                if gate.from_b.value == X
-                    gate.from_b.value = 0
-                    assumptions.push(-gate.from_b.var)
-                    gate.from_a.value = 1
-                    assumptions.push(gate.from_a.var)
-                    path.push(gate.from_a)
-                    trace()
-                    path.pop()
-                    gate = path.back()
-                    assumptions.pop()
-                    gate.from_a.value = X
-                    assumptions.pop()
-                    gate.from_b.value = X
+        # Same logic as above, just swap "0" and "1".
 
         # Try to make gate.from_b become a true path.
 
