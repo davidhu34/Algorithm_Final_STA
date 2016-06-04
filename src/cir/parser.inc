@@ -324,7 +324,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 // we can connect PI to gate later.
                 Wire wire(token);
                 wire.from = pi;
-                wires.insert(token, wire);
+                wires.insert_blindly(token, wire);
 
                 token = get_token(fin); // "," or ";"
             } while (token != ";");
@@ -342,7 +342,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 Wire wire(token);
                 wire.tos.push_back(po);
                 wire.tos_pin.push_back(0);
-                wires.insert(token, wire);
+                wires.insert_blindly(token, wire);
 
                 token = get_token(fin); // "," or ";"
             } while (token != ";");
@@ -350,7 +350,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
         else if (token == "wire") { // Parse wires.
             do {
                 token = get_token(fin); // Name of wire.
-                wires.insert(token, (Wire(token))); // Add wire.
+                wires.insert_blindly(token, (Wire(token))); // Add wire.
                 token = get_token(fin); // "," or ";"
             } while (token != ";");
         }
