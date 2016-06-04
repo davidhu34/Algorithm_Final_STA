@@ -26,55 +26,160 @@ circuit using shortest time.
 
 See `doc/requirement.md` for more information.
 
-## Synopsys
+## Usage
+
+### Find
 
 ```
-sta -t <time_constraint> 
-    -s <slack_constraint> 
-    [-o <output_file>] 
-    <circuit_files>
-
-or
-
-sta -t <time_constraint>
-    -s <slack_constraint>
-    -v <true_path_set_file>
-    <circuit_files>
+sta find -t <time_constraint> 
+         -s <slack_constraint> 
+         [-o <output_file>] 
+         [-d <dump_file>]
+         <circuit_files>
 ```
 
-## Description
-
-The first version will print a true path set. If option `-o` is given,
-it will print into `<output_file>`, otherwise it will print to stdout.
-For more details about input and output, see `doc/requirement.md`.
-
-The second version will verify a true path set. 
-
-## Options
+Print a true path set. 
 
 <dl>
 
-<dt><code>-o</code></dt>
-<dd><p>Output to this file.</p></dd>
+<dt><code>-t &lt;time_constraint&gt</code></dt>
+<dd><p>Specify time constraint. It should be an integer.</p></dd>
 
-<dt><code>-t &lt;time_constraint&gt;</code></dt>
-<dd><p>Specify time constraint.</p></dd>
+<dt><code>-s &lt;slack_constraint&gt</code></dt>
+<dd><p>Specify slack constraint. It should be an integer.</p></dd>
 
-<dt><code>-s &lt;slack_constraint&gt;</code></dt>
-<dd><p>Specify slack constraint.</p></dd>
+<dt><code>-o &lt;output_file&gt;</code></dt>
+<dd><p>If given, it will print to <code>output_file</code>, otherwise
+it will print to <code>stdout</code>. See <code>doc/requirement.md</code>
+for more information about its format.</p></dd>
 
-<dt><code>&lt;output_file&gt;</code></dt>
-<dd><p>If given, a true path set will be printed into it.</p></dd>
+<dt><code>-d &lt;dump_file&gt;</code></dt>
+<dd><p>If given, it will print circuit connection into
+<code>dump_file</code>. Otherwise it won't print circuit connection.
+See <a href="#dump">Dump</a> for more information.</p></dd>
 
 <dt><code>&lt;circuit_files&gt;</code></dt>
 <dd><p>Verilog file describing a gate-level netlist. Files will
-concatenated before being parsed. The order of input files matters.
-Modules must be parsed before they are used.</p></dd>
-
-<dt><code>-v &lt;true_path_set_file&gt;</code></dt>
-<dd><p>Verify this true path set. </p></dd>
+concatenated before being parsed. The order of these files matters.
+Modules must be parsed before they are used. See 
+<code>doc/requirement.md</code> for more details about their 
+format.</p></dd> 
 
 </dl>
+
+### Verify
+
+```
+sta verify -t <time_constraint>
+           -s <slack_constraint>
+           -v <true_path_set_file>
+           [-d <dump_file>]
+           <circuit_files>
+```
+
+Verify a true path set. For each path in true path set, check whether
+it is within time constraint and slack constraint, and whether the
+given input vector can prove that path is a true path. It extract
+path and input vector from `true_path_set_file`, and verify it.
+It does not check any other value stated in `true_path_set_file`.
+
+<dl>
+
+<dt><code>-t &lt;time_constraint&gt</code></dt>
+<dt><code>-s &lt;slack_constraint&gt</code></dt>
+<dt><code>-d &lt;dump_file&gt;</code></dt>
+<dt><code>&lt;circuit_files&gt;</code></dt>
+<dd><p>Same as above.</p></dd>
+
+<dt><code>-v &lt;true_path_set_file&gt;</code></dt>
+<dd><p>Verify this <code>true_path_set_file</code>. It does not check
+format of <code>true_path_set_file</code>, so make sure it is correct
+before you feed it in. See <code>doc/requirement.md</code> for more
+information about format of <code>true_path_set_file</code>.</p></dd>
+
+</dl>
+
+### Dump
+
+```
+sta dump [-d <dump_file>]
+         <circuit_files>
+```
+
+Dump circuit connection information. This is for circuit checking.
+If you have built your own circuit parser, you can feed it with
+some verilog file, then dump your circuit's connection information
+according to format below. Feed those verilog file to `sta` too,
+and use this function to dump connection information. Then you can
+compare to see whether we have same output, using `sta compare`.
+
+<dl>
+
+<dt><code>&lt;circuit_files&gt;</code></dt>
+<dd><p>Same as above.</p></dd>
+
+<dt><code>-d &lt;dump_file&gt;</code></dt>
+<dd><p>If given, it will print circuit connection into
+<code>dump_file</code>. Otherwise it will print to stdout. </p></dd>
+
+</dl>
+
+`dump_file` has the following format:
+
+```
+-circuit_name          case0
+-pi_count              13
+-po_count              30
+-gate_count            78
+-nand2_input_pin_name  A B
+-nand2_output_pin_name Y
+-nor2_input_pin_name   A B
+-nor2_output_pin_name  Y
+-not1_input_pin_name   A
+-not1_output_pin_name  Y
+-I1/PI/fanout          Y:u4
+-O1/PO/fanin           A:u5    
+-u1/NAND2/fanin        A:u7 B:u8
+-u1/NAND2/fanout       Y:u13    
+-u9/NOR2/fanin         A:u2 B:u7
+-u9/NOR2/fanout        Y:u7     
+...
+```
+
+`-circuit_name`, `case0`, `-pi_count`, `13`, ... are tokens.
+A token is consecutive printable characters excluding whitespace.
+You can put any number of whitespace between token. A token start
+with `-` is key token. All other following tokens are value tokens.
+
+Major part of the key token are gates. All token following it are
+fanins of it. `-U1/NAND2 A:U13 B:U30` means U1 input from U13 through
+pin A, input from U30 through pin B.
+
+### Compare
+
+```
+sta compare <dump_file_1> <dump_file_2>
+```
+
+Compare two `dump_file`. For each key token, `sta compare` put all 
+following value tokens into a set. It then map that key token into 
+the set. After that, It read another file. When it read a key token,
+it will find the value token set that is mapped by the key token. 
+Then, for each following value token read from file, `sta_compare` 
+remove it from value token set. If it read a value token that it 
+can't find in that value token set, it issues error. At the end, 
+it output all value token set that is not empty.
+
+Order of key token is not important. Order of value token of a key
+token is not important.
+
+<dl>
+
+<dt><code>&lt;dump_file_1&gt;</code></dt>
+<dt><code>&lt;dump_file_2&gt;</code></dt>
+<dd><p>File describing circuit connection information. See
+<a href="#dump">Dump</a> for more information.</p></dd>
+
 
 ## Directory
 
