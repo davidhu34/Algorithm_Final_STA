@@ -7,6 +7,7 @@
 #include "sta/src/cir/circuit.h"
 #include "sta/src/cir/parser.h"
 #include "sta/src/cir/writer.h"
+#include "sta/src/cir/compare.h"
 #include "sta/src/ana/analyzer.h"
 
 static void print_usage(void) {
