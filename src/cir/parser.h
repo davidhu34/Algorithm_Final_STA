@@ -2,6 +2,7 @@
 #define STA_CIR_PARSER_H
 
 #include <vector>
+#include <string>
 
 #include "sta/src/cir/circuit.h"
 
@@ -28,6 +29,33 @@ namespace Cir {
 //
 int parse(const std::vector<const char*>& input_files,
           Circuit&                        circuit     );
+
+// Extract paths, values and input_vecs from `true_path_set_file`.
+//
+// #### Input
+//
+// - `true_path_set_file`
+// - `circuit`
+//
+// #### Ouput
+//
+// - `paths`
+// - `values`
+// - `input_vecs`
+// - Return code
+//     - 0: Success
+//     - 1: Failed
+//
+inline int parse_true_path_set(
+    const std::string&                true_path_set_file,
+    Cir::Circuit&                     circuit,
+    std::vector<Cir::Path>&           paths,
+    std::vector< std::vector<bool> >& values,
+    std::vector<Cir::InputVec>&       input_vecs) {
+
+    // TODO
+    return 0;
+}
           
 } // namespace Cir
 } // namespace Sta
