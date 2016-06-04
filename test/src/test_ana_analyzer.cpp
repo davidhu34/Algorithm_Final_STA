@@ -26,11 +26,11 @@ static void print_connection(const Sta::Cir::Gate*    g1,
         g2->module == Module::NOR2  ||
         g2->module == Module::NOT1    ) {
 
-        for (size_t i = 0; i < g2->froms.size(); ++i) {
-            if (g2->froms[i] == g1) {
-                std::cout << "/" << cir.modules[g2->module].input_names[i];
-                break;
-            }
+        if (g2->froms[0] == g1) {
+            std::cout << "/" << cir.modules[g2->module].input_names[0];
+        }
+        else {
+            std::cout << "/" << cir.modules[g2->module].input_names[1];
         }
     }
 }
