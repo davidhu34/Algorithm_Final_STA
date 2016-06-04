@@ -7,14 +7,14 @@
 namespace Sta {
 namespace Util {
 
-// Hash map of key to value. Compare key using `operator==`.
+// HashMap of key to value. Compare key using `operator==`.
 //
 // Hash is a hash function type for key, that has implement
 // `size_t operator()(const Key&)`. It can also be a function pointer
 // type, e.g. `size_t (*)(const Key&)`. It return a `size_t` type
 // using full `size_t` full range.
 //
-// To loop through all element in hash map, you have to loop bucket
+// To loop through all element in HashMap, you have to loop bucket
 // yourself, e.g.
 //
 // ```
@@ -28,6 +28,8 @@ namespace Util {
 // You can use `Util::prime_gt(n)` to get a prime number greater
 // than `n`, and use that prime number as bucket size to rehash.
 // Prime number can help hash key to distribute more evenly.
+//
+// HashMap won't grow automatically. You need to grow it yourself.
 //
 template <typename Key, typename Value, typename Hash>
 struct HashMap {
@@ -54,21 +56,52 @@ struct HashMap {
     //
     // - `hash`: A hash function for key.
     //
-    explicit HashMap(Hash _hash): bucket(1), hash(_hash), size(0) { }
+    explicit HashMap(const Hash& _hash): 
+        bucket(1    ), 
+        hash  (_hash), 
+        size  (0    ) { }
 
     // Member functions
 
-    // Insert a key-value pair. It won't check whether HashMap contain
-    // `key`. It just hash that key and insert that key-value pair into
-    // bucket directly. If you want to check whether HashMap contain
-    // `key` before insert, use `find_or_insert()`.
+    // Insert a key-value pair. It will check before insert. If the
+    // key-value pair is already exist, it will return false; Else
+    // it will insert that key-value pair and return true.
     //
     // #### Input
     //
     // - `key`
     // - `value`
     //
-    void insert(const Key& key, const Value& value) {
+    // #### Ouput
+    //
+    // Return true if the key-value pair is not in the Map originally.
+    // Return false otherwise.
+    //
+    bool insert(const Key& key, const Value& value) {
+        size_t       idx   = hash(key) % bucket.size();
+        const size_t bsize = bucket[idx].size();
+
+        for (size_t i = 0; i < bsize; ++i) {
+            if (key == bucket[idx][i].key) {
+                return false;
+            }
+        }
+        bucket[idx].push_back((Pair(key, value)));
+        ++size;
+        return true;
+    }
+
+    // Insert a key-value pair. It won't check whether HashMap contain
+    // `key`. It just hash that key and insert that key-value pair into
+    // bucket directly. If you want to check whether HashMap contain
+    // `key` before insert, use `insert()`.
+    //
+    // #### Input
+    //
+    // - `key`
+    // - `value`
+    //
+    void insert_blindly(const Key& key, const Value& value) {
         size_t idx = hash(key) % bucket.size();
         bucket[idx].push_back((Pair(key, value)));
         ++size;
@@ -160,7 +193,7 @@ struct HashMap {
     //
     // #### Output
     //
-    // - true or fale.
+    // - true or false.
     //
     bool contains(const Key& key) const {
         size_t idx = hash(key) % bucket.size();

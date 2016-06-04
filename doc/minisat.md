@@ -61,11 +61,9 @@ Circuit SAT problem can be expressed as a SAT problem. Consider a
 circuit with only one AND gate.
 
 ```
-      -------
-A-----|      \
-      |      |-----C
-B-----|      /
-      -------
+A-----|¯¯¯¯\
+      |     |------C
+B-----|____/
 ```
 
 We want to know is there a way to assign value to A, B, so that C = 1.
@@ -133,18 +131,15 @@ NOR   |(A + B + C)(B' + C')(A' + C')
 Another example:
 
 ```
-A----------------
-                |   -------
-      ------    ----|      \
-B-----\     \       |      |---H
-       |     >--F---|      /   |
-C-----/     /       -------    |
-      ------                   |  -------
-      -------                  ---|      \
-D-----|      \                    |      |-----I
-      |      |O--G----------------|      /
-E-----|      /                    -------
-      -------
+A---------------+
+                +---|¯¯¯¯\
+B-----\¯¯¯¯\        |     )--H-+
+       )    >---F---|____/     |
+C-----/____/                   |
+                               +--|¯¯¯¯\
+D-----|¯¯¯¯\                      |     )------I
+      |     )O---G----------------|____/
+E-----|____/                      
 ```
 
 The behavior of this circuit can be expressed with the following

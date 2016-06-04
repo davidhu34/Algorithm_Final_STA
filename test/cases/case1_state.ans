@@ -1,0 +1,2340 @@
+-circuit_name                 case1
+-pi_count                     20
+-po_count                     20
+-gate_count                   1145
+-nand2_input_pin_name         A B
+-nand2_output_pin_name        Y
+-nor2_input_pin_name          A B
+-nor2_output_pin_name         Y
+-not1_input_pin_name          A
+-not1_output_pin_name         Y
+-U146/NOT1/fanin              A:U443 
+-U146/NOT1/fanout             Y:U442 
+-U172/NOT1/fanin              A:U1052 
+-U172/NOT1/fanout             Y:U1042 
+-U173/NOT1/fanin              A:U1173 
+-U173/NOT1/fanout             Y:U1054 
+-U178/NOT1/fanin              A:U447 
+-U178/NOT1/fanout             Y:U445 
+-U179/NOT1/fanin              A:U395 
+-U179/NOT1/fanout             Y:U393 
+-U180/NOT1/fanin              A:U396 
+-U180/NOT1/fanout             Y:U394 Y:U395 
+-U190/NOT1/fanin              A:U455 
+-U190/NOT1/fanout             Y:U454 
+-U192/NOT1/fanin              A:U400 
+-U192/NOT1/fanout             Y:U398 
+-U197/NOT1/fanin              A:U418 
+-U197/NOT1/fanout             Y:U417 
+-U203/NOT1/fanin              A:U464 
+-U203/NOT1/fanout             Y:U453 
+-U205/NOT1/fanin              A:U403 
+-U205/NOT1/fanout             Y:U401 
+-U212/NOT1/fanin              A:U404 
+-U212/NOT1/fanout             Y:U402 Y:U403 
+-U214/NOT1/fanin              A:U372 
+-U214/NOT1/fanout             Y:U362 Y:U371 
+-U216/NOT1/fanin              A:U320 
+-U216/NOT1/fanout             Y:U319 
+-U217/NOT1/fanin              A:U375 
+-U217/NOT1/fanout             Y:U1332 
+-U218/NOT1/fanin              A:U472 
+-U218/NOT1/fanout             Y:U1287 Y:U1328 Y:U1342 
+-U235/NOT1/fanin              A:U377 
+-U235/NOT1/fanout             Y:U362 Y:U370 
+-U319/NOR2/fanin              A:U321 B:U216 
+-U319/NOR2/fanout             Y:U1087 Y:U1100 Y:U1111 
+-U320/NAND2/fanin             A:U322 B:U324 
+-U320/NAND2/fanout            Y:U216 
+-U321/NOR2/fanin              A:U324 B:U322 
+-U321/NOR2/fanout             Y:U319 Y:U1099 
+-U322/NOR2/fanin              A:U360 B:U1357 
+-U322/NOR2/fanout             Y:U320 Y:U321 
+-U324/NAND2/fanin             A:U1137 B:U325 
+-U324/NAND2/fanout            Y:U320 Y:U321 
+-U334/NAND2/fanin             A:U358 B:U1337 
+-U334/NAND2/fanout            Y:U1086 Y:U1100 Y:U1112 
+-U338/NOR2/fanin              A:U1346 B:U1347 
+-U338/NOR2/fanout             Y:U2050 
+-U346/NAND2/fanin             A:U398 B:U396 
+-U346/NAND2/fanout            Y:U1345 
+-U348/NAND2/fanin             A:U353 B:U349 
+-U348/NAND2/fanout            Y:U1347 
+-U349/NAND2/fanin             A:U1344 B:U351 
+-U349/NAND2/fanout            Y:U348 
+-U350/NAND2/fanin             A:U352 B:U351 
+-U350/NAND2/fanout            Y:U1347 Y:U1360 
+-U351/NAND2/fanin             A:U1343 B:U357 
+-U351/NAND2/fanout            Y:U349 Y:U350 
+-U352/NOR2/fanin              A:U354 B:U353 
+-U352/NOR2/fanout             Y:U350 
+-U353/NOR2/fanin              A:U403 B:U399 
+-U353/NOR2/fanout             Y:U348 Y:U352 
+-U354/NOR2/fanin              A:U357 B:U1343 
+-U354/NOR2/fanout             Y:U352 Y:U1344 
+-U355/NAND2/fanin             A:U419 B:U1342 
+-U355/NAND2/fanout            Y:U1343 
+-U357/NAND2/fanin             A:U363 B:U358 
+-U357/NAND2/fanout            Y:U351 Y:U354 
+-U358/NAND2/fanin             A:U361 B:U359 
+-U358/NAND2/fanout            Y:U334 Y:U357 
+-U359/NOR2/fanin              A:U1341 B:U360 
+-U359/NOR2/fanout             Y:U358 
+-U360/NOR2/fanin              A:U377 B:U372 
+-U360/NOR2/fanout             Y:U322 Y:U359 
+-U361/NOR2/fanin              A:U362 B:U1340 
+-U361/NOR2/fanout             Y:U358 
+-U362/NOR2/fanin              A:U235 B:U214 
+-U362/NOR2/fanout             Y:U361 
+-U363/NAND2/fanin             A:U369 B:U364 
+-U363/NAND2/fanout            Y:U357 
+-U364/NAND2/fanin             A:U1337 B:U1339 
+-U364/NAND2/fanout            Y:U363 
+-U369/NOR2/fanin              A:U371 B:U370 
+-U369/NOR2/fanout             Y:U363 
+-U370/NOR2/fanin              A:U235 B:U372 
+-U370/NOR2/fanout             Y:U369 
+-U371/NOR2/fanin              A:U377 B:U214 
+-U371/NOR2/fanout             Y:U369 
+-U372/NOR2/fanin              A:U1332 B:U1334 
+-U372/NOR2/fanout             Y:U214 Y:U360 Y:U370 
+-U375/NAND2/fanin             A:b10 B:a7 
+-U375/NAND2/fanout            Y:U217 Y:U1334 Y:U1357 
+-U377/NAND2/fanin             A:a9 B:b8 
+-U377/NAND2/fanout            Y:U235 Y:U360 Y:U371 
+-U387/NAND2/fanin             A:U445 B:U1330 
+-U387/NAND2/fanout            Y:U1418 
+-U389/NOR2/fanin              A:U391 B:U393 
+-U389/NOR2/fanout             Y:U1422 
+-U390/NAND2/fanin             A:U393 B:U391 
+-U390/NAND2/fanout            Y:U1345 Y:U1420 Y:U1424 
+-U391/NAND2/fanin             A:U392 B:U1285 
+-U391/NAND2/fanout            Y:U389 Y:U390 
+-U392/NAND2/fanin             A:U1250 B:U1256 
+-U392/NAND2/fanout            Y:U391 
+-U393/NAND2/fanin             A:U179 B:U394 
+-U393/NAND2/fanout            Y:U389 Y:U390 
+-U394/NAND2/fanin             A:U180 B:U398 
+-U394/NAND2/fanout            Y:U393 
+-U395/NOR2/fanin              A:U398 B:U180 
+-U395/NOR2/fanout             Y:U179 
+-U396/NAND2/fanin             A:U397 B:U447 
+-U396/NAND2/fanout            Y:U180 Y:U346 
+-U397/NAND2/fanin             A:U464 B:U455 
+-U397/NAND2/fanout            Y:U396 
+-U398/NOR2/fanin              A:U192 B:U399 
+-U398/NOR2/fanout             Y:U346 Y:U394 Y:U395 
+-U399/NOR2/fanin              A:U417 B:U401 
+-U399/NOR2/fanout             Y:U353 Y:U398 
+-U400/NAND2/fanin             A:U417 B:U401 
+-U400/NAND2/fanout            Y:U192 
+-U401/NAND2/fanin             A:U205 B:U402 
+-U401/NAND2/fanout            Y:U399 Y:U400 
+-U402/NAND2/fanin             A:U212 B:U408 
+-U402/NAND2/fanout            Y:U401 
+-U403/NOR2/fanin              A:U408 B:U212 
+-U403/NOR2/fanout             Y:U205 Y:U353 
+-U404/NAND2/fanin             A:U1328 B:U1329 
+-U404/NAND2/fanout            Y:U212 
+-U408/NAND2/fanin             A:U1327 B:U409 
+-U408/NAND2/fanout            Y:U402 Y:U403 
+-U409/NAND2/fanin             A:U1325 B:U410 
+-U409/NAND2/fanout            Y:U408 
+-U410/NAND2/fanin             A:a9 B:b7 
+-U410/NAND2/fanout            Y:U409 
+-U417/NAND2/fanin             A:U419 B:U197 
+-U417/NAND2/fanout            Y:U399 Y:U400 
+-U418/NOR2/fanin              A:U420 B:U424 
+-U418/NOR2/fanout             Y:U197 
+-U419/NAND2/fanin             A:U424 B:U420 
+-U419/NAND2/fanout            Y:U355 Y:U417 
+-U420/NAND2/fanin             A:U1316 B:U1317 
+-U420/NAND2/fanout            Y:U418 Y:U419 
+-U424/NAND2/fanin             A:U426 B:U425 
+-U424/NAND2/fanout            Y:U418 Y:U419 
+-U426/NAND2/fanin             A:U1263 B:U1259 
+-U426/NAND2/fanout            Y:U424 
+-U442/NAND2/fanin             A:U444 B:U146 
+-U442/NAND2/fanout            Y:U1417 Y:U1431 Y:U1432 
+-U443/NOR2/fanin              A:U445 B:U473 
+-U443/NOR2/fanout             Y:U146 
+-U444/NAND2/fanin             A:U473 B:U445 
+-U444/NAND2/fanout            Y:U442 
+-U445/NOR2/fanin              A:U178 B:U446 
+-U445/NOR2/fanout             Y:U387 Y:U443 Y:U444 
+-U446/NOR2/fanin              A:U448 B:U452 
+-U446/NOR2/fanout             Y:U445 
+-U447/NAND2/fanin             A:U452 B:U448 
+-U447/NAND2/fanout            Y:U178 Y:U396 
+-U448/NAND2/fanin             A:U1312 B:U1315 
+-U448/NAND2/fanout            Y:U446 Y:U447 
+-U452/NAND2/fanin             A:U454 B:U453 
+-U452/NAND2/fanout            Y:U446 Y:U447 
+-U453/NAND2/fanin             A:U455 B:U203 
+-U453/NAND2/fanout            Y:U452 
+-U454/NAND2/fanin             A:U464 B:U190 
+-U454/NAND2/fanout            Y:U452 
+-U455/NAND2/fanin             A:U1304 B:U1307 
+-U455/NAND2/fanout            Y:U190 Y:U397 Y:U453 
+-U464/NAND2/fanin             A:U1292 B:U1295 
+-U464/NAND2/fanout            Y:U203 Y:U397 Y:U454 
+-U472/NAND2/fanin             A:b8 B:a7 
+-U472/NAND2/fanout            Y:U218 Y:U1289 
+-U473/NAND2/fanin             A:U1285 B:U1078 
+-U473/NAND2/fanout            Y:U443 Y:U444 Y:U1330 
+-U478/NAND2/fanin             A:U1258 B:U479 
+-U478/NAND2/fanout            Y:U1077 Y:U1285 
+-U479/NAND2/fanin             A:U1257 B:U1250 
+-U479/NAND2/fanout            Y:U478 
+-U480/NOR2/fanin              A:U1250 B:U1257 
+-U480/NOR2/fanout             Y:U1258 
+-U535/NAND2/fanin             A:a7 B:b7 
+-U535/NAND2/fanout            Y:U1240 Y:U1241 
+-U539/NAND2/fanin             A:a8 B:b6 
+-U539/NAND2/fanout            Y:U1235 Y:U1236 
+-U597/NAND2/fanin             A:U599 B:U598 
+-U597/NAND2/fanout            Y:U1443 Y:U1451 Y:U1452 
+-U598/NAND2/fanin             A:U1215 B:U1216 
+-U598/NAND2/fanout            Y:U597 
+-U599/NAND2/fanin             A:U1200 B:U1214 
+-U599/NAND2/fanout            Y:U597 
+-U682/NAND2/fanin             A:b4 B:a1 
+-U682/NAND2/fanout            Y:U1965 Y:U1966 
+-U1041/NAND2/fanin            A:U1043 B:U1042 
+-U1041/NAND2/fanout           Y:U1526 Y:U1560 Y:U1561 
+-U1042/NAND2/fanin            A:U1186 B:U172 
+-U1042/NAND2/fanout           Y:U1041 
+-U1043/NAND2/fanin            A:U1052 B:U1185 
+-U1043/NAND2/fanout           Y:U1041 
+-U1052/NAND2/fanin            A:U1054 B:U1053 
+-U1052/NAND2/fanout           Y:U172 Y:U1043 Y:U1507 
+-U1053/NAND2/fanin            A:U1173 B:U1174 
+-U1053/NAND2/fanout           Y:U1052 
+-U1054/NAND2/fanin            A:U1167 B:U173 
+-U1054/NAND2/fanout           Y:U1052 
+-U1059/NAND2/fanin            A:b8 B:a4 
+-U1059/NAND2/fanout           Y:U1170 Y:U1171 
+-U1071/NAND2/fanin            A:b1 B:a2 
+-U1071/NAND2/fanout           Y:U2105 Y:U2107 
+-U325/NAND2/fanin             A:U1355 B:U1356 
+-U325/NAND2/fanout            Y:U324 
+-U303/NAND2/fanin             A:U1124 B:U1122 
+-U303/NAND2/fanout            Y:U300 Y:U1075 
+-U425/NAND2/fanin             A:U1120 B:U1260 
+-U425/NAND2/fanout            Y:U424 
+-U300/NAND2/fanin             A:U303 B:U301 
+-U300/NAND2/fanout            Y:U1073 Y:U1098 Y:U1134 
+-U301/NAND2/fanin             A:U1137 B:U1118 
+-U301/NAND2/fanout            Y:U300 Y:U1075 
+-U1073/NAND2/fanin            A:U300 B:U1076 
+-U1073/NAND2/fanout           Y:U1074 
+-U1074/NOT1/fanin             A:U1073 
+-U1074/NOT1/fanout            Y:U1106 
+-U1075/NOR2/fanin             A:U301 B:U303 
+-U1075/NOR2/fanout            Y:U1076 
+-U1076/NOT1/fanin             A:U1075 
+-U1076/NOT1/fanout            Y:U1073 Y:U1098 
+-U1077/NOR2/fanin             A:U478 B:U1284 
+-U1077/NOR2/fanout            Y:U1078 
+-U1078/NOT1/fanin             A:U1077 
+-U1078/NOT1/fanout            Y:U473 
+-U1079/NOR2/fanin             A:U1360 B:U1093 
+-U1079/NOR2/fanout            Y:U1080 
+-U1080/NOT1/fanin             A:U1079 
+-U1080/NOT1/fanout            Y:U1361 
+-U1081/NAND2/fanin            A:U1093 B:U1360 
+-U1081/NAND2/fanout           Y:U1361 
+-U1082/NAND2/fanin            A:U1103 B:U1102 
+-U1082/NAND2/fanout           Y:U1083 Y:U1104 
+-U1083/NOR2/fanin             A:U1082 B:U1115 
+-U1083/NOR2/fanout            Y:U2043 
+-U1084/NOR2/fanin             A:U1094 B:U1104 
+-U1084/NOR2/fanout            Y:U2043 
+-U1085/NOR2/fanin             A:U1092 B:U1096 
+-U1085/NOR2/fanout            Y:U1117 
+-U1086/NOT1/fanin             A:U334 
+-U1086/NOT1/fanout            Y:U1111 
+-U1087/NOT1/fanin             A:U319 
+-U1087/NOT1/fanout            Y:U1112 
+-U1088/NOR2/fanin             A:U1091 B:U1095 
+-U1088/NOR2/fanout            Y:U1116 
+-U1089/NAND2/fanin            A:U1106 B:U1102 
+-U1089/NAND2/fanout           Y:U1091 Y:U1092 Y:U1108 
+-U1090/NOT1/fanin             A:U1361 
+-U1090/NOT1/fanout            Y:U1103 
+-U1091/NOR2/fanin             A:U2042 B:U1089 
+-U1091/NOR2/fanout            Y:U1088 
+-U1092/NOR2/fanin             A:U1089 B:U2042 
+-U1092/NOR2/fanout            Y:U1085 
+-U1093/NAND2/fanin            A:U1112 B:U1111 
+-U1093/NAND2/fanout           Y:U1079 Y:U1081 Y:U1102 
+-U1094/NAND2/fanin            A:U1114 B:U1113 
+-U1094/NAND2/fanout           Y:U1084 Y:U1107 Y:U1115 
+-U1095/NAND2/fanin            A:U1109 B:U1107 
+-U1095/NAND2/fanout           Y:U1088 
+-U1096/NAND2/fanin            A:U1110 B:U1107 
+-U1096/NAND2/fanout           Y:U1085 
+-U1097/NAND2/fanin            A:U1099 B:U1100 
+-U1097/NAND2/fanout           Y:U1101 Y:U1106 Y:U1114 
+-U1098/NAND2/fanin            A:U300 B:U1076 
+-U1098/NAND2/fanout           Y:U1105 Y:U1113 
+-U1099/NOT1/fanin             A:U321 
+-U1099/NOT1/fanout            Y:U1097 
+-U1100/NAND2/fanin            A:U319 B:U334 
+-U1100/NAND2/fanout           Y:U1097 
+-U1101/NOT1/fanin             A:U1097 
+-U1101/NOT1/fanout            Y:U1113 
+-U1102/NAND2/fanin            A:U1360 B:U1093 
+-U1102/NAND2/fanout           Y:U1082 Y:U1089 
+-U1103/NAND2/fanin            A:U2042 B:U1090 
+-U1103/NAND2/fanout           Y:U1082 
+-U1104/NOT1/fanin             A:U1082 
+-U1104/NOT1/fanout            Y:U1084 
+-U1105/NOT1/fanin             A:U1098 
+-U1105/NOT1/fanout            Y:U1114 
+-U1106/NAND2/fanin            A:U1074 B:U1097 
+-U1106/NAND2/fanout           Y:U1089 Y:U1107 
+-U1107/NAND2/fanin            A:U1094 B:U1106 
+-U1107/NAND2/fanout           Y:U1095 Y:U1096 
+-U1108/NOT1/fanin             A:U1089 
+-U1108/NOT1/fanout            Y:U1109 Y:U1110 
+-U1109/NAND2/fanin            A:U1361 B:U1108 
+-U1109/NAND2/fanout           Y:U1095 
+-U1110/NAND2/fanin            A:U1361 B:U1108 
+-U1110/NAND2/fanout           Y:U1096 
+-U1111/NAND2/fanin            A:U319 B:U1086 
+-U1111/NAND2/fanout           Y:U1093 
+-U1112/NAND2/fanin            A:U334 B:U1087 
+-U1112/NAND2/fanout           Y:U1093 
+-U1113/NAND2/fanin            A:U1101 B:U1098 
+-U1113/NAND2/fanout           Y:U1094 
+-U1114/NAND2/fanin            A:U1105 B:U1097 
+-U1114/NAND2/fanout           Y:U1094 
+-U1115/NOT1/fanin             A:U1094 
+-U1115/NOT1/fanout            Y:U1083 
+-U1116/NAND2/fanin            A:U1128 B:U1088 
+-U1116/NAND2/fanout           Y:U1126 Y:U1127 
+-U1117/NOR2/fanin             A:U1128 B:U1085 
+-U1117/NOR2/fanout            Y:U1138 
+-U1118/NAND2/fanin            A:U1120 B:U1119 
+-U1118/NAND2/fanout           Y:U301 
+-U1119/NOT1/fanin             A:U1133 
+-U1119/NOT1/fanout            Y:U1118 Y:U1132 Y:U1135 Y:U1255 Y:U1274 Y:U1316 Y:U1335 
+-U1120/NOT1/fanin             A:U1259 
+-U1120/NOT1/fanout            Y:U425 Y:U1118 Y:U1121 
+-U1121/NAND2/fanin            A:U1267 B:U1120 
+-U1121/NAND2/fanout           Y:U1270 
+-U1122/NAND2/fanin            A:U1358 B:U1123 
+-U1122/NAND2/fanout           Y:U303 
+-U1123/NOT1/fanin             A:U1359 
+-U1123/NOT1/fanout            Y:U1122 
+-U1124/NAND2/fanin            A:U1125 B:U1359 
+-U1124/NAND2/fanout           Y:U303 
+-U1125/NOT1/fanin             A:U1358 
+-U1125/NOT1/fanout            Y:U1124 
+-U1126/NAND2/fanin            A:U1132 B:U1116 
+-U1126/NAND2/fanout           Y:product19 
+-U1127/NOT1/fanin             A:U1116 
+-U1127/NOT1/fanout            Y:U1138 
+-U1128/NOT1/fanin             A:U1129 
+-U1128/NOT1/fanout            Y:U1116 Y:U1117 
+-U1129/NAND2/fanin            A:U1130 B:U1132 
+-U1129/NAND2/fanout           Y:U1128 
+-U1130/NAND2/fanin            A:U1131 B:U1133 
+-U1130/NAND2/fanout           Y:U1129 
+-U1131/NOT1/fanin             A:U1134 
+-U1131/NOT1/fanout            Y:U1130 
+-U1132/NAND2/fanin            A:U1119 B:U1134 
+-U1132/NAND2/fanout           Y:U1126 Y:U1129 
+-U1133/NAND2/fanin            A:b10 B:a10 
+-U1133/NAND2/fanout           Y:U1119 Y:U1130 
+-U1134/NAND2/fanin            A:U300 B:U1135 
+-U1134/NAND2/fanout           Y:U1131 Y:U1132 
+-U1135/NAND2/fanin            A:U1136 B:U1119 
+-U1135/NAND2/fanout           Y:U1134 
+-U1136/NOT1/fanin             A:U1356 
+-U1136/NOT1/fanout            Y:U1135 Y:U1137 
+-U1137/NAND2/fanin            A:U1136 B:U1354 
+-U1137/NAND2/fanout           Y:U324 Y:U301 
+-U1138/NOR2/fanin             A:U1127 B:U1117 
+-U1138/NOR2/fanout            Y:product18 
+-U1139/NAND2/fanin            A:a2 B:b3 
+-U1139/NAND2/fanout           Y:U1140 
+-U1140/NOT1/fanin             A:U1139 
+-U1140/NOT1/fanout            Y:U1943 
+-U1141/NAND2/fanin            A:U1677 B:U1631 
+-U1141/NAND2/fanout           Y:U1142 
+-U1142/NOT1/fanin             A:U1141 
+-U1142/NOT1/fanout            Y:U1678 
+-U1143/NAND2/fanin            A:U1563 B:U1557 
+-U1143/NAND2/fanout           Y:U1144 
+-U1144/NOT1/fanin             A:U1143 
+-U1144/NOT1/fanout            Y:U1564 
+-U1145/NAND2/fanin            A:U1824 B:U1883 
+-U1145/NAND2/fanout           Y:U1146 
+-U1146/NOT1/fanin             A:U1145 
+-U1146/NOT1/fanout            Y:U1884 
+-U1147/NAND2/fanin            A:b4 B:a7 
+-U1147/NAND2/fanout           Y:U1148 
+-U1148/NOT1/fanin             A:U1147 
+-U1148/NOT1/fanout            Y:U1467 
+-U1149/NAND2/fanin            A:U1690 B:U1576 
+-U1149/NAND2/fanout           Y:U1150 
+-U1150/NOT1/fanin             A:U1149 
+-U1150/NOT1/fanout            Y:U1691 
+-U1151/NAND2/fanin            A:b4 B:a8 
+-U1151/NAND2/fanout           Y:U1152 
+-U1152/NOT1/fanin             A:U1151 
+-U1152/NOT1/fanout            Y:U1392 
+-U1153/NAND2/fanin            A:U1683 B:U1687 
+-U1153/NAND2/fanout           Y:U1154 
+-U1154/NOT1/fanin             A:U1153 
+-U1154/NOT1/fanout            Y:U1696 
+-U1155/NAND2/fanin            A:U1614 B:U1629 
+-U1155/NAND2/fanout           Y:U1156 
+-U1156/NOT1/fanin             A:U1155 
+-U1156/NOT1/fanout            Y:U1687 
+-U1157/NAND2/fanin            A:a9 B:b3 
+-U1157/NAND2/fanout           Y:U1158 Y:U1275 
+-U1158/NOT1/fanin             A:U1157 
+-U1158/NOT1/fanout            Y:U1160 Y:U1166 
+-U1159/NAND2/fanin            A:a10 B:b2 
+-U1159/NAND2/fanout           Y:U1160 Y:U1164 Y:U1177 Y:U1275 
+-U1160/NOR2/fanin             A:U1158 B:U1159 
+-U1160/NOR2/fanout            Y:U1163 
+-U1161/NAND2/fanin            A:a9 B:b1 
+-U1161/NAND2/fanout           Y:U1162 Y:U1591 
+-U1162/NOT1/fanin             A:U1161 
+-U1162/NOT1/fanout            Y:U1163 Y:U1165 Y:U1276 Y:U1588 Y:U1592 
+-U1163/NAND2/fanin            A:U1160 B:U1162 
+-U1163/NAND2/fanout           Y:U1167 
+-U1164/NOT1/fanin             A:U1159 
+-U1164/NOT1/fanout            Y:U1165 Y:U1178 Y:U1441 
+-U1165/NAND2/fanin            A:U1164 B:U1162 
+-U1165/NAND2/fanout           Y:U1166 
+-U1166/NAND2/fanin            A:U1158 B:U1165 
+-U1166/NAND2/fanout           Y:U1167 
+-U1167/NAND2/fanin            A:U1163 B:U1166 
+-U1167/NAND2/fanout           Y:U1054 Y:U1174 Y:U1403 
+-U1168/NAND2/fanin            A:b7 B:a5 
+-U1168/NAND2/fanout           Y:U1169 Y:U1172 
+-U1169/NOT1/fanin             A:U1168 
+-U1169/NOT1/fanout            Y:U1170 
+-U1170/NAND2/fanin            A:U1059 B:U1169 
+-U1170/NAND2/fanout           Y:U1173 
+-U1171/NOT1/fanin             A:U1059 
+-U1171/NOT1/fanout            Y:U1172 
+-U1172/NAND2/fanin            A:U1168 B:U1171 
+-U1172/NAND2/fanout           Y:U1173 
+-U1173/NAND2/fanin            A:U1170 B:U1172 
+-U1173/NAND2/fanout           Y:U173 Y:U1053 Y:U1403 
+-U1174/NOT1/fanin             A:U1167 
+-U1174/NOT1/fanout            Y:U1053 
+-U1175/NAND2/fanin            A:a6 B:b6 
+-U1175/NAND2/fanout           Y:U1176 Y:U1178 
+-U1176/NOT1/fanin             A:U1175 
+-U1176/NOT1/fanout            Y:U1177 Y:U1335 Y:U1441 
+-U1177/NAND2/fanin            A:U1176 B:U1159 
+-U1177/NAND2/fanout           Y:U1179 
+-U1178/NAND2/fanin            A:U1164 B:U1175 
+-U1178/NAND2/fanout           Y:U1179 
+-U1179/NAND2/fanin            A:U1177 B:U1178 
+-U1179/NAND2/fanout           Y:U1180 Y:U1184 
+-U1180/NOT1/fanin             A:U1179 
+-U1180/NOT1/fanout            Y:U1182 
+-U1181/NAND2/fanin            A:b10 B:a2 
+-U1181/NAND2/fanout           Y:U1182 Y:U1183 
+-U1182/NAND2/fanin            A:U1180 B:U1181 
+-U1182/NAND2/fanout           Y:U1185 
+-U1183/NOT1/fanin             A:U1181 
+-U1183/NOT1/fanout            Y:U1184 
+-U1184/NAND2/fanin            A:U1183 B:U1179 
+-U1184/NAND2/fanout           Y:U1185 Y:U1442 
+-U1185/NAND2/fanin            A:U1182 B:U1184 
+-U1185/NAND2/fanout           Y:U1043 Y:U1186 
+-U1186/NOT1/fanin             A:U1185 
+-U1186/NOT1/fanout            Y:U1042 Y:U1507 
+-U1187/NAND2/fanin            A:b7 B:a6 
+-U1187/NAND2/fanout           Y:U1196 Y:U1268 
+-U1188/NAND2/fanin            A:b8 B:a5 
+-U1188/NAND2/fanout           Y:U1189 
+-U1189/NOT1/fanin             A:U1188 
+-U1189/NOT1/fanout            Y:U1191 Y:U1194 Y:U1406 
+-U1190/NOT1/fanin             A:a8 
+-U1190/NOT1/fanout            Y:U1191 Y:U1605 
+-U1191/NOR2/fanin             A:U1189 B:U1190 
+-U1191/NOR2/fanout            Y:U1192 
+-U1192/NAND2/fanin            A:U1191 B:b5 
+-U1192/NAND2/fanout           Y:U1195 
+-U1193/NAND2/fanin            A:a8 B:b5 
+-U1193/NAND2/fanout           Y:U1194 
+-U1194/NAND2/fanin            A:U1189 B:U1193 
+-U1194/NAND2/fanout           Y:U1195 
+-U1195/NAND2/fanin            A:U1192 B:U1194 
+-U1195/NAND2/fanout           Y:U1196 Y:U1198 Y:U1269 
+-U1196/NAND2/fanin            A:U1187 B:U1195 
+-U1196/NAND2/fanout           Y:U1200 
+-U1197/NOT1/fanin             A:a6 
+-U1197/NOT1/fanout            Y:U1198 Y:U1540 Y:U1813 
+-U1198/NOR2/fanin             A:U1197 B:U1195 
+-U1198/NOR2/fanout            Y:U1199 
+-U1199/NAND2/fanin            A:U1198 B:b7 
+-U1199/NAND2/fanout           Y:U1200 
+-U1200/NAND2/fanin            A:U1196 B:U1199 
+-U1200/NAND2/fanout           Y:U599 Y:U1216 Y:U1440 
+-U1201/NAND2/fanin            A:a9 B:b4 
+-U1201/NAND2/fanout           Y:U1202 Y:U1213 
+-U1202/NOT1/fanin             A:U1201 
+-U1202/NOT1/fanout            Y:U1211 
+-U1203/NAND2/fanin            A:b9 B:a4 
+-U1203/NAND2/fanout           Y:U1204 
+-U1204/NOT1/fanin             A:U1203 
+-U1204/NOT1/fanout            Y:U1206 Y:U1209 
+-U1205/NOT1/fanin             A:a7 
+-U1205/NOT1/fanout            Y:U1206 Y:U1314 
+-U1206/NOR2/fanin             A:U1204 B:U1205 
+-U1206/NOR2/fanout            Y:U1207 
+-U1207/NAND2/fanin            A:U1206 B:b6 
+-U1207/NAND2/fanout           Y:U1210 
+-U1208/NAND2/fanin            A:a7 B:b6 
+-U1208/NAND2/fanout           Y:U1209 
+-U1209/NAND2/fanin            A:U1204 B:U1208 
+-U1209/NAND2/fanout           Y:U1210 
+-U1210/NAND2/fanin            A:U1207 B:U1209 
+-U1210/NAND2/fanout           Y:U1211 Y:U1212 
+-U1211/NAND2/fanin            A:U1202 B:U1210 
+-U1211/NAND2/fanout           Y:U1214 Y:U1265 
+-U1212/NOT1/fanin             A:U1210 
+-U1212/NOT1/fanout            Y:U1213 
+-U1213/NAND2/fanin            A:U1212 B:U1201 
+-U1213/NAND2/fanout           Y:U1214 
+-U1214/NAND2/fanin            A:U1211 B:U1213 
+-U1214/NAND2/fanout           Y:U599 Y:U1215 
+-U1215/NOT1/fanin             A:U1214 
+-U1215/NOT1/fanout            Y:U598 Y:U1440 
+-U1216/NOT1/fanin             A:U1200 
+-U1216/NOT1/fanout            Y:U598 
+-U1217/NAND2/fanin            A:b8 B:a6 
+-U1217/NAND2/fanout           Y:U1218 Y:U1246 
+-U1218/NOT1/fanin             A:U1217 
+-U1218/NOT1/fanout            Y:U1232 Y:U1703 
+-U1219/NAND2/fanin            A:a9 B:b5 
+-U1219/NAND2/fanout           Y:U1227 Y:U1251 
+-U1220/NAND2/fanin            A:a10 B:b4 
+-U1220/NAND2/fanout           Y:U1221 Y:U1225 
+-U1221/NOT1/fanin             A:U1220 
+-U1221/NOT1/fanout            Y:U1223 
+-U1222/NAND2/fanin            A:b10 B:a4 
+-U1222/NAND2/fanout           Y:U1223 Y:U1224 
+-U1223/NAND2/fanin            A:U1221 B:U1222 
+-U1223/NAND2/fanout           Y:U1226 
+-U1224/NOT1/fanin             A:U1222 
+-U1224/NOT1/fanout            Y:U1225 
+-U1225/NAND2/fanin            A:U1224 B:U1220 
+-U1225/NAND2/fanout           Y:U1226 
+-U1226/NAND2/fanin            A:U1223 B:U1225 
+-U1226/NAND2/fanout           Y:U1227 Y:U1229 Y:U1252 
+-U1227/NAND2/fanin            A:U1219 B:U1226 
+-U1227/NAND2/fanout           Y:U1231 
+-U1228/NOT1/fanin             A:a9 
+-U1228/NOT1/fanout            Y:U1229 Y:U1326 
+-U1229/NOR2/fanin             A:U1228 B:U1226 
+-U1229/NOR2/fanout            Y:U1230 
+-U1230/NAND2/fanin            A:U1229 B:b5 
+-U1230/NAND2/fanout           Y:U1231 
+-U1231/NAND2/fanin            A:U1227 B:U1230 
+-U1231/NAND2/fanout           Y:U1232 Y:U1245 
+-U1232/NAND2/fanin            A:U1218 B:U1231 
+-U1232/NAND2/fanout           Y:U1247 Y:U1250 
+-U1233/NAND2/fanin            A:b9 B:a5 
+-U1233/NAND2/fanout           Y:U1234 Y:U1237 
+-U1234/NOT1/fanin             A:U1233 
+-U1234/NOT1/fanout            Y:U1235 
+-U1235/NAND2/fanin            A:U539 B:U1234 
+-U1235/NAND2/fanout           Y:U1238 
+-U1236/NOT1/fanin             A:U539 
+-U1236/NOT1/fanout            Y:U1237 
+-U1237/NAND2/fanin            A:U1233 B:U1236 
+-U1237/NAND2/fanout           Y:U1238 
+-U1238/NAND2/fanin            A:U1235 B:U1237 
+-U1238/NAND2/fanout           Y:U1239 Y:U1242 Y:U1315 
+-U1239/NOT1/fanin             A:U1238 
+-U1239/NOT1/fanout            Y:U1240 
+-U1240/NAND2/fanin            A:U535 B:U1239 
+-U1240/NAND2/fanout           Y:U1243 
+-U1241/NOT1/fanin             A:U535 
+-U1241/NOT1/fanout            Y:U1242 
+-U1242/NAND2/fanin            A:U1238 B:U1241 
+-U1242/NAND2/fanout           Y:U1243 
+-U1243/NAND2/fanin            A:U1240 B:U1242 
+-U1243/NAND2/fanout           Y:U1244 Y:U1364 
+-U1244/NOT1/fanin             A:U1243 
+-U1244/NOT1/fanout            Y:U1249 Y:U1363 
+-U1245/NOT1/fanin             A:U1231 
+-U1245/NOT1/fanout            Y:U1246 
+-U1246/NAND2/fanin            A:U1245 B:U1217 
+-U1246/NAND2/fanout           Y:U1247 
+-U1247/NAND2/fanin            A:U1246 B:U1232 
+-U1247/NAND2/fanout           Y:U1248 Y:U1363 
+-U1248/NOT1/fanin             A:U1247 
+-U1248/NOT1/fanout            Y:U1249 Y:U1364 
+-U1249/NAND2/fanin            A:U1244 B:U1248 
+-U1249/NAND2/fanout           Y:U1250 
+-U1250/NAND2/fanin            A:U1232 B:U1249 
+-U1250/NAND2/fanout           Y:U392 Y:U479 Y:U480 
+-U1251/NOT1/fanin             A:U1219 
+-U1251/NOT1/fanout            Y:U1252 
+-U1252/NAND2/fanin            A:U1251 B:U1226 
+-U1252/NAND2/fanout           Y:U1256 
+-U1253/NAND2/fanin            A:b4 B:a4 
+-U1253/NAND2/fanout           Y:U1254 Y:U1791 
+-U1254/NOT1/fanin             A:U1253 
+-U1254/NOT1/fanout            Y:U1255 Y:U1792 
+-U1255/NAND2/fanin            A:U1119 B:U1254 
+-U1255/NAND2/fanout           Y:U1256 
+-U1256/NAND2/fanin            A:U1252 B:U1255 
+-U1256/NAND2/fanout           Y:U392 Y:U1257 
+-U1257/NOT1/fanin             A:U1256 
+-U1257/NOT1/fanout            Y:U479 Y:U480 
+-U1258/NOT1/fanin             A:U480 
+-U1258/NOT1/fanout            Y:U478 
+-U1259/NAND2/fanin            A:b8 B:a8 
+-U1259/NAND2/fanout           Y:U426 Y:U1120 
+-U1260/NAND2/fanin            A:b9 B:a7 
+-U1260/NAND2/fanout           Y:U425 Y:U1263 
+-U1261/NAND2/fanin            A:b6 B:a4 
+-U1261/NAND2/fanout           Y:U1262 Y:U1608 
+-U1262/NOT1/fanin             A:U1261 
+-U1262/NOT1/fanout            Y:U1264 Y:U1603 Y:U1609 Y:U1786 Y:U1856 
+-U1263/NOT1/fanin             A:U1260 
+-U1263/NOT1/fanout            Y:U426 Y:U1264 Y:U1462 
+-U1264/NAND2/fanin            A:U1262 B:U1263 
+-U1264/NAND2/fanout           Y:U1265 
+-U1265/NAND2/fanin            A:U1264 B:U1211 
+-U1265/NAND2/fanout           Y:U1271 Y:U1278 Y:U1281 
+-U1266/NAND2/fanin            A:b5 B:a5 
+-U1266/NAND2/fanout           Y:U1267 
+-U1267/NOT1/fanin             A:U1266 
+-U1267/NOT1/fanout            Y:U1121 Y:U1316 Y:U1627 Y:U1707 
+-U1268/NOT1/fanin             A:U1187 
+-U1268/NOT1/fanout            Y:U1269 
+-U1269/NAND2/fanin            A:U1268 B:U1195 
+-U1269/NAND2/fanout           Y:U1270 
+-U1270/NAND2/fanin            A:U1121 B:U1269 
+-U1270/NAND2/fanout           Y:U1271 Y:U1279 Y:U1280 
+-U1271/NAND2/fanin            A:U1265 B:U1270 
+-U1271/NAND2/fanout           Y:U1284 
+-U1272/NAND2/fanin            A:b3 B:a3 
+-U1272/NAND2/fanout           Y:U1273 Y:U1902 
+-U1273/NOT1/fanin             A:U1272 
+-U1273/NOT1/fanout            Y:U1274 Y:U1900 
+-U1274/NAND2/fanin            A:U1119 B:U1273 
+-U1274/NAND2/fanout           Y:U1277 
+-U1275/NOR2/fanin             A:U1159 B:U1157 
+-U1275/NOR2/fanout            Y:U1276 
+-U1276/NAND2/fanin            A:U1275 B:U1162 
+-U1276/NAND2/fanout           Y:U1277 Y:U1372 Y:U1382 
+-U1277/NAND2/fanin            A:U1274 B:U1276 
+-U1277/NAND2/fanout           Y:U1283 Y:U1367 Y:U1368 
+-U1278/NOT1/fanin             A:U1265 
+-U1278/NOT1/fanout            Y:U1279 
+-U1279/NAND2/fanin            A:U1278 B:U1270 
+-U1279/NAND2/fanout           Y:U1282 
+-U1280/NOT1/fanin             A:U1270 
+-U1280/NOT1/fanout            Y:U1281 
+-U1281/NAND2/fanin            A:U1280 B:U1265 
+-U1281/NAND2/fanout           Y:U1282 
+-U1282/NAND2/fanin            A:U1279 B:U1281 
+-U1282/NAND2/fanout           Y:U1283 Y:U1366 Y:U1369 
+-U1283/NAND2/fanin            A:U1277 B:U1282 
+-U1283/NAND2/fanout           Y:U1284 
+-U1284/NAND2/fanin            A:U1271 B:U1283 
+-U1284/NAND2/fanout           Y:U1077 Y:U1285 
+-U1285/NAND2/fanin            A:U478 B:U1284 
+-U1285/NAND2/fanout           Y:U391 Y:U473 
+-U1286/NAND2/fanin            A:a8 B:b7 
+-U1286/NAND2/fanout           Y:U1287 Y:U1288 
+-U1287/NAND2/fanin            A:U1286 B:U218 
+-U1287/NAND2/fanout           Y:U1290 
+-U1288/NOT1/fanin             A:U1286 
+-U1288/NOT1/fanout            Y:U1289 Y:U1328 
+-U1289/NAND2/fanin            A:U1288 B:U472 
+-U1289/NAND2/fanout           Y:U1290 
+-U1290/NAND2/fanin            A:U1287 B:U1289 
+-U1290/NAND2/fanout           Y:U1292 Y:U1293 Y:U1329 
+-U1291/NAND2/fanin            A:b9 B:a6 
+-U1291/NAND2/fanout           Y:U1292 Y:U1294 
+-U1292/NAND2/fanin            A:U1290 B:U1291 
+-U1292/NAND2/fanout           Y:U464 
+-U1293/NOT1/fanin             A:U1290 
+-U1293/NOT1/fanout            Y:U1295 
+-U1294/NOT1/fanin             A:U1291 
+-U1294/NOT1/fanout            Y:U1295 Y:U1329 
+-U1295/NAND2/fanin            A:U1293 B:U1294 
+-U1295/NAND2/fanout           Y:U464 
+-U1296/NAND2/fanin            A:a10 B:b5 
+-U1296/NAND2/fanout           Y:U1297 Y:U1301 
+-U1297/NOT1/fanin             A:U1296 
+-U1297/NOT1/fanout            Y:U1299 
+-U1298/NAND2/fanin            A:b10 B:a5 
+-U1298/NAND2/fanout           Y:U1299 Y:U1300 
+-U1299/NAND2/fanin            A:U1297 B:U1298 
+-U1299/NAND2/fanout           Y:U1302 
+-U1300/NOT1/fanin             A:U1298 
+-U1300/NOT1/fanout            Y:U1301 
+-U1301/NAND2/fanin            A:U1300 B:U1296 
+-U1301/NAND2/fanout           Y:U1302 
+-U1302/NAND2/fanin            A:U1299 B:U1301 
+-U1302/NAND2/fanout           Y:U1304 Y:U1305 Y:U1317 
+-U1303/NAND2/fanin            A:a9 B:b6 
+-U1303/NAND2/fanout           Y:U1304 Y:U1306 
+-U1304/NAND2/fanin            A:U1302 B:U1303 
+-U1304/NAND2/fanout           Y:U455 
+-U1305/NOT1/fanin             A:U1302 
+-U1305/NOT1/fanout            Y:U1307 
+-U1306/NOT1/fanin             A:U1303 
+-U1306/NOT1/fanout            Y:U1307 Y:U1317 
+-U1307/NAND2/fanin            A:U1305 B:U1306 
+-U1307/NAND2/fanout           Y:U455 
+-U1308/NAND2/fanin            A:b6 B:a5 
+-U1308/NAND2/fanout           Y:U1309 Y:U1485 
+-U1309/NOT1/fanin             A:U1308 
+-U1309/NOT1/fanout            Y:U1312 Y:U1484 Y:U1486 
+-U1310/NAND2/fanin            A:b9 B:a8 
+-U1310/NAND2/fanout           Y:U1311 Y:U1339 
+-U1311/NOT1/fanin             A:U1310 
+-U1311/NOT1/fanout            Y:U1312 Y:U1337 Y:U1342 Y:U1387 
+-U1312/NAND2/fanin            A:U1309 B:U1311 
+-U1312/NAND2/fanout           Y:U448 
+-U1313/NOT1/fanin             A:b7 
+-U1313/NOT1/fanout            Y:U1314 Y:U1326 
+-U1314/NOR2/fanin             A:U1313 B:U1205 
+-U1314/NOR2/fanout            Y:U1315 
+-U1315/NAND2/fanin            A:U1238 B:U1314 
+-U1315/NAND2/fanout           Y:U448 
+-U1316/NAND2/fanin            A:U1267 B:U1119 
+-U1316/NAND2/fanout           Y:U420 
+-U1317/NAND2/fanin            A:U1302 B:U1306 
+-U1317/NAND2/fanout           Y:U420 
+-U1318/NAND2/fanin            A:a10 B:b6 
+-U1318/NAND2/fanout           Y:U1319 Y:U1323 
+-U1319/NOT1/fanin             A:U1318 
+-U1319/NOT1/fanout            Y:U1321 
+-U1320/NAND2/fanin            A:b10 B:a6 
+-U1320/NAND2/fanout           Y:U1321 Y:U1322 
+-U1321/NAND2/fanin            A:U1319 B:U1320 
+-U1321/NAND2/fanout           Y:U1324 
+-U1322/NOT1/fanin             A:U1320 
+-U1322/NOT1/fanout            Y:U1323 
+-U1323/NAND2/fanin            A:U1322 B:U1318 
+-U1323/NAND2/fanout           Y:U1324 
+-U1324/NAND2/fanin            A:U1321 B:U1323 
+-U1324/NAND2/fanout           Y:U1325 Y:U1327 
+-U1325/NOT1/fanin             A:U1324 
+-U1325/NOT1/fanout            Y:U409 
+-U1326/NOR2/fanin             A:U1313 B:U1228 
+-U1326/NOR2/fanout            Y:U1327 
+-U1327/NAND2/fanin            A:U1326 B:U1324 
+-U1327/NAND2/fanout           Y:U408 Y:U1336 
+-U1328/NAND2/fanin            A:U218 B:U1288 
+-U1328/NAND2/fanout           Y:U404 
+-U1329/NAND2/fanin            A:U1290 B:U1294 
+-U1329/NAND2/fanout           Y:U404 
+-U1330/NOT1/fanin             A:U473 
+-U1330/NOT1/fanout            Y:U387 
+-U1331/NAND2/fanin            A:a10 B:b7 
+-U1331/NAND2/fanout           Y:U1332 Y:U1333 Y:U1357 
+-U1332/NOR2/fanin             A:U217 B:U1331 
+-U1332/NOR2/fanout            Y:U372 
+-U1333/NOT1/fanin             A:U1331 
+-U1333/NOT1/fanout            Y:U1334 
+-U1334/NOR2/fanin             A:U375 B:U1333 
+-U1334/NOR2/fanout            Y:U372 
+-U1335/NAND2/fanin            A:U1119 B:U1176 
+-U1335/NAND2/fanout           Y:U1336 
+-U1336/NAND2/fanin            A:U1335 B:U1327 
+-U1336/NAND2/fanout           Y:U1337 Y:U1338 
+-U1337/NAND2/fanin            A:U1311 B:U1336 
+-U1337/NAND2/fanout           Y:U334 Y:U364 Y:U1341 
+-U1338/NOT1/fanin             A:U1336 
+-U1338/NOT1/fanout            Y:U1339 
+-U1339/NAND2/fanin            A:U1338 B:U1310 
+-U1339/NAND2/fanout           Y:U364 Y:U1340 
+-U1340/NOT1/fanin             A:U1339 
+-U1340/NOT1/fanout            Y:U361 
+-U1341/NOT1/fanin             A:U1337 
+-U1341/NOT1/fanout            Y:U359 
+-U1342/NAND2/fanin            A:U218 B:U1311 
+-U1342/NAND2/fanout           Y:U355 
+-U1343/NOT1/fanin             A:U355 
+-U1343/NOT1/fanout            Y:U351 Y:U354 
+-U1344/NOT1/fanin             A:U354 
+-U1344/NOT1/fanout            Y:U349 Y:U1360 
+-U1345/NAND2/fanin            A:U346 B:U390 
+-U1345/NAND2/fanout           Y:U1346 Y:U2041 
+-U1346/NOT1/fanin             A:U1345 
+-U1346/NOT1/fanout            Y:U338 Y:U1362 
+-U1347/NAND2/fanin            A:U350 B:U348 
+-U1347/NAND2/fanout           Y:U338 Y:U1362 Y:U2040 
+-U1348/NAND2/fanin            A:a10 B:b8 
+-U1348/NAND2/fanout           Y:U1349 Y:U1353 
+-U1349/NOT1/fanin             A:U1348 
+-U1349/NOT1/fanout            Y:U1351 
+-U1350/NAND2/fanin            A:b10 B:a8 
+-U1350/NAND2/fanout           Y:U1351 Y:U1352 
+-U1351/NAND2/fanin            A:U1349 B:U1350 
+-U1351/NAND2/fanout           Y:U1354 
+-U1352/NOT1/fanin             A:U1350 
+-U1352/NOT1/fanout            Y:U1353 Y:U1510 
+-U1353/NAND2/fanin            A:U1352 B:U1348 
+-U1353/NAND2/fanout           Y:U1354 
+-U1354/NAND2/fanin            A:U1351 B:U1353 
+-U1354/NAND2/fanout           Y:U1137 Y:U1355 
+-U1355/NOT1/fanin             A:U1354 
+-U1355/NOT1/fanout            Y:U325 
+-U1356/NAND2/fanin            A:a9 B:b9 
+-U1356/NAND2/fanout           Y:U325 Y:U1136 
+-U1357/NOR2/fanin             A:U375 B:U1331 
+-U1357/NOR2/fanout            Y:U322 
+-U1358/NAND2/fanin            A:a10 B:b9 
+-U1358/NAND2/fanout           Y:U1122 Y:U1125 
+-U1359/NAND2/fanin            A:b10 B:a9 
+-U1359/NAND2/fanout           Y:U1123 Y:U1124 
+-U1360/NAND2/fanin            A:U350 B:U1344 
+-U1360/NAND2/fanout           Y:U1079 Y:U1081 Y:U1102 
+-U1361/NAND2/fanin            A:U1081 B:U1080 
+-U1361/NAND2/fanout           Y:U1090 Y:U1109 Y:U1110 Y:U2045 Y:U2047 
+-U1362/NAND2/fanin            A:U1346 B:U1347 
+-U1362/NAND2/fanout           Y:U2039 Y:U2049 
+-U1363/NAND2/fanin            A:U1244 B:U1247 
+-U1363/NAND2/fanout           Y:U1365 
+-U1364/NAND2/fanin            A:U1248 B:U1243 
+-U1364/NAND2/fanout           Y:U1365 
+-U1365/NAND2/fanin            A:U1363 B:U1364 
+-U1365/NAND2/fanout           Y:U1371 Y:U1410 Y:U1413 
+-U1366/NOT1/fanin             A:U1282 
+-U1366/NOT1/fanout            Y:U1367 
+-U1367/NAND2/fanin            A:U1366 B:U1277 
+-U1367/NAND2/fanout           Y:U1370 
+-U1368/NOT1/fanin             A:U1277 
+-U1368/NOT1/fanout            Y:U1369 
+-U1369/NAND2/fanin            A:U1368 B:U1282 
+-U1369/NAND2/fanout           Y:U1370 
+-U1370/NAND2/fanin            A:U1367 B:U1369 
+-U1370/NAND2/fanout           Y:U1371 Y:U1411 Y:U1412 
+-U1371/NAND2/fanin            A:U1365 B:U1370 
+-U1371/NAND2/fanout           Y:U1416 
+-U1372/NOT1/fanin             A:U1276 
+-U1372/NOT1/fanout            Y:U1380 
+-U1373/NAND2/fanin            A:a10 B:b3 
+-U1373/NAND2/fanout           Y:U1374 Y:U1378 
+-U1374/NOT1/fanin             A:U1373 
+-U1374/NOT1/fanout            Y:U1376 
+-U1375/NAND2/fanin            A:b10 B:a3 
+-U1375/NAND2/fanout           Y:U1376 Y:U1377 
+-U1376/NAND2/fanin            A:U1374 B:U1375 
+-U1376/NAND2/fanout           Y:U1379 
+-U1377/NOT1/fanin             A:U1375 
+-U1377/NOT1/fanout            Y:U1378 
+-U1378/NAND2/fanin            A:U1377 B:U1373 
+-U1378/NAND2/fanout           Y:U1379 
+-U1379/NAND2/fanin            A:U1376 B:U1378 
+-U1379/NAND2/fanout           Y:U1380 Y:U1381 
+-U1380/NAND2/fanin            A:U1372 B:U1379 
+-U1380/NAND2/fanout           Y:U1383 
+-U1381/NOT1/fanin             A:U1379 
+-U1381/NOT1/fanout            Y:U1382 
+-U1382/NAND2/fanin            A:U1381 B:U1276 
+-U1382/NAND2/fanout           Y:U1383 
+-U1383/NAND2/fanin            A:U1380 B:U1382 
+-U1383/NAND2/fanout           Y:U1384 Y:U1400 
+-U1384/NOT1/fanin             A:U1383 
+-U1384/NOT1/fanout            Y:U1398 
+-U1385/NAND2/fanin            A:b4 B:a3 
+-U1385/NAND2/fanout           Y:U1386 Y:U1847 
+-U1386/NOT1/fanin             A:U1385 
+-U1386/NOT1/fanout            Y:U1387 Y:U1848 Y:U1854 Y:U1859 Y:U1928 
+-U1387/NAND2/fanin            A:U1311 B:U1386 
+-U1387/NAND2/fanout           Y:U1397 
+-U1388/NAND2/fanin            A:a7 B:b5 
+-U1388/NAND2/fanout           Y:U1389 Y:U1475 
+-U1389/NOT1/fanin             A:U1388 
+-U1389/NOT1/fanout            Y:U1396 
+-U1390/NAND2/fanin            A:b9 B:a3 
+-U1390/NAND2/fanout           Y:U1391 Y:U1392 
+-U1391/NOT1/fanin             A:U1390 
+-U1391/NOT1/fanout            Y:U1394 
+-U1392/NAND2/fanin            A:U1152 B:U1390 
+-U1392/NAND2/fanout           Y:U1395 
+-U1393/NAND2/fanin            A:a8 B:b4 
+-U1393/NAND2/fanout           Y:U1394 
+-U1394/NAND2/fanin            A:U1391 B:U1393 
+-U1394/NAND2/fanout           Y:U1395 
+-U1395/NAND2/fanin            A:U1392 B:U1394 
+-U1395/NAND2/fanout           Y:U1396 Y:U1474 
+-U1396/NAND2/fanin            A:U1389 B:U1395 
+-U1396/NAND2/fanout           Y:U1397 Y:U1476 
+-U1397/NAND2/fanin            A:U1387 B:U1396 
+-U1397/NAND2/fanout           Y:U1398 Y:U1399 
+-U1398/NAND2/fanin            A:U1384 B:U1397 
+-U1398/NAND2/fanout           Y:U1401 Y:U1409 
+-U1399/NOT1/fanin             A:U1397 
+-U1399/NOT1/fanout            Y:U1400 
+-U1400/NAND2/fanin            A:U1399 B:U1383 
+-U1400/NAND2/fanout           Y:U1401 
+-U1401/NAND2/fanin            A:U1398 B:U1400 
+-U1401/NAND2/fanout           Y:U1402 Y:U1447 
+-U1402/NOT1/fanin             A:U1401 
+-U1402/NOT1/fanout            Y:U1408 
+-U1403/NAND2/fanin            A:U1167 B:U1173 
+-U1403/NAND2/fanout           Y:U1407 
+-U1404/NAND2/fanin            A:b7 B:a4 
+-U1404/NAND2/fanout           Y:U1405 Y:U1545 
+-U1405/NOT1/fanin             A:U1404 
+-U1405/NOT1/fanout            Y:U1406 Y:U1488 
+-U1406/NAND2/fanin            A:U1189 B:U1405 
+-U1406/NAND2/fanout           Y:U1407 
+-U1407/NAND2/fanin            A:U1403 B:U1406 
+-U1407/NAND2/fanout           Y:U1408 Y:U1446 
+-U1408/NAND2/fanin            A:U1402 B:U1407 
+-U1408/NAND2/fanout           Y:U1409 Y:U1448 
+-U1409/NAND2/fanin            A:U1408 B:U1398 
+-U1409/NAND2/fanout           Y:U1415 Y:U1436 Y:U1437 
+-U1410/NOT1/fanin             A:U1365 
+-U1410/NOT1/fanout            Y:U1411 
+-U1411/NAND2/fanin            A:U1410 B:U1370 
+-U1411/NAND2/fanout           Y:U1414 
+-U1412/NOT1/fanin             A:U1370 
+-U1412/NOT1/fanout            Y:U1413 
+-U1413/NAND2/fanin            A:U1412 B:U1365 
+-U1413/NAND2/fanout           Y:U1414 
+-U1414/NAND2/fanin            A:U1411 B:U1413 
+-U1414/NAND2/fanout           Y:U1415 Y:U1435 Y:U1438 
+-U1415/NAND2/fanin            A:U1409 B:U1414 
+-U1415/NAND2/fanout           Y:U1416 
+-U1416/NAND2/fanin            A:U1371 B:U1415 
+-U1416/NAND2/fanout           Y:U1417 Y:U1430 Y:U1433 
+-U1417/NAND2/fanin            A:U442 B:U1416 
+-U1417/NAND2/fanout           Y:U1418 
+-U1418/NAND2/fanin            A:U387 B:U1417 
+-U1418/NAND2/fanout           Y:U1419 Y:U1426 
+-U1419/NOT1/fanin             A:U1418 
+-U1419/NOT1/fanout            Y:U1421 Y:U1427 
+-U1420/NOT1/fanin             A:U390 
+-U1420/NOT1/fanout            Y:U1421 
+-U1421/NOR2/fanin             A:U1419 B:U1420 
+-U1421/NOR2/fanout            Y:U1423 
+-U1422/NOT1/fanin             A:U389 
+-U1422/NOT1/fanout            Y:U1423 Y:U1424 
+-U1423/NAND2/fanin            A:U1421 B:U1422 
+-U1423/NAND2/fanout           Y:U2038 
+-U1424/NAND2/fanin            A:U390 B:U1422 
+-U1424/NAND2/fanout           Y:U1425 Y:U1427 
+-U1425/NOT1/fanin             A:U1424 
+-U1425/NOT1/fanout            Y:U1426 
+-U1426/NAND2/fanin            A:U1425 B:U1418 
+-U1426/NAND2/fanout           Y:U1428 
+-U1427/NAND2/fanin            A:U1419 B:U1424 
+-U1427/NAND2/fanout           Y:U1428 
+-U1428/NAND2/fanin            A:U1426 B:U1427 
+-U1428/NAND2/fanout           Y:U1429 
+-U1429/NOT1/fanin             A:U1428 
+-U1429/NOT1/fanout            Y:U2037 Y:U2055 
+-U1430/NOT1/fanin             A:U1416 
+-U1430/NOT1/fanout            Y:U1431 
+-U1431/NAND2/fanin            A:U442 B:U1430 
+-U1431/NAND2/fanout           Y:U1434 
+-U1432/NOT1/fanin             A:U442 
+-U1432/NOT1/fanout            Y:U1433 
+-U1433/NAND2/fanin            A:U1416 B:U1432 
+-U1433/NAND2/fanout           Y:U1434 
+-U1434/NAND2/fanin            A:U1431 B:U1433 
+-U1434/NAND2/fanout           Y:U1501 Y:U2030 Y:U2033 
+-U1435/NOT1/fanin             A:U1414 
+-U1435/NOT1/fanout            Y:U1436 
+-U1436/NAND2/fanin            A:U1435 B:U1409 
+-U1436/NAND2/fanout           Y:U1439 
+-U1437/NOT1/fanin             A:U1409 
+-U1437/NOT1/fanout            Y:U1438 
+-U1438/NAND2/fanin            A:U1437 B:U1414 
+-U1438/NAND2/fanout           Y:U1439 
+-U1439/NAND2/fanin            A:U1436 B:U1438 
+-U1439/NAND2/fanout           Y:U1445 Y:U1494 Y:U1497 
+-U1440/NAND2/fanin            A:U1200 B:U1215 
+-U1440/NAND2/fanout           Y:U1444 
+-U1441/NAND2/fanin            A:U1176 B:U1164 
+-U1441/NAND2/fanout           Y:U1442 
+-U1442/NAND2/fanin            A:U1441 B:U1184 
+-U1442/NAND2/fanout           Y:U1443 Y:U1450 Y:U1453 
+-U1443/NAND2/fanin            A:U597 B:U1442 
+-U1443/NAND2/fanout           Y:U1444 
+-U1444/NAND2/fanin            A:U1440 B:U1443 
+-U1444/NAND2/fanout           Y:U1445 Y:U1495 Y:U1496 
+-U1445/NAND2/fanin            A:U1439 B:U1444 
+-U1445/NAND2/fanout           Y:U1500 
+-U1446/NOT1/fanin             A:U1407 
+-U1446/NOT1/fanout            Y:U1447 
+-U1447/NAND2/fanin            A:U1446 B:U1401 
+-U1447/NAND2/fanout           Y:U1448 
+-U1448/NAND2/fanin            A:U1447 B:U1408 
+-U1448/NAND2/fanout           Y:U1449 Y:U1457 
+-U1449/NOT1/fanin             A:U1448 
+-U1449/NOT1/fanout            Y:U1455 
+-U1450/NOT1/fanin             A:U1442 
+-U1450/NOT1/fanout            Y:U1451 
+-U1451/NAND2/fanin            A:U597 B:U1450 
+-U1451/NAND2/fanout           Y:U1454 
+-U1452/NOT1/fanin             A:U597 
+-U1452/NOT1/fanout            Y:U1453 
+-U1453/NAND2/fanin            A:U1442 B:U1452 
+-U1453/NAND2/fanout           Y:U1454 
+-U1454/NAND2/fanin            A:U1451 B:U1453 
+-U1454/NAND2/fanout           Y:U1455 Y:U1456 
+-U1455/NAND2/fanin            A:U1449 B:U1454 
+-U1455/NAND2/fanout           Y:U1458 Y:U1493 
+-U1456/NOT1/fanin             A:U1454 
+-U1456/NOT1/fanout            Y:U1457 
+-U1457/NAND2/fanin            A:U1456 B:U1448 
+-U1457/NAND2/fanout           Y:U1458 
+-U1458/NAND2/fanin            A:U1455 B:U1457 
+-U1458/NAND2/fanout           Y:U1459 Y:U1568 
+-U1459/NOT1/fanin             A:U1458 
+-U1459/NOT1/fanout            Y:U1492 
+-U1460/NAND2/fanin            A:b4 B:a2 
+-U1460/NAND2/fanout           Y:U1461 Y:U1959 
+-U1461/NOT1/fanin             A:U1460 
+-U1461/NOT1/fanout            Y:U1462 Y:U1786 Y:U1904 
+-U1462/NAND2/fanin            A:U1461 B:U1263 
+-U1462/NAND2/fanout           Y:U1472 
+-U1463/NAND2/fanin            A:a6 B:b5 
+-U1463/NAND2/fanout           Y:U1464 Y:U1539 
+-U1464/NOT1/fanin             A:U1463 
+-U1464/NOT1/fanout            Y:U1471 
+-U1465/NAND2/fanin            A:b9 B:a2 
+-U1465/NAND2/fanout           Y:U1466 Y:U1467 
+-U1466/NOT1/fanin             A:U1465 
+-U1466/NOT1/fanout            Y:U1469 
+-U1467/NAND2/fanin            A:U1148 B:U1465 
+-U1467/NAND2/fanout           Y:U1470 
+-U1468/NAND2/fanin            A:a7 B:b4 
+-U1468/NAND2/fanout           Y:U1469 
+-U1469/NAND2/fanin            A:U1466 B:U1468 
+-U1469/NAND2/fanout           Y:U1470 
+-U1470/NAND2/fanin            A:U1467 B:U1469 
+-U1470/NAND2/fanout           Y:U1471 Y:U1539 Y:U1540 
+-U1471/NAND2/fanin            A:U1464 B:U1470 
+-U1471/NAND2/fanout           Y:U1472 
+-U1472/NAND2/fanin            A:U1462 B:U1471 
+-U1472/NAND2/fanout           Y:U1473 Y:U1479 
+-U1473/NOT1/fanin             A:U1472 
+-U1473/NOT1/fanout            Y:U1477 
+-U1474/NOT1/fanin             A:U1395 
+-U1474/NOT1/fanout            Y:U1475 
+-U1475/NAND2/fanin            A:U1474 B:U1388 
+-U1475/NAND2/fanout           Y:U1476 
+-U1476/NAND2/fanin            A:U1475 B:U1396 
+-U1476/NAND2/fanout           Y:U1477 Y:U1478 
+-U1477/NAND2/fanin            A:U1473 B:U1476 
+-U1477/NAND2/fanout           Y:U1480 
+-U1478/NOT1/fanin             A:U1476 
+-U1478/NOT1/fanout            Y:U1479 
+-U1479/NAND2/fanin            A:U1478 B:U1472 
+-U1479/NAND2/fanout           Y:U1480 Y:U1491 
+-U1480/NAND2/fanin            A:U1477 B:U1479 
+-U1480/NAND2/fanout           Y:U1481 Y:U1529 
+-U1481/NOT1/fanin             A:U1480 
+-U1481/NOT1/fanout            Y:U1490 
+-U1482/NAND2/fanin            A:b8 B:a3 
+-U1482/NAND2/fanout           Y:U1483 Y:U1486 
+-U1483/NOT1/fanin             A:U1482 
+-U1483/NOT1/fanout            Y:U1484 Y:U1485 
+-U1484/NAND2/fanin            A:U1483 B:U1309 
+-U1484/NAND2/fanout           Y:U1489 
+-U1485/NAND2/fanin            A:U1483 B:U1308 
+-U1485/NAND2/fanout           Y:U1487 
+-U1486/NAND2/fanin            A:U1309 B:U1482 
+-U1486/NAND2/fanout           Y:U1487 
+-U1487/NAND2/fanin            A:U1485 B:U1486 
+-U1487/NAND2/fanout           Y:U1488 Y:U1544 
+-U1488/NAND2/fanin            A:U1405 B:U1487 
+-U1488/NAND2/fanout           Y:U1489 Y:U1546 
+-U1489/NAND2/fanin            A:U1484 B:U1488 
+-U1489/NAND2/fanout           Y:U1490 Y:U1528 
+-U1490/NAND2/fanin            A:U1481 B:U1489 
+-U1490/NAND2/fanout           Y:U1491 Y:U1530 
+-U1491/NAND2/fanin            A:U1490 B:U1479 
+-U1491/NAND2/fanout           Y:U1492 Y:U1567 
+-U1492/NAND2/fanin            A:U1459 B:U1491 
+-U1492/NAND2/fanout           Y:U1493 Y:U1569 
+-U1493/NAND2/fanin            A:U1492 B:U1455 
+-U1493/NAND2/fanout           Y:U1499 Y:U1503 Y:U1504 
+-U1494/NOT1/fanin             A:U1439 
+-U1494/NOT1/fanout            Y:U1495 
+-U1495/NAND2/fanin            A:U1494 B:U1444 
+-U1495/NAND2/fanout           Y:U1498 
+-U1496/NOT1/fanin             A:U1444 
+-U1496/NOT1/fanout            Y:U1497 
+-U1497/NAND2/fanin            A:U1496 B:U1439 
+-U1497/NAND2/fanout           Y:U1498 
+-U1498/NAND2/fanin            A:U1495 B:U1497 
+-U1498/NAND2/fanout           Y:U1499 Y:U1502 Y:U1505 
+-U1499/NAND2/fanin            A:U1493 B:U1498 
+-U1499/NAND2/fanout           Y:U1500 
+-U1500/NAND2/fanin            A:U1445 B:U1499 
+-U1500/NAND2/fanout           Y:U1501 Y:U2031 Y:U2032 
+-U1501/NAND2/fanin            A:U1434 B:U1500 
+-U1501/NAND2/fanout           Y:U2036 
+-U1502/NOT1/fanin             A:U1498 
+-U1502/NOT1/fanout            Y:U1503 
+-U1503/NAND2/fanin            A:U1502 B:U1493 
+-U1503/NAND2/fanout           Y:U1506 
+-U1504/NOT1/fanin             A:U1493 
+-U1504/NOT1/fanout            Y:U1505 
+-U1505/NAND2/fanin            A:U1504 B:U1498 
+-U1505/NAND2/fanout           Y:U1506 
+-U1506/NAND2/fanin            A:U1503 B:U1505 
+-U1506/NAND2/fanout           Y:U1578 Y:U2023 Y:U2026 
+-U1507/NAND2/fanin            A:U1052 B:U1186 
+-U1507/NAND2/fanout           Y:U1527 
+-U1508/NAND2/fanin            A:b3 B:a1 
+-U1508/NAND2/fanout           Y:U1509 Y:U1973 
+-U1509/NOT1/fanin             A:U1508 
+-U1509/NOT1/fanout            Y:U1510 Y:U1703 Y:U1856 Y:U1940 Y:U1974 
+-U1510/NAND2/fanin            A:U1352 B:U1509 
+-U1510/NAND2/fanout           Y:U1525 
+-U1511/NAND2/fanin            A:a7 B:b2 
+-U1511/NAND2/fanout           Y:U1512 Y:U1648 
+-U1512/NOT1/fanin             A:U1511 
+-U1512/NOT1/fanout            Y:U1515 Y:U1647 
+-U1513/NAND2/fanin            A:a8 B:b1 
+-U1513/NAND2/fanout           Y:U1514 Y:U1647 
+-U1514/NOT1/fanin             A:U1513 
+-U1514/NOT1/fanout            Y:U1515 Y:U1648 
+-U1515/NAND2/fanin            A:U1512 B:U1514 
+-U1515/NAND2/fanout           Y:U1516 Y:U1583 Y:U1606 
+-U1516/NOT1/fanin             A:U1515 
+-U1516/NOT1/fanout            Y:U1524 
+-U1517/NAND2/fanin            A:b10 B:a1 
+-U1517/NAND2/fanout           Y:U1518 Y:U1522 
+-U1518/NOT1/fanin             A:U1517 
+-U1518/NOT1/fanout            Y:U1520 
+-U1519/NAND2/fanin            A:a8 B:b3 
+-U1519/NAND2/fanout           Y:U1520 Y:U1521 
+-U1520/NAND2/fanin            A:U1518 B:U1519 
+-U1520/NAND2/fanout           Y:U1523 
+-U1521/NOT1/fanin             A:U1519 
+-U1521/NOT1/fanout            Y:U1522 
+-U1522/NAND2/fanin            A:U1521 B:U1517 
+-U1522/NAND2/fanout           Y:U1523 
+-U1523/NAND2/fanin            A:U1520 B:U1522 
+-U1523/NAND2/fanout           Y:U1524 Y:U1582 
+-U1524/NAND2/fanin            A:U1516 B:U1523 
+-U1524/NAND2/fanout           Y:U1525 Y:U1584 
+-U1525/NAND2/fanin            A:U1510 B:U1524 
+-U1525/NAND2/fanout           Y:U1526 Y:U1559 Y:U1562 
+-U1526/NAND2/fanin            A:U1041 B:U1525 
+-U1526/NAND2/fanout           Y:U1527 
+-U1527/NAND2/fanin            A:U1507 B:U1526 
+-U1527/NAND2/fanout           Y:U1566 Y:U1571 Y:U1574 
+-U1528/NOT1/fanin             A:U1489 
+-U1528/NOT1/fanout            Y:U1529 
+-U1529/NAND2/fanin            A:U1528 B:U1480 
+-U1529/NAND2/fanout           Y:U1530 
+-U1530/NAND2/fanin            A:U1529 B:U1490 
+-U1530/NAND2/fanout           Y:U1531 Y:U1557 
+-U1531/NOT1/fanin             A:U1530 
+-U1531/NOT1/fanout            Y:U1555 
+-U1532/NAND2/fanin            A:a9 B:b2 
+-U1532/NAND2/fanout           Y:U1533 Y:U1537 
+-U1533/NOT1/fanin             A:U1532 
+-U1533/NOT1/fanout            Y:U1535 
+-U1534/NAND2/fanin            A:a10 B:b1 
+-U1534/NAND2/fanout           Y:U1535 Y:U1536 
+-U1535/NAND2/fanin            A:U1533 B:U1534 
+-U1535/NAND2/fanout           Y:U1538 
+-U1536/NOT1/fanin             A:U1534 
+-U1536/NOT1/fanout            Y:U1537 
+-U1537/NAND2/fanin            A:U1536 B:U1532 
+-U1537/NAND2/fanout           Y:U1538 
+-U1538/NAND2/fanin            A:U1535 B:U1537 
+-U1538/NAND2/fanout           Y:U1543 Y:U1548 Y:U1551 
+-U1539/NAND2/fanin            A:U1463 B:U1470 
+-U1539/NAND2/fanout           Y:U1542 
+-U1540/NOR2/fanin             A:U1197 B:U1470 
+-U1540/NOR2/fanout            Y:U1541 
+-U1541/NAND2/fanin            A:U1540 B:b5 
+-U1541/NAND2/fanout           Y:U1542 
+-U1542/NAND2/fanin            A:U1539 B:U1541 
+-U1542/NAND2/fanout           Y:U1543 Y:U1549 Y:U1550 
+-U1543/NAND2/fanin            A:U1538 B:U1542 
+-U1543/NAND2/fanout           Y:U1554 
+-U1544/NOT1/fanin             A:U1487 
+-U1544/NOT1/fanout            Y:U1545 
+-U1545/NAND2/fanin            A:U1544 B:U1404 
+-U1545/NAND2/fanout           Y:U1546 
+-U1546/NAND2/fanin            A:U1545 B:U1488 
+-U1546/NAND2/fanout           Y:U1547 Y:U1616 
+-U1547/NOT1/fanin             A:U1546 
+-U1547/NOT1/fanout            Y:U1553 
+-U1548/NOT1/fanin             A:U1538 
+-U1548/NOT1/fanout            Y:U1549 
+-U1549/NAND2/fanin            A:U1548 B:U1542 
+-U1549/NAND2/fanout           Y:U1552 
+-U1550/NOT1/fanin             A:U1542 
+-U1550/NOT1/fanout            Y:U1551 
+-U1551/NAND2/fanin            A:U1550 B:U1538 
+-U1551/NAND2/fanout           Y:U1552 
+-U1552/NAND2/fanin            A:U1549 B:U1551 
+-U1552/NAND2/fanout           Y:U1553 Y:U1615 
+-U1553/NAND2/fanin            A:U1547 B:U1552 
+-U1553/NAND2/fanout           Y:U1554 Y:U1617 
+-U1554/NAND2/fanin            A:U1543 B:U1553 
+-U1554/NAND2/fanout           Y:U1555 Y:U1556 
+-U1555/NAND2/fanin            A:U1531 B:U1554 
+-U1555/NAND2/fanout           Y:U1558 Y:U1564 Y:U1565 
+-U1556/NOT1/fanin             A:U1554 
+-U1556/NOT1/fanout            Y:U1557 
+-U1557/NAND2/fanin            A:U1556 B:U1530 
+-U1557/NAND2/fanout           Y:U1143 Y:U1558 
+-U1558/NAND2/fanin            A:U1555 B:U1557 
+-U1558/NAND2/fanout           Y:U1682 
+-U1559/NOT1/fanin             A:U1525 
+-U1559/NOT1/fanout            Y:U1560 
+-U1560/NAND2/fanin            A:U1041 B:U1559 
+-U1560/NAND2/fanout           Y:U1563 
+-U1561/NOT1/fanin             A:U1041 
+-U1561/NOT1/fanout            Y:U1562 
+-U1562/NAND2/fanin            A:U1525 B:U1561 
+-U1562/NAND2/fanout           Y:U1563 
+-U1563/NAND2/fanin            A:U1560 B:U1562 
+-U1563/NAND2/fanout           Y:U1143 Y:U1681 
+-U1564/NAND2/fanin            A:U1144 B:U1555 
+-U1564/NAND2/fanout           Y:U1565 Y:U1683 
+-U1565/NAND2/fanin            A:U1564 B:U1555 
+-U1565/NAND2/fanout           Y:U1566 Y:U1572 Y:U1573 
+-U1566/NAND2/fanin            A:U1527 B:U1565 
+-U1566/NAND2/fanout           Y:U1577 
+-U1567/NOT1/fanin             A:U1491 
+-U1567/NOT1/fanout            Y:U1568 
+-U1568/NAND2/fanin            A:U1567 B:U1458 
+-U1568/NAND2/fanout           Y:U1569 
+-U1569/NAND2/fanin            A:U1568 B:U1492 
+-U1569/NAND2/fanout           Y:U1570 Y:U1580 
+-U1570/NOT1/fanin             A:U1569 
+-U1570/NOT1/fanout            Y:U1576 
+-U1571/NOT1/fanin             A:U1527 
+-U1571/NOT1/fanout            Y:U1572 
+-U1572/NAND2/fanin            A:U1571 B:U1565 
+-U1572/NAND2/fanout           Y:U1575 
+-U1573/NOT1/fanin             A:U1565 
+-U1573/NOT1/fanout            Y:U1574 
+-U1574/NAND2/fanin            A:U1573 B:U1527 
+-U1574/NAND2/fanout           Y:U1575 
+-U1575/NAND2/fanin            A:U1572 B:U1574 
+-U1575/NAND2/fanout           Y:U1576 Y:U1579 
+-U1576/NAND2/fanin            A:U1570 B:U1575 
+-U1576/NAND2/fanout           Y:U1149 Y:U1577 Y:U1581 
+-U1577/NAND2/fanin            A:U1566 B:U1576 
+-U1577/NAND2/fanout           Y:U1578 Y:U2024 Y:U2025 
+-U1578/NAND2/fanin            A:U1506 B:U1577 
+-U1578/NAND2/fanout           Y:U2029 
+-U1579/NOT1/fanin             A:U1575 
+-U1579/NOT1/fanout            Y:U1580 
+-U1580/NAND2/fanin            A:U1579 B:U1569 
+-U1580/NAND2/fanout           Y:U1581 Y:U1691 
+-U1581/NAND2/fanin            A:U1580 B:U1576 
+-U1581/NAND2/fanout           Y:U1693 
+-U1582/NOT1/fanin             A:U1523 
+-U1582/NOT1/fanout            Y:U1583 
+-U1583/NAND2/fanin            A:U1582 B:U1515 
+-U1583/NAND2/fanout           Y:U1584 
+-U1584/NAND2/fanin            A:U1583 B:U1524 
+-U1584/NAND2/fanout           Y:U1585 Y:U1598 
+-U1585/NOT1/fanin             A:U1584 
+-U1585/NOT1/fanout            Y:U1596 
+-U1586/NAND2/fanin            A:a7 B:b3 
+-U1586/NAND2/fanout           Y:U1587 Y:U1592 
+-U1587/NOT1/fanin             A:U1586 
+-U1587/NOT1/fanout            Y:U1588 Y:U1591 
+-U1588/NAND2/fanin            A:U1587 B:U1162 
+-U1588/NAND2/fanout           Y:U1595 
+-U1589/NAND2/fanin            A:b9 B:a1 
+-U1589/NAND2/fanout           Y:U1590 Y:U1634 
+-U1590/NOT1/fanin             A:U1589 
+-U1590/NOT1/fanout            Y:U1594 
+-U1591/NAND2/fanin            A:U1587 B:U1161 
+-U1591/NAND2/fanout           Y:U1593 
+-U1592/NAND2/fanin            A:U1162 B:U1586 
+-U1592/NAND2/fanout           Y:U1593 
+-U1593/NAND2/fanin            A:U1591 B:U1592 
+-U1593/NAND2/fanout           Y:U1594 Y:U1633 
+-U1594/NAND2/fanin            A:U1590 B:U1593 
+-U1594/NAND2/fanout           Y:U1595 Y:U1635 
+-U1595/NAND2/fanin            A:U1588 B:U1594 
+-U1595/NAND2/fanout           Y:U1596 Y:U1597 
+-U1596/NAND2/fanin            A:U1585 B:U1595 
+-U1596/NAND2/fanout           Y:U1599 Y:U1614 
+-U1597/NOT1/fanin             A:U1595 
+-U1597/NOT1/fanout            Y:U1598 
+-U1598/NAND2/fanin            A:U1597 B:U1584 
+-U1598/NAND2/fanout           Y:U1599 
+-U1599/NAND2/fanin            A:U1596 B:U1598 
+-U1599/NAND2/fanout           Y:U1600 Y:U1700 
+-U1600/NOT1/fanin             A:U1599 
+-U1600/NOT1/fanout            Y:U1613 
+-U1601/NAND2/fanin            A:b7 B:a3 
+-U1601/NAND2/fanout           Y:U1602 Y:U1609 
+-U1602/NOT1/fanin             A:U1601 
+-U1602/NOT1/fanout            Y:U1603 Y:U1608 
+-U1603/NAND2/fanin            A:U1602 B:U1262 
+-U1603/NAND2/fanout           Y:U1612 
+-U1604/NOT1/fanin             A:b2 
+-U1604/NOT1/fanout            Y:U1605 Y:U1813 
+-U1605/NOR2/fanin             A:U1604 B:U1190 
+-U1605/NOR2/fanout            Y:U1606 
+-U1606/NAND2/fanin            A:U1605 B:U1515 
+-U1606/NAND2/fanout           Y:U1607 Y:U1638 
+-U1607/NOT1/fanin             A:U1606 
+-U1607/NOT1/fanout            Y:U1611 
+-U1608/NAND2/fanin            A:U1602 B:U1261 
+-U1608/NAND2/fanout           Y:U1610 
+-U1609/NAND2/fanin            A:U1262 B:U1601 
+-U1609/NAND2/fanout           Y:U1610 
+-U1610/NAND2/fanin            A:U1608 B:U1609 
+-U1610/NAND2/fanout           Y:U1611 Y:U1637 
+-U1611/NAND2/fanin            A:U1607 B:U1610 
+-U1611/NAND2/fanout           Y:U1612 Y:U1639 
+-U1612/NAND2/fanin            A:U1603 B:U1611 
+-U1612/NAND2/fanout           Y:U1613 Y:U1699 
+-U1613/NAND2/fanin            A:U1600 B:U1612 
+-U1613/NAND2/fanout           Y:U1614 Y:U1701 
+-U1614/NAND2/fanin            A:U1613 B:U1596 
+-U1614/NAND2/fanout           Y:U1155 Y:U1680 Y:U1685 
+-U1615/NOT1/fanin             A:U1552 
+-U1615/NOT1/fanout            Y:U1616 
+-U1616/NAND2/fanin            A:U1615 B:U1546 
+-U1616/NAND2/fanout           Y:U1617 
+-U1617/NAND2/fanin            A:U1616 B:U1553 
+-U1617/NAND2/fanout           Y:U1618 Y:U1631 
+-U1618/NOT1/fanin             A:U1617 
+-U1618/NOT1/fanout            Y:U1629 
+-U1619/NAND2/fanin            A:a6 B:b4 
+-U1619/NAND2/fanout           Y:U1620 Y:U1625 
+-U1620/NOT1/fanin             A:U1619 
+-U1620/NOT1/fanout            Y:U1623 Y:U1624 
+-U1621/NAND2/fanin            A:b8 B:a2 
+-U1621/NAND2/fanout           Y:U1622 Y:U1624 
+-U1622/NOT1/fanin             A:U1621 
+-U1622/NOT1/fanout            Y:U1623 Y:U1625 
+-U1623/NAND2/fanin            A:U1620 B:U1622 
+-U1623/NAND2/fanout           Y:U1628 
+-U1624/NAND2/fanin            A:U1620 B:U1621 
+-U1624/NAND2/fanout           Y:U1626 Y:U1708 
+-U1625/NAND2/fanin            A:U1622 B:U1619 
+-U1625/NAND2/fanout           Y:U1626 Y:U1706 
+-U1626/NAND2/fanin            A:U1624 B:U1625 
+-U1626/NAND2/fanout           Y:U1627 
+-U1627/NAND2/fanin            A:U1267 B:U1626 
+-U1627/NAND2/fanout           Y:U1628 Y:U1711 Y:U1712 
+-U1628/NAND2/fanin            A:U1623 B:U1627 
+-U1628/NAND2/fanout           Y:U1629 Y:U1630 
+-U1629/NAND2/fanin            A:U1618 B:U1628 
+-U1629/NAND2/fanout           Y:U1155 Y:U1632 Y:U1678 Y:U1679 
+-U1630/NOT1/fanin             A:U1628 
+-U1630/NOT1/fanout            Y:U1631 
+-U1631/NAND2/fanin            A:U1630 B:U1617 
+-U1631/NAND2/fanout           Y:U1141 Y:U1632 
+-U1632/NAND2/fanin            A:U1629 B:U1631 
+-U1632/NAND2/fanout           Y:U1736 
+-U1633/NOT1/fanin             A:U1593 
+-U1633/NOT1/fanout            Y:U1634 
+-U1634/NAND2/fanin            A:U1633 B:U1589 
+-U1634/NAND2/fanout           Y:U1635 
+-U1635/NAND2/fanin            A:U1634 B:U1594 
+-U1635/NAND2/fanout           Y:U1636 Y:U1643 
+-U1636/NOT1/fanin             A:U1635 
+-U1636/NOT1/fanout            Y:U1641 Y:U1642 
+-U1637/NOT1/fanin             A:U1610 
+-U1637/NOT1/fanout            Y:U1638 
+-U1638/NAND2/fanin            A:U1637 B:U1606 
+-U1638/NAND2/fanout           Y:U1639 
+-U1639/NAND2/fanin            A:U1638 B:U1611 
+-U1639/NAND2/fanout           Y:U1640 Y:U1642 
+-U1640/NOT1/fanin             A:U1639 
+-U1640/NOT1/fanout            Y:U1641 Y:U1643 
+-U1641/NAND2/fanin            A:U1636 B:U1640 
+-U1641/NAND2/fanout           Y:U1677 
+-U1642/NAND2/fanin            A:U1636 B:U1639 
+-U1642/NAND2/fanout           Y:U1644 
+-U1643/NAND2/fanin            A:U1640 B:U1635 
+-U1643/NAND2/fanout           Y:U1644 
+-U1644/NAND2/fanin            A:U1642 B:U1643 
+-U1644/NAND2/fanout           Y:U1676 Y:U1749 Y:U1752 
+-U1645/NAND2/fanin            A:b6 B:a3 
+-U1645/NAND2/fanout           Y:U1646 Y:U1669 
+-U1646/NOT1/fanin             A:U1645 
+-U1646/NOT1/fanout            Y:U1650 
+-U1647/NAND2/fanin            A:U1512 B:U1513 
+-U1647/NAND2/fanout           Y:U1649 
+-U1648/NAND2/fanin            A:U1514 B:U1511 
+-U1648/NAND2/fanout           Y:U1649 
+-U1649/NAND2/fanin            A:U1647 B:U1648 
+-U1649/NAND2/fanout           Y:U1650 Y:U1669 Y:U1671 
+-U1650/NAND2/fanin            A:U1646 B:U1649 
+-U1650/NAND2/fanout           Y:U1675 
+-U1651/NAND2/fanin            A:b8 B:a1 
+-U1651/NAND2/fanout           Y:U1652 Y:U1656 
+-U1652/NOT1/fanin             A:U1651 
+-U1652/NOT1/fanout            Y:U1654 
+-U1653/NAND2/fanin            A:a6 B:b3 
+-U1653/NAND2/fanout           Y:U1654 Y:U1655 
+-U1654/NAND2/fanin            A:U1652 B:U1653 
+-U1654/NAND2/fanout           Y:U1657 
+-U1655/NOT1/fanin             A:U1653 
+-U1655/NOT1/fanout            Y:U1656 
+-U1656/NAND2/fanin            A:U1655 B:U1651 
+-U1656/NAND2/fanout           Y:U1657 
+-U1657/NAND2/fanin            A:U1654 B:U1656 
+-U1657/NAND2/fanout           Y:U1658 Y:U1666 
+-U1658/NOT1/fanin             A:U1657 
+-U1658/NOT1/fanout            Y:U1664 
+-U1659/NAND2/fanin            A:a5 B:b2 
+-U1659/NAND2/fanout           Y:U1660 Y:U1851 
+-U1660/NOT1/fanin             A:U1659 
+-U1660/NOT1/fanout            Y:U1663 Y:U1850 
+-U1661/NAND2/fanin            A:a6 B:b1 
+-U1661/NAND2/fanout           Y:U1662 Y:U1850 
+-U1662/NOT1/fanin             A:U1661 
+-U1662/NOT1/fanout            Y:U1663 Y:U1851 
+-U1663/NAND2/fanin            A:U1660 B:U1662 
+-U1663/NAND2/fanout           Y:U1664 Y:U1665 Y:U1814 
+-U1664/NAND2/fanin            A:U1658 B:U1663 
+-U1664/NAND2/fanout           Y:U1667 
+-U1665/NOT1/fanin             A:U1663 
+-U1665/NOT1/fanout            Y:U1666 
+-U1666/NAND2/fanin            A:U1665 B:U1657 
+-U1666/NAND2/fanout           Y:U1667 Y:U1704 
+-U1667/NAND2/fanin            A:U1664 B:U1666 
+-U1667/NAND2/fanout           Y:U1668 Y:U1806 
+-U1668/NOT1/fanin             A:U1667 
+-U1668/NOT1/fanout            Y:U1674 
+-U1669/NAND2/fanin            A:U1645 B:U1649 
+-U1669/NAND2/fanout           Y:U1673 
+-U1670/NOT1/fanin             A:a3 
+-U1670/NOT1/fanout            Y:U1671 
+-U1671/NOR2/fanin             A:U1670 B:U1649 
+-U1671/NOR2/fanout            Y:U1672 
+-U1672/NAND2/fanin            A:U1671 B:b6 
+-U1672/NAND2/fanout           Y:U1673 
+-U1673/NAND2/fanin            A:U1669 B:U1672 
+-U1673/NAND2/fanout           Y:U1674 Y:U1805 
+-U1674/NAND2/fanin            A:U1668 B:U1673 
+-U1674/NAND2/fanout           Y:U1675 Y:U1807 
+-U1675/NAND2/fanin            A:U1650 B:U1674 
+-U1675/NAND2/fanout           Y:U1676 Y:U1750 Y:U1751 
+-U1676/NAND2/fanin            A:U1644 B:U1675 
+-U1676/NAND2/fanout           Y:U1677 
+-U1677/NAND2/fanin            A:U1641 B:U1676 
+-U1677/NAND2/fanout           Y:U1141 Y:U1735 
+-U1678/NAND2/fanin            A:U1142 B:U1629 
+-U1678/NAND2/fanout           Y:U1679 Y:U1687 Y:U1737 
+-U1679/NAND2/fanin            A:U1678 B:U1629 
+-U1679/NAND2/fanout           Y:U1680 Y:U1686 
+-U1680/NAND2/fanin            A:U1614 B:U1679 
+-U1680/NAND2/fanout           Y:U1690 
+-U1681/NOT1/fanin             A:U1563 
+-U1681/NOT1/fanout            Y:U1682 
+-U1682/NAND2/fanin            A:U1681 B:U1558 
+-U1682/NAND2/fanout           Y:U1683 
+-U1683/NAND2/fanin            A:U1564 B:U1682 
+-U1683/NAND2/fanout           Y:U1153 Y:U1684 
+-U1684/NOT1/fanin             A:U1683 
+-U1684/NOT1/fanout            Y:U1689 
+-U1685/NOT1/fanin             A:U1614 
+-U1685/NOT1/fanout            Y:U1686 
+-U1686/NAND2/fanin            A:U1685 B:U1679 
+-U1686/NAND2/fanout           Y:U1688 Y:U1696 
+-U1687/NAND2/fanin            A:U1156 B:U1678 
+-U1687/NAND2/fanout           Y:U1153 Y:U1688 
+-U1688/NAND2/fanin            A:U1686 B:U1687 
+-U1688/NAND2/fanout           Y:U1689 
+-U1689/NAND2/fanin            A:U1684 B:U1688 
+-U1689/NAND2/fanout           Y:U1690 Y:U1697 
+-U1690/NAND2/fanin            A:U1680 B:U1689 
+-U1690/NAND2/fanout           Y:U1149 Y:U1692 
+-U1691/NAND2/fanin            A:U1150 B:U1580 
+-U1691/NAND2/fanout           Y:U1694 Y:U2022 
+-U1692/NOT1/fanin             A:U1690 
+-U1692/NOT1/fanout            Y:U1693 
+-U1693/NAND2/fanin            A:U1692 B:U1581 
+-U1693/NAND2/fanout           Y:U1694 
+-U1694/NAND2/fanin            A:U1691 B:U1693 
+-U1694/NAND2/fanout           Y:U1695 
+-U1695/NOT1/fanin             A:U1694 
+-U1695/NOT1/fanout            Y:U2021 Y:U2068 
+-U1696/NAND2/fanin            A:U1154 B:U1686 
+-U1696/NAND2/fanout           Y:U1697 
+-U1697/NAND2/fanin            A:U1696 B:U1689 
+-U1697/NAND2/fanout           Y:U1698 Y:U1743 
+-U1698/NOT1/fanin             A:U1697 
+-U1698/NOT1/fanout            Y:U1741 
+-U1699/NOT1/fanin             A:U1612 
+-U1699/NOT1/fanout            Y:U1700 
+-U1700/NAND2/fanin            A:U1699 B:U1599 
+-U1700/NAND2/fanout           Y:U1701 
+-U1701/NAND2/fanin            A:U1613 B:U1700 
+-U1701/NAND2/fanout           Y:U1702 Y:U1732 
+-U1702/NOT1/fanin             A:U1701 
+-U1702/NOT1/fanout            Y:U1730 
+-U1703/NAND2/fanin            A:U1218 B:U1509 
+-U1703/NAND2/fanout           Y:U1704 
+-U1704/NAND2/fanin            A:U1703 B:U1666 
+-U1704/NAND2/fanout           Y:U1705 
+-U1705/NOT1/fanin             A:U1704 
+-U1705/NOT1/fanout            Y:U1710 Y:U1713 
+-U1706/NOT1/fanin             A:U1625 
+-U1706/NOT1/fanout            Y:U1707 
+-U1707/NOR2/fanin             A:U1267 B:U1706 
+-U1707/NOR2/fanout            Y:U1708 
+-U1708/NAND2/fanin            A:U1707 B:U1624 
+-U1708/NAND2/fanout           Y:U1709 Y:U1712 
+-U1709/NOT1/fanin             A:U1708 
+-U1709/NOT1/fanout            Y:U1710 
+-U1710/NOR2/fanin             A:U1705 B:U1709 
+-U1710/NOR2/fanout            Y:U1711 
+-U1711/NAND2/fanin            A:U1710 B:U1627 
+-U1711/NAND2/fanout           Y:U1714 Y:U1729 
+-U1712/NAND2/fanin            A:U1627 B:U1708 
+-U1712/NAND2/fanout           Y:U1713 
+-U1713/NAND2/fanin            A:U1705 B:U1712 
+-U1713/NAND2/fanout           Y:U1714 
+-U1714/NAND2/fanin            A:U1711 B:U1713 
+-U1714/NAND2/fanout           Y:U1715 Y:U1756 
+-U1715/NOT1/fanin             A:U1714 
+-U1715/NOT1/fanout            Y:U1728 
+-U1716/NAND2/fanin            A:a5 B:b4 
+-U1716/NAND2/fanout           Y:U1717 Y:U1724 
+-U1717/NOT1/fanin             A:U1716 
+-U1717/NOT1/fanout            Y:U1720 Y:U1723 
+-U1718/NAND2/fanin            A:b7 B:a2 
+-U1718/NAND2/fanout           Y:U1719 Y:U1723 
+-U1719/NOT1/fanin             A:U1718 
+-U1719/NOT1/fanout            Y:U1720 Y:U1724 
+-U1720/NAND2/fanin            A:U1717 B:U1719 
+-U1720/NAND2/fanout           Y:U1727 
+-U1721/NAND2/fanin            A:b5 B:a4 
+-U1721/NAND2/fanout           Y:U1722 
+-U1722/NOT1/fanin             A:U1721 
+-U1722/NOT1/fanout            Y:U1726 Y:U1777 
+-U1723/NAND2/fanin            A:U1717 B:U1718 
+-U1723/NAND2/fanout           Y:U1725 Y:U1778 
+-U1724/NAND2/fanin            A:U1719 B:U1716 
+-U1724/NAND2/fanout           Y:U1725 Y:U1776 
+-U1725/NAND2/fanin            A:U1723 B:U1724 
+-U1725/NAND2/fanout           Y:U1726 
+-U1726/NAND2/fanin            A:U1722 B:U1725 
+-U1726/NAND2/fanout           Y:U1727 Y:U1779 Y:U1783 
+-U1727/NAND2/fanin            A:U1720 B:U1726 
+-U1727/NAND2/fanout           Y:U1728 Y:U1755 
+-U1728/NAND2/fanin            A:U1715 B:U1727 
+-U1728/NAND2/fanout           Y:U1729 Y:U1757 
+-U1729/NAND2/fanin            A:U1728 B:U1711 
+-U1729/NAND2/fanout           Y:U1730 Y:U1731 
+-U1730/NAND2/fanin            A:U1702 B:U1729 
+-U1730/NAND2/fanout           Y:U1733 Y:U1740 
+-U1731/NOT1/fanin             A:U1729 
+-U1731/NOT1/fanout            Y:U1732 
+-U1732/NAND2/fanin            A:U1731 B:U1701 
+-U1732/NAND2/fanout           Y:U1733 
+-U1733/NAND2/fanin            A:U1730 B:U1732 
+-U1733/NAND2/fanout           Y:U1734 Y:U1747 
+-U1734/NOT1/fanin             A:U1733 
+-U1734/NOT1/fanout            Y:U1739 Y:U1746 
+-U1735/NOT1/fanin             A:U1677 
+-U1735/NOT1/fanout            Y:U1736 
+-U1736/NAND2/fanin            A:U1735 B:U1632 
+-U1736/NAND2/fanout           Y:U1737 
+-U1737/NAND2/fanin            A:U1678 B:U1736 
+-U1737/NAND2/fanout           Y:U1738 Y:U1746 
+-U1738/NOT1/fanin             A:U1737 
+-U1738/NOT1/fanout            Y:U1739 Y:U1747 
+-U1739/NAND2/fanin            A:U1734 B:U1738 
+-U1739/NAND2/fanout           Y:U1740 
+-U1740/NAND2/fanin            A:U1739 B:U1730 
+-U1740/NAND2/fanout           Y:U1741 Y:U1742 
+-U1741/NAND2/fanin            A:U1698 B:U1740 
+-U1741/NAND2/fanout           Y:U1744 Y:U2020 
+-U1742/NOT1/fanin             A:U1740 
+-U1742/NOT1/fanout            Y:U1743 
+-U1743/NAND2/fanin            A:U1742 B:U1697 
+-U1743/NAND2/fanout           Y:U1744 
+-U1744/NAND2/fanin            A:U1741 B:U1743 
+-U1744/NAND2/fanout           Y:U1745 
+-U1745/NOT1/fanin             A:U1744 
+-U1745/NOT1/fanout            Y:U2019 Y:U2071 
+-U1746/NAND2/fanin            A:U1734 B:U1737 
+-U1746/NAND2/fanout           Y:U1748 
+-U1747/NAND2/fanin            A:U1738 B:U1733 
+-U1747/NAND2/fanout           Y:U1748 
+-U1748/NAND2/fanin            A:U1746 B:U1747 
+-U1748/NAND2/fanout           Y:U1800 Y:U2012 Y:U2015 
+-U1749/NOT1/fanin             A:U1644 
+-U1749/NOT1/fanout            Y:U1750 
+-U1750/NAND2/fanin            A:U1749 B:U1675 
+-U1750/NAND2/fanout           Y:U1753 
+-U1751/NOT1/fanin             A:U1675 
+-U1751/NOT1/fanout            Y:U1752 
+-U1752/NAND2/fanin            A:U1751 B:U1644 
+-U1752/NAND2/fanout           Y:U1753 
+-U1753/NAND2/fanin            A:U1750 B:U1752 
+-U1753/NAND2/fanout           Y:U1754 Y:U1760 
+-U1754/NOT1/fanin             A:U1753 
+-U1754/NOT1/fanout            Y:U1758 
+-U1755/NOT1/fanin             A:U1727 
+-U1755/NOT1/fanout            Y:U1756 
+-U1756/NAND2/fanin            A:U1755 B:U1714 
+-U1756/NAND2/fanout           Y:U1757 
+-U1757/NAND2/fanin            A:U1728 B:U1756 
+-U1757/NAND2/fanout           Y:U1758 Y:U1759 
+-U1758/NAND2/fanin            A:U1754 B:U1757 
+-U1758/NAND2/fanout           Y:U1761 
+-U1759/NOT1/fanin             A:U1757 
+-U1759/NOT1/fanout            Y:U1760 
+-U1760/NAND2/fanin            A:U1759 B:U1753 
+-U1760/NAND2/fanout           Y:U1761 Y:U1799 
+-U1761/NAND2/fanin            A:U1758 B:U1760 
+-U1761/NAND2/fanout           Y:U1762 Y:U1802 
+-U1762/NOT1/fanin             A:U1761 
+-U1762/NOT1/fanout            Y:U1798 
+-U1763/NAND2/fanin            A:a7 B:b1 
+-U1763/NAND2/fanout           Y:U1764 Y:U1770 
+-U1764/NOT1/fanin             A:U1763 
+-U1764/NOT1/fanout            Y:U1767 Y:U1771 
+-U1765/NAND2/fanin            A:a5 B:b3 
+-U1765/NAND2/fanout           Y:U1766 Y:U1771 
+-U1766/NOT1/fanin             A:U1765 
+-U1766/NOT1/fanout            Y:U1767 Y:U1770 Y:U1898 
+-U1767/NAND2/fanin            A:U1764 B:U1766 
+-U1767/NAND2/fanout           Y:U1774 
+-U1768/NAND2/fanin            A:b7 B:a1 
+-U1768/NAND2/fanout           Y:U1769 Y:U1810 
+-U1769/NOT1/fanin             A:U1768 
+-U1769/NOT1/fanout            Y:U1773 
+-U1770/NAND2/fanin            A:U1766 B:U1763 
+-U1770/NAND2/fanout           Y:U1772 
+-U1771/NAND2/fanin            A:U1764 B:U1765 
+-U1771/NAND2/fanout           Y:U1772 
+-U1772/NAND2/fanin            A:U1770 B:U1771 
+-U1772/NAND2/fanout           Y:U1773 Y:U1809 
+-U1773/NAND2/fanin            A:U1769 B:U1772 
+-U1773/NAND2/fanout           Y:U1774 Y:U1811 
+-U1774/NAND2/fanin            A:U1767 B:U1773 
+-U1774/NAND2/fanout           Y:U1775 
+-U1775/NOT1/fanin             A:U1774 
+-U1775/NOT1/fanout            Y:U1780 Y:U1782 
+-U1776/NOT1/fanin             A:U1724 
+-U1776/NOT1/fanout            Y:U1777 
+-U1777/NOR2/fanin             A:U1776 B:U1722 
+-U1777/NOR2/fanout            Y:U1778 
+-U1778/NAND2/fanin            A:U1777 B:U1723 
+-U1778/NAND2/fanout           Y:U1779 Y:U1781 
+-U1779/NAND2/fanin            A:U1726 B:U1778 
+-U1779/NAND2/fanout           Y:U1780 
+-U1780/NAND2/fanin            A:U1775 B:U1779 
+-U1780/NAND2/fanout           Y:U1784 
+-U1781/NOT1/fanin             A:U1778 
+-U1781/NOT1/fanout            Y:U1782 
+-U1782/NOR2/fanin             A:U1775 B:U1781 
+-U1782/NOR2/fanout            Y:U1783 
+-U1783/NAND2/fanin            A:U1782 B:U1726 
+-U1783/NAND2/fanout           Y:U1784 Y:U1797 
+-U1784/NAND2/fanin            A:U1780 B:U1783 
+-U1784/NAND2/fanout           Y:U1785 Y:U1832 
+-U1785/NOT1/fanin             A:U1784 
+-U1785/NOT1/fanout            Y:U1796 
+-U1786/NAND2/fanin            A:U1262 B:U1461 
+-U1786/NAND2/fanout           Y:U1795 
+-U1787/NAND2/fanin            A:b5 B:a3 
+-U1787/NAND2/fanout           Y:U1788 Y:U1818 
+-U1788/NOT1/fanin             A:U1787 
+-U1788/NOT1/fanout            Y:U1794 
+-U1789/NAND2/fanin            A:b6 B:a2 
+-U1789/NAND2/fanout           Y:U1790 Y:U1792 
+-U1790/NOT1/fanin             A:U1789 
+-U1790/NOT1/fanout            Y:U1791 
+-U1791/NAND2/fanin            A:U1790 B:U1253 
+-U1791/NAND2/fanout           Y:U1793 
+-U1792/NAND2/fanin            A:U1254 B:U1789 
+-U1792/NAND2/fanout           Y:U1793 
+-U1793/NAND2/fanin            A:U1791 B:U1792 
+-U1793/NAND2/fanout           Y:U1794 Y:U1817 
+-U1794/NAND2/fanin            A:U1788 B:U1793 
+-U1794/NAND2/fanout           Y:U1795 Y:U1819 
+-U1795/NAND2/fanin            A:U1786 B:U1794 
+-U1795/NAND2/fanout           Y:U1796 Y:U1831 
+-U1796/NAND2/fanin            A:U1785 B:U1795 
+-U1796/NAND2/fanout           Y:U1797 Y:U1833 
+-U1797/NAND2/fanin            A:U1796 B:U1783 
+-U1797/NAND2/fanout           Y:U1798 Y:U1801 
+-U1798/NAND2/fanin            A:U1762 B:U1797 
+-U1798/NAND2/fanout           Y:U1799 Y:U1803 
+-U1799/NAND2/fanin            A:U1798 B:U1760 
+-U1799/NAND2/fanout           Y:U1800 Y:U2013 Y:U2014 
+-U1800/NAND2/fanin            A:U1748 B:U1799 
+-U1800/NAND2/fanout           Y:U2018 
+-U1801/NOT1/fanin             A:U1797 
+-U1801/NOT1/fanout            Y:U1802 
+-U1802/NAND2/fanin            A:U1801 B:U1761 
+-U1802/NAND2/fanout           Y:U1803 
+-U1803/NAND2/fanin            A:U1802 B:U1798 
+-U1803/NAND2/fanout           Y:U1804 Y:U1839 
+-U1804/NOT1/fanin             A:U1803 
+-U1804/NOT1/fanout            Y:U1837 
+-U1805/NOT1/fanin             A:U1673 
+-U1805/NOT1/fanout            Y:U1806 
+-U1806/NAND2/fanin            A:U1805 B:U1667 
+-U1806/NAND2/fanout           Y:U1807 
+-U1807/NAND2/fanin            A:U1806 B:U1674 
+-U1807/NAND2/fanout           Y:U1808 Y:U1828 
+-U1808/NOT1/fanin             A:U1807 
+-U1808/NOT1/fanout            Y:U1826 
+-U1809/NOT1/fanin             A:U1772 
+-U1809/NOT1/fanout            Y:U1810 
+-U1810/NAND2/fanin            A:U1809 B:U1768 
+-U1810/NAND2/fanout           Y:U1811 
+-U1811/NAND2/fanin            A:U1810 B:U1773 
+-U1811/NAND2/fanout           Y:U1812 Y:U1822 
+-U1812/NOT1/fanin             A:U1811 
+-U1812/NOT1/fanout            Y:U1816 Y:U1821 
+-U1813/NOR2/fanin             A:U1604 B:U1197 
+-U1813/NOR2/fanout            Y:U1814 
+-U1814/NAND2/fanin            A:U1813 B:U1663 
+-U1814/NAND2/fanout           Y:U1815 Y:U1821 
+-U1815/NOT1/fanin             A:U1814 
+-U1815/NOT1/fanout            Y:U1816 Y:U1822 
+-U1816/NAND2/fanin            A:U1812 B:U1815 
+-U1816/NAND2/fanout           Y:U1825 
+-U1817/NOT1/fanin             A:U1793 
+-U1817/NOT1/fanout            Y:U1818 
+-U1818/NAND2/fanin            A:U1817 B:U1787 
+-U1818/NAND2/fanout           Y:U1819 
+-U1819/NAND2/fanin            A:U1818 B:U1794 
+-U1819/NAND2/fanout           Y:U1820 Y:U1877 
+-U1820/NOT1/fanin             A:U1819 
+-U1820/NOT1/fanout            Y:U1824 
+-U1821/NAND2/fanin            A:U1812 B:U1814 
+-U1821/NAND2/fanout           Y:U1823 
+-U1822/NAND2/fanin            A:U1815 B:U1811 
+-U1822/NAND2/fanout           Y:U1823 
+-U1823/NAND2/fanin            A:U1821 B:U1822 
+-U1823/NAND2/fanout           Y:U1824 Y:U1876 
+-U1824/NAND2/fanin            A:U1820 B:U1823 
+-U1824/NAND2/fanout           Y:U1145 Y:U1825 Y:U1878 
+-U1825/NAND2/fanin            A:U1816 B:U1824 
+-U1825/NAND2/fanout           Y:U1826 Y:U1827 
+-U1826/NAND2/fanin            A:U1808 B:U1825 
+-U1826/NAND2/fanout           Y:U1829 Y:U1836 
+-U1827/NOT1/fanin             A:U1825 
+-U1827/NOT1/fanout            Y:U1828 
+-U1828/NAND2/fanin            A:U1827 B:U1807 
+-U1828/NAND2/fanout           Y:U1829 
+-U1829/NAND2/fanin            A:U1826 B:U1828 
+-U1829/NAND2/fanout           Y:U1830 Y:U1843 
+-U1830/NOT1/fanin             A:U1829 
+-U1830/NOT1/fanout            Y:U1835 Y:U1842 
+-U1831/NOT1/fanin             A:U1795 
+-U1831/NOT1/fanout            Y:U1832 
+-U1832/NAND2/fanin            A:U1831 B:U1784 
+-U1832/NAND2/fanout           Y:U1833 
+-U1833/NAND2/fanin            A:U1832 B:U1796 
+-U1833/NAND2/fanout           Y:U1834 Y:U1842 
+-U1834/NOT1/fanin             A:U1833 
+-U1834/NOT1/fanout            Y:U1835 Y:U1843 
+-U1835/NAND2/fanin            A:U1830 B:U1834 
+-U1835/NAND2/fanout           Y:U1836 
+-U1836/NAND2/fanin            A:U1835 B:U1826 
+-U1836/NAND2/fanout           Y:U1837 Y:U1838 
+-U1837/NAND2/fanin            A:U1804 B:U1836 
+-U1837/NAND2/fanout           Y:U1840 Y:U2011 
+-U1838/NOT1/fanin             A:U1836 
+-U1838/NOT1/fanout            Y:U1839 
+-U1839/NAND2/fanin            A:U1838 B:U1803 
+-U1839/NAND2/fanout           Y:U1840 
+-U1840/NAND2/fanin            A:U1837 B:U1839 
+-U1840/NAND2/fanout           Y:U1841 
+-U1841/NOT1/fanin             A:U1840 
+-U1841/NOT1/fanout            Y:U2010 Y:U2079 
+-U1842/NAND2/fanin            A:U1830 B:U1833 
+-U1842/NAND2/fanout           Y:U1844 
+-U1843/NAND2/fanin            A:U1834 B:U1829 
+-U1843/NAND2/fanout           Y:U1844 
+-U1844/NAND2/fanin            A:U1842 B:U1843 
+-U1844/NAND2/fanout           Y:U1886 Y:U2003 Y:U2006 
+-U1845/NAND2/fanin            A:b5 B:a2 
+-U1845/NAND2/fanout           Y:U1846 Y:U1848 
+-U1846/NOT1/fanin             A:U1845 
+-U1846/NOT1/fanout            Y:U1847 Y:U1854 
+-U1847/NAND2/fanin            A:U1846 B:U1385 
+-U1847/NAND2/fanout           Y:U1849 
+-U1848/NAND2/fanin            A:U1386 B:U1845 
+-U1848/NAND2/fanout           Y:U1849 
+-U1849/NAND2/fanin            A:U1847 B:U1848 
+-U1849/NAND2/fanout           Y:U1853 Y:U1891 Y:U1894 
+-U1850/NAND2/fanin            A:U1660 B:U1661 
+-U1850/NAND2/fanout           Y:U1852 
+-U1851/NAND2/fanin            A:U1662 B:U1659 
+-U1851/NAND2/fanout           Y:U1852 
+-U1852/NAND2/fanin            A:U1850 B:U1851 
+-U1852/NAND2/fanout           Y:U1853 Y:U1892 Y:U1893 
+-U1853/NAND2/fanin            A:U1849 B:U1852 
+-U1853/NAND2/fanout           Y:U1855 
+-U1854/NAND2/fanin            A:U1846 B:U1386 
+-U1854/NAND2/fanout           Y:U1855 
+-U1855/NAND2/fanin            A:U1853 B:U1854 
+-U1855/NAND2/fanout           Y:U1875 Y:U1879 Y:U1882 
+-U1856/NAND2/fanin            A:U1262 B:U1509 
+-U1856/NAND2/fanout           Y:U1874 
+-U1857/NAND2/fanin            A:b2 B:a1 
+-U1857/NAND2/fanout           Y:U1858 Y:U1927 Y:U1943 Y:U2106 
+-U1858/NOT1/fanin             A:U1857 
+-U1858/NOT1/fanout            Y:U1859 Y:U2107 
+-U1859/NAND2/fanin            A:U1386 B:U1858 
+-U1859/NAND2/fanout           Y:U1860 Y:U1929 
+-U1860/NOT1/fanin             A:U1859 
+-U1860/NOT1/fanout            Y:U1863 
+-U1861/NAND2/fanin            A:a4 B:b2 
+-U1861/NAND2/fanout           Y:U1862 
+-U1862/NOT1/fanin             A:U1861 
+-U1862/NOT1/fanout            Y:U1863 Y:U1927 Y:U1929 
+-U1863/NAND2/fanin            A:U1860 B:U1862 
+-U1863/NAND2/fanout           Y:U1864 Y:U1908 
+-U1864/NOT1/fanin             A:U1863 
+-U1864/NOT1/fanout            Y:U1873 
+-U1865/NAND2/fanin            A:b6 B:a1 
+-U1865/NAND2/fanout           Y:U1866 
+-U1866/NOT1/fanin             A:U1865 
+-U1866/NOT1/fanout            Y:U1868 Y:U1871 
+-U1867/NOT1/fanin             A:a4 
+-U1867/NOT1/fanout            Y:U1868 
+-U1868/NOR2/fanin             A:U1866 B:U1867 
+-U1868/NOR2/fanout            Y:U1869 
+-U1869/NAND2/fanin            A:U1868 B:b3 
+-U1869/NAND2/fanout           Y:U1872 
+-U1870/NAND2/fanin            A:a4 B:b3 
+-U1870/NAND2/fanout           Y:U1871 
+-U1871/NAND2/fanin            A:U1866 B:U1870 
+-U1871/NAND2/fanout           Y:U1872 
+-U1872/NAND2/fanin            A:U1869 B:U1871 
+-U1872/NAND2/fanout           Y:U1873 Y:U1907 
+-U1873/NAND2/fanin            A:U1864 B:U1872 
+-U1873/NAND2/fanout           Y:U1874 Y:U1909 
+-U1874/NAND2/fanin            A:U1856 B:U1873 
+-U1874/NAND2/fanout           Y:U1875 Y:U1880 Y:U1881 
+-U1875/NAND2/fanin            A:U1855 B:U1874 
+-U1875/NAND2/fanout           Y:U1885 
+-U1876/NOT1/fanin             A:U1823 
+-U1876/NOT1/fanout            Y:U1877 
+-U1877/NAND2/fanin            A:U1876 B:U1819 
+-U1877/NAND2/fanout           Y:U1878 Y:U1884 
+-U1878/NAND2/fanin            A:U1824 B:U1877 
+-U1878/NAND2/fanout           Y:U1888 
+-U1879/NOT1/fanin             A:U1855 
+-U1879/NOT1/fanout            Y:U1880 
+-U1880/NAND2/fanin            A:U1879 B:U1874 
+-U1880/NAND2/fanout           Y:U1883 
+-U1881/NOT1/fanin             A:U1874 
+-U1881/NOT1/fanout            Y:U1882 
+-U1882/NAND2/fanin            A:U1881 B:U1855 
+-U1882/NAND2/fanout           Y:U1883 
+-U1883/NAND2/fanin            A:U1880 B:U1882 
+-U1883/NAND2/fanout           Y:U1145 Y:U1887 
+-U1884/NAND2/fanin            A:U1146 B:U1877 
+-U1884/NAND2/fanout           Y:U1885 Y:U1889 
+-U1885/NAND2/fanin            A:U1875 B:U1884 
+-U1885/NAND2/fanout           Y:U1886 Y:U2004 Y:U2005 
+-U1886/NAND2/fanin            A:U1844 B:U1885 
+-U1886/NAND2/fanout           Y:U2009 
+-U1887/NOT1/fanin             A:U1883 
+-U1887/NOT1/fanout            Y:U1888 
+-U1888/NAND2/fanin            A:U1887 B:U1878 
+-U1888/NAND2/fanout           Y:U1889 
+-U1889/NAND2/fanin            A:U1888 B:U1884 
+-U1889/NAND2/fanout           Y:U1890 Y:U1920 
+-U1890/NOT1/fanin             A:U1889 
+-U1890/NOT1/fanout            Y:U1918 
+-U1891/NOT1/fanin             A:U1849 
+-U1891/NOT1/fanout            Y:U1892 
+-U1892/NAND2/fanin            A:U1891 B:U1852 
+-U1892/NAND2/fanout           Y:U1895 
+-U1893/NOT1/fanin             A:U1852 
+-U1893/NOT1/fanout            Y:U1894 
+-U1894/NAND2/fanin            A:U1893 B:U1849 
+-U1894/NAND2/fanout           Y:U1895 
+-U1895/NAND2/fanin            A:U1892 B:U1894 
+-U1895/NAND2/fanout           Y:U1906 Y:U1911 Y:U1914 
+-U1896/NAND2/fanin            A:a3 B:b1 
+-U1896/NAND2/fanout           Y:U1897 Y:U1977 
+-U1897/NOT1/fanin             A:U1896 
+-U1897/NOT1/fanout            Y:U1898 Y:U1978 
+-U1898/NAND2/fanin            A:U1766 B:U1897 
+-U1898/NAND2/fanout           Y:U1905 
+-U1899/NAND2/fanin            A:a5 B:b1 
+-U1899/NAND2/fanout           Y:U1900 Y:U1901 
+-U1900/NAND2/fanin            A:U1273 B:U1899 
+-U1900/NAND2/fanout           Y:U1903 
+-U1901/NOT1/fanin             A:U1899 
+-U1901/NOT1/fanout            Y:U1902 
+-U1902/NAND2/fanin            A:U1901 B:U1272 
+-U1902/NAND2/fanout           Y:U1903 
+-U1903/NAND2/fanin            A:U1900 B:U1902 
+-U1903/NAND2/fanout           Y:U1904 Y:U1958 
+-U1904/NAND2/fanin            A:U1461 B:U1903 
+-U1904/NAND2/fanout           Y:U1905 Y:U1960 
+-U1905/NAND2/fanin            A:U1898 B:U1904 
+-U1905/NAND2/fanout           Y:U1906 Y:U1912 Y:U1913 
+-U1906/NAND2/fanin            A:U1895 B:U1905 
+-U1906/NAND2/fanout           Y:U1917 
+-U1907/NOT1/fanin             A:U1872 
+-U1907/NOT1/fanout            Y:U1908 
+-U1908/NAND2/fanin            A:U1907 B:U1863 
+-U1908/NAND2/fanout           Y:U1909 
+-U1909/NAND2/fanin            A:U1873 B:U1908 
+-U1909/NAND2/fanout           Y:U1910 Y:U1924 
+-U1910/NOT1/fanin             A:U1909 
+-U1910/NOT1/fanout            Y:U1916 
+-U1911/NOT1/fanin             A:U1895 
+-U1911/NOT1/fanout            Y:U1912 
+-U1912/NAND2/fanin            A:U1911 B:U1905 
+-U1912/NAND2/fanout           Y:U1915 
+-U1913/NOT1/fanin             A:U1905 
+-U1913/NOT1/fanout            Y:U1914 
+-U1914/NAND2/fanin            A:U1913 B:U1895 
+-U1914/NAND2/fanout           Y:U1915 
+-U1915/NAND2/fanin            A:U1912 B:U1914 
+-U1915/NAND2/fanout           Y:U1916 Y:U1923 
+-U1916/NAND2/fanin            A:U1910 B:U1915 
+-U1916/NAND2/fanout           Y:U1917 Y:U1925 
+-U1917/NAND2/fanin            A:U1906 B:U1916 
+-U1917/NAND2/fanout           Y:U1918 Y:U1919 
+-U1918/NAND2/fanin            A:U1890 B:U1917 
+-U1918/NAND2/fanout           Y:U1921 Y:U2002 
+-U1919/NOT1/fanin             A:U1917 
+-U1919/NOT1/fanout            Y:U1920 
+-U1920/NAND2/fanin            A:U1919 B:U1889 
+-U1920/NAND2/fanout           Y:U1921 
+-U1921/NAND2/fanin            A:U1918 B:U1920 
+-U1921/NAND2/fanout           Y:U1922 
+-U1922/NOT1/fanin             A:U1921 
+-U1922/NOT1/fanout            Y:U2001 Y:U2087 
+-U1923/NOT1/fanin             A:U1915 
+-U1923/NOT1/fanout            Y:U1924 
+-U1924/NAND2/fanin            A:U1923 B:U1909 
+-U1924/NAND2/fanout           Y:U1925 
+-U1925/NAND2/fanin            A:U1924 B:U1916 
+-U1925/NAND2/fanout           Y:U1926 Y:U1951 
+-U1926/NOT1/fanin             A:U1925 
+-U1926/NOT1/fanout            Y:U1949 
+-U1927/NOR2/fanin             A:U1862 B:U1857 
+-U1927/NOR2/fanout            Y:U1928 
+-U1928/NAND2/fanin            A:U1927 B:U1386 
+-U1928/NAND2/fanout           Y:U1930 
+-U1929/NAND2/fanin            A:U1862 B:U1859 
+-U1929/NAND2/fanout           Y:U1930 
+-U1930/NAND2/fanin            A:U1928 B:U1929 
+-U1930/NAND2/fanout           Y:U1931 Y:U1935 
+-U1931/NOT1/fanin             A:U1930 
+-U1931/NOT1/fanout            Y:U1933 
+-U1932/NAND2/fanin            A:b5 B:a1 
+-U1932/NAND2/fanout           Y:U1933 Y:U1934 
+-U1933/NAND2/fanin            A:U1931 B:U1932 
+-U1933/NAND2/fanout           Y:U1936 
+-U1934/NOT1/fanin             A:U1932 
+-U1934/NOT1/fanout            Y:U1935 
+-U1935/NAND2/fanin            A:U1934 B:U1930 
+-U1935/NAND2/fanout           Y:U1936 Y:U1948 
+-U1936/NAND2/fanin            A:U1933 B:U1935 
+-U1936/NAND2/fanout           Y:U1937 Y:U1955 
+-U1937/NOT1/fanin             A:U1936 
+-U1937/NOT1/fanout            Y:U1947 
+-U1938/NAND2/fanin            A:a2 B:b2 
+-U1938/NAND2/fanout           Y:U1939 Y:U1974 
+-U1939/NOT1/fanin             A:U1938 
+-U1939/NOT1/fanout            Y:U1940 Y:U1973 Y:U1983 
+-U1940/NAND2/fanin            A:U1939 B:U1509 
+-U1940/NAND2/fanout           Y:U1946 
+-U1941/NAND2/fanin            A:a4 B:b1 
+-U1941/NAND2/fanout           Y:U1942 Y:U1970 
+-U1942/NOT1/fanin             A:U1941 
+-U1942/NOT1/fanout            Y:U1945 Y:U1969 
+-U1943/NAND2/fanin            A:U1140 B:U1857 
+-U1943/NAND2/fanout           Y:U1944 Y:U1969 
+-U1944/NOT1/fanin             A:U1943 
+-U1944/NOT1/fanout            Y:U1945 Y:U1970 
+-U1945/NAND2/fanin            A:U1942 B:U1944 
+-U1945/NAND2/fanout           Y:U1946 
+-U1946/NAND2/fanin            A:U1940 B:U1945 
+-U1946/NAND2/fanout           Y:U1947 Y:U1954 
+-U1947/NAND2/fanin            A:U1937 B:U1946 
+-U1947/NAND2/fanout           Y:U1948 Y:U1956 
+-U1948/NAND2/fanin            A:U1947 B:U1935 
+-U1948/NAND2/fanout           Y:U1949 Y:U1950 
+-U1949/NAND2/fanin            A:U1926 B:U1948 
+-U1949/NAND2/fanout           Y:U1952 Y:U2000 
+-U1950/NOT1/fanin             A:U1948 
+-U1950/NOT1/fanout            Y:U1951 
+-U1951/NAND2/fanin            A:U1950 B:U1925 
+-U1951/NAND2/fanout           Y:U1952 
+-U1952/NAND2/fanin            A:U1949 B:U1951 
+-U1952/NAND2/fanout           Y:U1953 
+-U1953/NOT1/fanin             A:U1952 
+-U1953/NOT1/fanout            Y:U1999 Y:U2090 
+-U1954/NOT1/fanin             A:U1946 
+-U1954/NOT1/fanout            Y:U1955 
+-U1955/NAND2/fanin            A:U1954 B:U1936 
+-U1955/NAND2/fanout           Y:U1956 
+-U1956/NAND2/fanin            A:U1955 B:U1947 
+-U1956/NAND2/fanout           Y:U1957 Y:U1995 
+-U1957/NOT1/fanin             A:U1956 
+-U1957/NOT1/fanout            Y:U1962 Y:U1994 
+-U1958/NOT1/fanin             A:U1903 
+-U1958/NOT1/fanout            Y:U1959 
+-U1959/NAND2/fanin            A:U1460 B:U1958 
+-U1959/NAND2/fanout           Y:U1960 
+-U1960/NAND2/fanin            A:U1959 B:U1904 
+-U1960/NAND2/fanout           Y:U1961 Y:U1994 
+-U1961/NOT1/fanin             A:U1960 
+-U1961/NOT1/fanout            Y:U1962 Y:U1995 
+-U1962/NAND2/fanin            A:U1957 B:U1961 
+-U1962/NAND2/fanout           Y:U1998 
+-U1963/NAND2/fanin            A:a3 B:b2 
+-U1963/NAND2/fanout           Y:U1964 Y:U1967 
+-U1964/NOT1/fanin             A:U1963 
+-U1964/NOT1/fanout            Y:U1965 
+-U1965/NAND2/fanin            A:U682 B:U1964 
+-U1965/NAND2/fanout           Y:U1968 
+-U1966/NOT1/fanin             A:U682 
+-U1966/NOT1/fanout            Y:U1967 
+-U1967/NAND2/fanin            A:U1963 B:U1966 
+-U1967/NAND2/fanout           Y:U1968 
+-U1968/NAND2/fanin            A:U1965 B:U1967 
+-U1968/NAND2/fanout           Y:U1972 Y:U1987 Y:U1990 
+-U1969/NAND2/fanin            A:U1942 B:U1943 
+-U1969/NAND2/fanout           Y:U1971 
+-U1970/NAND2/fanin            A:U1944 B:U1941 
+-U1970/NAND2/fanout           Y:U1971 
+-U1971/NAND2/fanin            A:U1969 B:U1970 
+-U1971/NAND2/fanout           Y:U1972 Y:U1988 Y:U1989 
+-U1972/NAND2/fanin            A:U1968 B:U1971 
+-U1972/NAND2/fanout           Y:U1993 
+-U1973/NAND2/fanin            A:U1939 B:U1508 
+-U1973/NAND2/fanout           Y:U1975 
+-U1974/NAND2/fanin            A:U1509 B:U1938 
+-U1974/NAND2/fanout           Y:U1975 
+-U1975/NAND2/fanin            A:U1973 B:U1974 
+-U1975/NAND2/fanout           Y:U1976 Y:U1978 
+-U1976/NOT1/fanin             A:U1975 
+-U1976/NOT1/fanout            Y:U1977 
+-U1977/NAND2/fanin            A:U1976 B:U1896 
+-U1977/NAND2/fanout           Y:U1979 
+-U1978/NAND2/fanin            A:U1897 B:U1975 
+-U1978/NAND2/fanout           Y:U1979 Y:U1986 
+-U1979/NAND2/fanin            A:U1977 B:U1978 
+-U1979/NAND2/fanout           Y:U1980 Y:U2102 
+-U1980/NOT1/fanin             A:U1979 
+-U1980/NOT1/fanout            Y:U1985 Y:U2103 
+-U1981/NAND2/fanin            A:a1 B:b1 
+-U1981/NAND2/fanout           Y:U1982 
+-U1982/NOT1/fanin             A:U1981 
+-U1982/NOT1/fanout            Y:product0 Y:U1983 
+-U1983/NAND2/fanin            A:U1982 B:U1939 
+-U1983/NAND2/fanout           Y:U1984 Y:U2103 
+-U1984/NOT1/fanin             A:U1983 
+-U1984/NOT1/fanout            Y:U1985 Y:U2102 
+-U1985/NAND2/fanin            A:U1980 B:U1984 
+-U1985/NAND2/fanout           Y:U1986 
+-U1986/NAND2/fanin            A:U1985 B:U1978 
+-U1986/NAND2/fanout           Y:U1992 Y:U2097 Y:U2100 
+-U1987/NOT1/fanin             A:U1968 
+-U1987/NOT1/fanout            Y:U1988 
+-U1988/NAND2/fanin            A:U1987 B:U1971 
+-U1988/NAND2/fanout           Y:U1991 
+-U1989/NOT1/fanin             A:U1971 
+-U1989/NOT1/fanout            Y:U1990 
+-U1990/NAND2/fanin            A:U1989 B:U1968 
+-U1990/NAND2/fanout           Y:U1991 
+-U1991/NAND2/fanin            A:U1988 B:U1990 
+-U1991/NAND2/fanout           Y:U1992 Y:U2098 Y:U2099 
+-U1992/NAND2/fanin            A:U1986 B:U1991 
+-U1992/NAND2/fanout           Y:U1993 
+-U1993/NAND2/fanin            A:U1972 B:U1992 
+-U1993/NAND2/fanout           Y:U1997 Y:U2092 Y:U2095 
+-U1994/NAND2/fanin            A:U1957 B:U1960 
+-U1994/NAND2/fanout           Y:U1996 
+-U1995/NAND2/fanin            A:U1961 B:U1956 
+-U1995/NAND2/fanout           Y:U1996 
+-U1996/NAND2/fanin            A:U1994 B:U1995 
+-U1996/NAND2/fanout           Y:U1997 Y:U2093 Y:U2094 
+-U1997/NAND2/fanin            A:U1993 B:U1996 
+-U1997/NAND2/fanout           Y:U1998 
+-U1998/NAND2/fanin            A:U1962 B:U1997 
+-U1998/NAND2/fanout           Y:U1999 Y:U2090 
+-U1999/NAND2/fanin            A:U1953 B:U1998 
+-U1999/NAND2/fanout           Y:U2000 Y:U2089 
+-U2000/NAND2/fanin            A:U1999 B:U1949 
+-U2000/NAND2/fanout           Y:U2001 Y:U2087 
+-U2001/NAND2/fanin            A:U1922 B:U2000 
+-U2001/NAND2/fanout           Y:U2002 Y:U2086 
+-U2002/NAND2/fanin            A:U2001 B:U1918 
+-U2002/NAND2/fanout           Y:U2008 Y:U2081 Y:U2084 
+-U2003/NOT1/fanin             A:U1844 
+-U2003/NOT1/fanout            Y:U2004 
+-U2004/NAND2/fanin            A:U2003 B:U1885 
+-U2004/NAND2/fanout           Y:U2007 
+-U2005/NOT1/fanin             A:U1885 
+-U2005/NOT1/fanout            Y:U2006 
+-U2006/NAND2/fanin            A:U2005 B:U1844 
+-U2006/NAND2/fanout           Y:U2007 
+-U2007/NAND2/fanin            A:U2004 B:U2006 
+-U2007/NAND2/fanout           Y:U2008 Y:U2082 Y:U2083 
+-U2008/NAND2/fanin            A:U2002 B:U2007 
+-U2008/NAND2/fanout           Y:U2009 
+-U2009/NAND2/fanin            A:U1886 B:U2008 
+-U2009/NAND2/fanout           Y:U2010 Y:U2079 
+-U2010/NAND2/fanin            A:U1841 B:U2009 
+-U2010/NAND2/fanout           Y:U2011 Y:U2078 
+-U2011/NAND2/fanin            A:U2010 B:U1837 
+-U2011/NAND2/fanout           Y:U2017 Y:U2073 Y:U2076 
+-U2012/NOT1/fanin             A:U1748 
+-U2012/NOT1/fanout            Y:U2013 
+-U2013/NAND2/fanin            A:U2012 B:U1799 
+-U2013/NAND2/fanout           Y:U2016 
+-U2014/NOT1/fanin             A:U1799 
+-U2014/NOT1/fanout            Y:U2015 
+-U2015/NAND2/fanin            A:U2014 B:U1748 
+-U2015/NAND2/fanout           Y:U2016 
+-U2016/NAND2/fanin            A:U2013 B:U2015 
+-U2016/NAND2/fanout           Y:U2017 Y:U2074 Y:U2075 
+-U2017/NAND2/fanin            A:U2011 B:U2016 
+-U2017/NAND2/fanout           Y:U2018 
+-U2018/NAND2/fanin            A:U1800 B:U2017 
+-U2018/NAND2/fanout           Y:U2019 Y:U2071 
+-U2019/NAND2/fanin            A:U1745 B:U2018 
+-U2019/NAND2/fanout           Y:U2020 Y:U2070 
+-U2020/NAND2/fanin            A:U2019 B:U1741 
+-U2020/NAND2/fanout           Y:U2021 Y:U2068 
+-U2021/NAND2/fanin            A:U1695 B:U2020 
+-U2021/NAND2/fanout           Y:U2022 Y:U2067 
+-U2022/NAND2/fanin            A:U2021 B:U1691 
+-U2022/NAND2/fanout           Y:U2028 Y:U2062 Y:U2065 
+-U2023/NOT1/fanin             A:U1506 
+-U2023/NOT1/fanout            Y:U2024 
+-U2024/NAND2/fanin            A:U2023 B:U1577 
+-U2024/NAND2/fanout           Y:U2027 
+-U2025/NOT1/fanin             A:U1577 
+-U2025/NOT1/fanout            Y:U2026 
+-U2026/NAND2/fanin            A:U2025 B:U1506 
+-U2026/NAND2/fanout           Y:U2027 
+-U2027/NAND2/fanin            A:U2024 B:U2026 
+-U2027/NAND2/fanout           Y:U2028 Y:U2063 Y:U2064 
+-U2028/NAND2/fanin            A:U2022 B:U2027 
+-U2028/NAND2/fanout           Y:U2029 
+-U2029/NAND2/fanin            A:U1578 B:U2028 
+-U2029/NAND2/fanout           Y:U2035 Y:U2057 Y:U2060 
+-U2030/NOT1/fanin             A:U1434 
+-U2030/NOT1/fanout            Y:U2031 
+-U2031/NAND2/fanin            A:U2030 B:U1500 
+-U2031/NAND2/fanout           Y:U2034 
+-U2032/NOT1/fanin             A:U1500 
+-U2032/NOT1/fanout            Y:U2033 
+-U2033/NAND2/fanin            A:U2032 B:U1434 
+-U2033/NAND2/fanout           Y:U2034 
+-U2034/NAND2/fanin            A:U2031 B:U2033 
+-U2034/NAND2/fanout           Y:U2035 Y:U2058 Y:U2059 
+-U2035/NAND2/fanin            A:U2029 B:U2034 
+-U2035/NAND2/fanout           Y:U2036 
+-U2036/NAND2/fanin            A:U1501 B:U2035 
+-U2036/NAND2/fanout           Y:U2037 Y:U2055 
+-U2037/NAND2/fanin            A:U1429 B:U2036 
+-U2037/NAND2/fanout           Y:U2038 Y:U2054 
+-U2038/NAND2/fanin            A:U1423 B:U2037 
+-U2038/NAND2/fanout           Y:U2039 Y:U2051 
+-U2039/NAND2/fanin            A:U1362 B:U2038 
+-U2039/NAND2/fanout           Y:U2042 Y:U2046 Y:U2052 
+-U2040/NOT1/fanin             A:U1347 
+-U2040/NOT1/fanout            Y:U2041 
+-U2041/NAND2/fanin            A:U1345 B:U2040 
+-U2041/NAND2/fanout           Y:U2042 Y:U2044 
+-U2042/NAND2/fanin            A:U2039 B:U2041 
+-U2042/NAND2/fanout           Y:U1091 Y:U1092 Y:U1103 Y:U2047 
+-U2043/NOR2/fanin             A:U1084 B:U1083 
+-U2043/NOR2/fanout            Y:product17 
+-U2044/NOT1/fanin             A:U2041 
+-U2044/NOT1/fanout            Y:U2045 Y:U2052 
+-U2045/NOR2/fanin             A:U2044 B:U1361 
+-U2045/NOR2/fanout            Y:U2046 
+-U2046/NAND2/fanin            A:U2045 B:U2039 
+-U2046/NAND2/fanout           Y:U2048 
+-U2047/NAND2/fanin            A:U2042 B:U1361 
+-U2047/NAND2/fanout           Y:U2048 
+-U2048/NAND2/fanin            A:U2046 B:U2047 
+-U2048/NAND2/fanout           Y:product16 
+-U2049/NOT1/fanin             A:U1362 
+-U2049/NOT1/fanout            Y:U2050 
+-U2050/NOR2/fanin             A:U338 B:U2049 
+-U2050/NOR2/fanout            Y:U2051 
+-U2051/NOR2/fanin             A:U2050 B:U2038 
+-U2051/NOR2/fanout            Y:U2053 
+-U2052/NOR2/fanin             A:U2044 B:U2039 
+-U2052/NOR2/fanout            Y:U2053 
+-U2053/NOR2/fanin             A:U2051 B:U2052 
+-U2053/NOR2/fanout            Y:product15 
+-U2054/NOT1/fanin             A:U2037 
+-U2054/NOT1/fanout            Y:U2056 
+-U2055/NOR2/fanin             A:U1429 B:U2036 
+-U2055/NOR2/fanout            Y:U2056 
+-U2056/NOR2/fanin             A:U2054 B:U2055 
+-U2056/NOR2/fanout            Y:product14 
+-U2057/NOT1/fanin             A:U2029 
+-U2057/NOT1/fanout            Y:U2058 
+-U2058/NAND2/fanin            A:U2057 B:U2034 
+-U2058/NAND2/fanout           Y:U2061 
+-U2059/NOT1/fanin             A:U2034 
+-U2059/NOT1/fanout            Y:U2060 
+-U2060/NAND2/fanin            A:U2059 B:U2029 
+-U2060/NAND2/fanout           Y:U2061 
+-U2061/NAND2/fanin            A:U2058 B:U2060 
+-U2061/NAND2/fanout           Y:product13 
+-U2062/NOT1/fanin             A:U2022 
+-U2062/NOT1/fanout            Y:U2063 
+-U2063/NAND2/fanin            A:U2062 B:U2027 
+-U2063/NAND2/fanout           Y:U2066 
+-U2064/NOT1/fanin             A:U2027 
+-U2064/NOT1/fanout            Y:U2065 
+-U2065/NAND2/fanin            A:U2064 B:U2022 
+-U2065/NAND2/fanout           Y:U2066 
+-U2066/NAND2/fanin            A:U2063 B:U2065 
+-U2066/NAND2/fanout           Y:product12 
+-U2067/NOT1/fanin             A:U2021 
+-U2067/NOT1/fanout            Y:U2069 
+-U2068/NOR2/fanin             A:U1695 B:U2020 
+-U2068/NOR2/fanout            Y:U2069 
+-U2069/NOR2/fanin             A:U2067 B:U2068 
+-U2069/NOR2/fanout            Y:product11 
+-U2070/NOT1/fanin             A:U2019 
+-U2070/NOT1/fanout            Y:U2072 
+-U2071/NOR2/fanin             A:U1745 B:U2018 
+-U2071/NOR2/fanout            Y:U2072 
+-U2072/NOR2/fanin             A:U2070 B:U2071 
+-U2072/NOR2/fanout            Y:product10 
+-U2073/NOT1/fanin             A:U2011 
+-U2073/NOT1/fanout            Y:U2074 
+-U2074/NAND2/fanin            A:U2073 B:U2016 
+-U2074/NAND2/fanout           Y:U2077 
+-U2075/NOT1/fanin             A:U2016 
+-U2075/NOT1/fanout            Y:U2076 
+-U2076/NAND2/fanin            A:U2075 B:U2011 
+-U2076/NAND2/fanout           Y:U2077 
+-U2077/NAND2/fanin            A:U2074 B:U2076 
+-U2077/NAND2/fanout           Y:product9 
+-U2078/NOT1/fanin             A:U2010 
+-U2078/NOT1/fanout            Y:U2080 
+-U2079/NOR2/fanin             A:U1841 B:U2009 
+-U2079/NOR2/fanout            Y:U2080 
+-U2080/NOR2/fanin             A:U2078 B:U2079 
+-U2080/NOR2/fanout            Y:product8 
+-U2081/NOT1/fanin             A:U2002 
+-U2081/NOT1/fanout            Y:U2082 
+-U2082/NAND2/fanin            A:U2081 B:U2007 
+-U2082/NAND2/fanout           Y:U2085 
+-U2083/NOT1/fanin             A:U2007 
+-U2083/NOT1/fanout            Y:U2084 
+-U2084/NAND2/fanin            A:U2083 B:U2002 
+-U2084/NAND2/fanout           Y:U2085 
+-U2085/NAND2/fanin            A:U2082 B:U2084 
+-U2085/NAND2/fanout           Y:product7 
+-U2086/NOT1/fanin             A:U2001 
+-U2086/NOT1/fanout            Y:U2088 
+-U2087/NOR2/fanin             A:U1922 B:U2000 
+-U2087/NOR2/fanout            Y:U2088 
+-U2088/NOR2/fanin             A:U2086 B:U2087 
+-U2088/NOR2/fanout            Y:product6 
+-U2089/NOT1/fanin             A:U1999 
+-U2089/NOT1/fanout            Y:U2091 
+-U2090/NOR2/fanin             A:U1953 B:U1998 
+-U2090/NOR2/fanout            Y:U2091 
+-U2091/NOR2/fanin             A:U2089 B:U2090 
+-U2091/NOR2/fanout            Y:product5 
+-U2092/NOT1/fanin             A:U1993 
+-U2092/NOT1/fanout            Y:U2093 
+-U2093/NAND2/fanin            A:U2092 B:U1996 
+-U2093/NAND2/fanout           Y:U2096 
+-U2094/NOT1/fanin             A:U1996 
+-U2094/NOT1/fanout            Y:U2095 
+-U2095/NAND2/fanin            A:U2094 B:U1993 
+-U2095/NAND2/fanout           Y:U2096 
+-U2096/NAND2/fanin            A:U2093 B:U2095 
+-U2096/NAND2/fanout           Y:product4 
+-U2097/NOT1/fanin             A:U1986 
+-U2097/NOT1/fanout            Y:U2098 
+-U2098/NAND2/fanin            A:U2097 B:U1991 
+-U2098/NAND2/fanout           Y:U2101 
+-U2099/NOT1/fanin             A:U1991 
+-U2099/NOT1/fanout            Y:U2100 
+-U2100/NAND2/fanin            A:U2099 B:U1986 
+-U2100/NAND2/fanout           Y:U2101 
+-U2101/NAND2/fanin            A:U2098 B:U2100 
+-U2101/NAND2/fanout           Y:product3 
+-U2102/NAND2/fanin            A:U1984 B:U1979 
+-U2102/NAND2/fanout           Y:U2104 
+-U2103/NAND2/fanin            A:U1980 B:U1983 
+-U2103/NAND2/fanout           Y:U2104 
+-U2104/NAND2/fanin            A:U2102 B:U2103 
+-U2104/NAND2/fanout           Y:product2 
+-U2105/NOT1/fanin             A:U1071 
+-U2105/NOT1/fanout            Y:U2106 
+-U2106/NAND2/fanin            A:U1857 B:U2105 
+-U2106/NAND2/fanout           Y:U2108 
+-U2107/NAND2/fanin            A:U1071 B:U1858 
+-U2107/NAND2/fanout           Y:U2108 
+-U2108/NAND2/fanin            A:U2106 B:U2107 
+-U2108/NAND2/fanout           Y:product1 
+-product0/PO/fanin            U1982 
+-product1/PO/fanin            U2108 
+-product2/PO/fanin            U2104 
+-product3/PO/fanin            U2101 
+-product4/PO/fanin            U2096 
+-product5/PO/fanin            U2091 
+-product6/PO/fanin            U2088 
+-product7/PO/fanin            U2085 
+-product8/PO/fanin            U2080 
+-product9/PO/fanin            U2077 
+-product10/PO/fanin           U2072 
+-product11/PO/fanin           U2069 
+-product12/PO/fanin           U2066 
+-product13/PO/fanin           U2061 
+-product14/PO/fanin           U2056 
+-product15/PO/fanin           U2053 
+-product16/PO/fanin           U2048 
+-product17/PO/fanin           U2043 
+-product18/PO/fanin           U1138 
+-product19/PO/fanin           U1126 
+-a1/PI/fanout                 U682 U1508 U1517 U1589 U1651 U1768 U1857 U1865 U1932 U1981 
+-a2/PI/fanout                 U1071 U1139 U1181 U1460 U1465 U1621 U1718 U1789 U1845 U1938 
+-a3/PI/fanout                 U1272 U1375 U1385 U1390 U1482 U1601 U1645 U1670 U1787 U1896 U1963 
+-a4/PI/fanout                 U1059 U1203 U1222 U1253 U1261 U1404 U1721 U1861 U1867 U1870 U1941 
+-a5/PI/fanout                 U1168 U1188 U1233 U1266 U1298 U1308 U1659 U1716 U1765 U1899 
+-a6/PI/fanout                 U1175 U1187 U1197 U1217 U1291 U1320 U1463 U1619 U1653 U1661 
+-a7/PI/fanout                 U375 U472 U535 U1147 U1205 U1208 U1260 U1388 U1468 U1511 U1586 U1763 
+-a8/PI/fanout                 U539 U1151 U1190 U1193 U1259 U1286 U1310 U1350 U1393 U1513 U1519 
+-a9/PI/fanout                 U377 U410 U1157 U1161 U1201 U1219 U1228 U1303 U1356 U1359 U1532 
+-a10/PI/fanout                U1133 U1159 U1220 U1296 U1318 U1331 U1348 U1358 U1373 U1534 
+-b1/PI/fanout                 U1071 U1161 U1513 U1534 U1661 U1763 U1896 U1899 U1941 U1981 
+-b2/PI/fanout                 U1159 U1511 U1532 U1604 U1659 U1857 U1861 U1938 U1963 
+-b3/PI/fanout                 U1139 U1157 U1272 U1373 U1508 U1519 U1586 U1653 U1765 U1869 U1870 
+-b4/PI/fanout                 U682 U1147 U1151 U1201 U1220 U1253 U1385 U1393 U1460 U1468 U1619 U1716 
+-b5/PI/fanout                 U1192 U1193 U1219 U1230 U1266 U1296 U1388 U1463 U1541 U1721 U1787 U1845 U1932 
+-b6/PI/fanout                 U539 U1175 U1207 U1208 U1261 U1303 U1308 U1318 U1645 U1672 U1789 U1865 
+-b7/PI/fanout                 U410 U535 U1168 U1187 U1199 U1286 U1313 U1331 U1404 U1601 U1718 U1768 
+-b8/PI/fanout                 U377 U472 U1059 U1188 U1217 U1259 U1348 U1482 U1621 U1651 
+-b9/PI/fanout                 U1203 U1233 U1260 U1291 U1310 U1356 U1358 U1390 U1465 U1589 
+-b10/PI/fanout                U375 U1133 U1181 U1222 U1298 U1320 U1350 U1359 U1375 U1517 

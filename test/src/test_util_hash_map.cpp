@@ -28,7 +28,7 @@ void test_hash_map(void) {
     
     while (fin >> word) {
         words.push_back(word);
-        dict.insert(word, 13);
+        dict.insert_blindly(word, 13);
         ASSERT(dict.size == words.size(), );
     }
 
