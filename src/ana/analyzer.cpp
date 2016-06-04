@@ -7,13 +7,13 @@
 
 #include "minisat_blbd/src/core/Solver.h"
 
-// Calculate arrival time.
+// Calculate maximum arrival time.
 //
 // #### Input
 //
-// - `circuit`
+// - `cir`
 //
-static void calculate_arrival_time(Sta::Cir::Circuit& cir) {
+static void calculate_max_arrival_time(Sta::Cir::Circuit& cir) {
     using Sta::Cir::Gate;
     using Sta::Cir::Module;
 
@@ -66,6 +66,74 @@ static void calculate_arrival_time(Sta::Cir::Circuit& cir) {
                     // Add that fan-out to queue.
                     q.push(fanout);
                 }
+            }
+        }
+    }
+}
+
+// Calculate minimum arrival time.
+//
+// #### Input
+//
+// - `cir`
+//
+static void calculate_min_arrival_time(Sta::Cir::Circuit& cir) {
+    using Sta::Cir::Gate;
+    using Sta::Cir::Module;
+
+    // Assign 0 to all gate's tag.
+    // 0: Not yet visited, not in queue.
+    // 1: In queue, not visited.
+    // 2: Visited, not in queue.
+    //
+    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+        cir.primary_outputs[i]->tag = 0;
+    }
+    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
+        cir.logic_gates[i]->tag = 0;
+    }
+
+    // For all gate inside queue, at least 1 of its fan-in has arrived.
+    // Every gate inside queue has already known min arrival time.
+    // This queue should be sorted according to min arrival time.
+    //
+    std::queue<Gate*> q;
+    
+    // Add primary_inputs into queue.
+    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+        Gate* pi = cir.primary_inputs[i];
+        pi->arrival_time = 0;
+        q.push(pi);
+        pi->tag = 1;
+    }
+
+    // While queue is not empty
+    while (!q.empty()) {
+        Gate* gate = q.front();
+        q.pop();
+        
+        for (size_t i = 0; i < gate->tos.size(); ++i) {
+            Gate* fanout = gate->tos[i];
+            
+            // If fanout is not visited nor in queue
+            if (fanout->tag == 0) {
+                
+                // Assign arrival time to that fan-out.
+                if (fanout->module == Module::PO) {
+                    fanout->arrival_time = gate->arrival_time;
+
+                    // No need to put PO into queue, because PO does
+                    // not have fan-out.
+                    fanout->tag = 2;
+                }
+                else {
+                    fanout->arrival_time = gate->arrival_time + 1;
+
+                    // Add that fan-out to queue.
+                    q.push(fanout);
+                    fanout->tag = 1;
+                }
+
             }
         }
     }
@@ -190,16 +258,16 @@ static bool add_NOT_clause(Minisat::Var A,
     slack -= 1;
 
 #define POP_GATE_1()                       \
+    slack += 1;                            \
     path.pop_back();                       \
-    gate = path.back();                    \
-    slack += 1;
+    gate = path.back();                    
 
 #define POP_GATE_2()                       \
+    slack += 1;                            \
     path.pop_back();                       \
     gate = path.back();                    \
     gA = gate->froms[0];                   \
-    gB = gate->froms[1];                   \
-    slack += 1;
+    gB = gate->froms[1];                   
 
 // Basically the idea is trace from output pins toward input pins. Try
 // every possibility (condition) that make a path become a true path.
@@ -261,6 +329,10 @@ pop_function:
 start_function:
     gate = path.back();
 
+    if (gate->arrival_time > slack) {
+        goto pop_function;
+    }
+
     if (slack == 0 && gate->module != Module::PI) {
         goto pop_function;
     }
@@ -290,60 +362,27 @@ start_function:
         gB = gate->froms[1];
 
     #define MAKE_TRUE_PATH(gA, gB, v0, v1, p1, p2, p3, p4)  \
-        if (gA->arrival_time < gB->arrival_time) {          \
+        if (gate->value == v1) {                            \
             if (gA->value == 2) {                           \
-                if (gate->value == v1) {                    \
-                    ASSIGN(gA, v0)                          \
-                    PUSH_GATE(gA)                           \
-                    CALL_FUNCTION(p1)                       \
-                    POP_GATE_2()                            \
-                    UNASSIGN(gA)                            \
-                }                                           \
+                ASSIGN(gA, v0)                              \
+                PUSH_GATE(gA)                               \
+                CALL_FUNCTION(p1)                           \
+                POP_GATE_2()                                \
+                UNASSIGN(gA)                                \
             }                                               \
         }                                                   \
                                                             \
-        else if (gA->arrival_time > gB->arrival_time) {     \
-            if (gB->value == 2) {                           \
+        else { /* gate->value == 0 */                       \
+            if (gA->value == 2 && gB->value == 2) {         \
+                ASSIGN(gA, v1)                              \
                 ASSIGN(gB, v1)                              \
-                                                            \
-                if (gate->value == v1) {                    \
-                    ASSIGN(gA, v0)                          \
-                }                                           \
-                else { /* gate->value == v0 */              \
-                    ASSIGN(gA, v1)                          \
-                }                                           \
-                                                            \
                 PUSH_GATE(gA)                               \
                 CALL_FUNCTION(p2)                           \
                 POP_GATE_2()                                \
-                UNASSIGN(gA)                                \
                 UNASSIGN(gB)                                \
+                UNASSIGN(gA)                                \
             }                                               \
-        }                                                   \
-                                                            \
-        else { /* Both of them have same arrival time. */   \
-            if (gate->value == v1) {                        \
-                if (gA->value == 2) {                       \
-                    ASSIGN(gA, v0)                          \
-                    PUSH_GATE(gA)                           \
-                    CALL_FUNCTION(p3)                       \
-                    POP_GATE_2()                            \
-                    UNASSIGN(gA)                            \
-                }                                           \
-            }                                               \
-                                                            \
-            else { /* gate->value == v0 */                  \
-                if (gB->value == 2) {                       \
-                    ASSIGN(gB, v1)                          \
-                    ASSIGN(gA, v1)                          \
-                    PUSH_GATE(gA)                           \
-                    CALL_FUNCTION(p4)                       \
-                    POP_GATE_2()                            \
-                    UNASSIGN(gA)                            \
-                    UNASSIGN(gB)                            \
-                }                                           \
-            }                                               \
-        }
+        }                                                   
 
         // Try to make gA become a true path.
         
@@ -367,7 +406,7 @@ start_function:
         // Try to make gB become a true path
 
         // Same logic as above, just swap "gA" and "gB"
-        MAKE_TRUE_PATH(gA, gB, 1, 0, 15, 16, 17, 18)
+        MAKE_TRUE_PATH(gB, gA, 1, 0, 15, 16, 17, 18)
         
     } // else if (gate->module == Module::NOR2)
 
@@ -388,7 +427,7 @@ start_function:
     } // else if (gate->module == Module::NOT1)
 
     else if (gate->module == Module::PI) {
-        if (slack < slack_constraint) {
+        if (slack + 1 < slack_constraint) {
             if (solver.solve(assumptions)) {
                 paths.push_back(path);
 
@@ -430,8 +469,8 @@ int Sta::Ana::find_sensitizable_paths(
     std::vector< std::vector<bool> >& values,
     std::vector<Cir::InputVec>&       input_vecs) {
 
-    // Calculate arrival time.
-    calculate_arrival_time(cir);
+    // Calculate minimum arrival time.
+    calculate_min_arrival_time(cir);
 
     // Initialize gate value to undefined state.
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
