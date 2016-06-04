@@ -75,6 +75,8 @@ void test_find_sensitizable_paths(void) {
         std::cout << "\n";
     }
 
+    cir.clear();
+
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 
