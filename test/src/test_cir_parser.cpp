@@ -6,8 +6,9 @@
 
 #include "sta/src/cir/circuit.h"
 #include "sta/src/cir/parser.h"
+#include "sta/src/cir/writer.h"
+#include "sta/src/cir/compare.h"
 #include "sta/test/src/util/util.h"
-#include "sta/test/src/util/cir_compare.h"
 
 // Helper functions
 
@@ -221,90 +222,14 @@ static void basic_validate(const std::vector<const char*>& files,
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 
-// Print circuit state in the format specified by `cir_compare()`.
-// Please refer to `cir_compare()`.
-//
-// #### Input
-//
-// - cir
-// - filename
-//
-static void print_circuit_state(Sta::Cir::Circuit& cir,
-                                std::ostream& out      ) {
-    using namespace Sta::Cir;
-
-    out << "-circuit_name " << cir.name << "\n"
-        << "-pi_count " << cir.primary_inputs.size() << "\n"
-        << "-po_count " << cir.primary_outputs.size() << "\n"
-        << "-gate_count " << cir.logic_gates.size() << "\n"
-        << "-nand2_input_pin_name " 
-        << cir.modules[Module::NAND2].input_names[0] << " " 
-        << cir.modules[Module::NAND2].input_names[1] << "\n" 
-        << "-nand2_output_pin_name "
-        << cir.modules[Module::NAND2].output_name << "\n"
-        << "-nor2_input_pin_name " 
-        << cir.modules[Module::NOR2].input_names[0] << " " 
-        << cir.modules[Module::NOR2].input_names[1] << "\n" 
-        << "-nor2_output_pin_name "
-        << cir.modules[Module::NOR2].output_name << "\n"
-        << "-not1_input_pin_name " 
-        << cir.modules[Module::NOT1].input_names[0] << "\n"
-        << "-not1_output_pin_name "
-        << cir.modules[Module::NOT1].output_name << "\n";
-
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        const Gate* g = cir.logic_gates[i];
-        // Print fanin
-        out << "-" << g->name << "/"
-            << cir.modules[g->module].name << "/fanin ";
-
-        for (size_t j = 0; j < g->froms.size(); ++j) {
-            out << cir.modules[g->module].input_names[j] << ":"
-                << g->froms[j]->name << " ";
-        }
-        out << "\n";
-
-        // Print fanout
-        out << "-" << g->name << "/"
-            << cir.modules[g->module].name << "/fanout ";
-
-        for (size_t j = 0; j < g->tos.size(); ++j) {
-            out << cir.modules[g->module].output_name << ":"
-                << g->tos[j]->name << " ";
-        }
-        out << "\n";
-    }
-
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        // Print fanin
-        const Gate* g = cir.primary_outputs[i];
-        out << "-" << g->name << "/PO/fanin ";
-
-        for (size_t j = 0; j < g->froms.size(); ++j) {
-            out << g->froms[j]->name << " ";
-        }
-        out << "\n";
-    }
-
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        // Print fanout
-        const Gate* g = cir.primary_inputs[i];
-        out << "-" << g->name << "/PI/fanout ";
-
-        for (size_t j = 0; j < g->tos.size(); ++j) {
-            out << g->tos[j]->name << " ";
-        }
-        out << "\n";
-    }
-}
-
 // Test two different cases: case0 and case1.
 //
 void test_parse(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
     using namespace Sta::Cir;
-    using TestUtil::cir_compare;
+    using Sta::Cir::compare_dump;
+    using Sta::Cir::dump;
 
     Circuit cir;
 
@@ -341,14 +266,11 @@ void test_parse(void) {
     basic_validate(file_set_B, cir);
 
     const char* filename = "test/cases/case0_state.out";
-    std::ofstream fout(filename);
-    ASSERT(fout.good(), << "Cannot open " << filename << "\n");
+    ASSERT(dump(cir, filename) == 0, << "Dump failed.\n");
 
-    print_circuit_state(cir, fout);
-    fout.close();
     cir.clear();
 
-    cir_compare("test/cases/case0_state.ans", filename);
+    compare_dump("test/cases/case0_state.ans", filename);
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
