@@ -34,6 +34,13 @@ int write(const Circuit&                          circuit,
           const std::vector<InputVec>&            input_vecs,
           const std::string&                      outfile = "");
 
+// Dump circuit connection information. This is for circuit checking.
+// If `dump_file` is empty string, dump to stdout. Return 0 if
+// operation succes. Return 1 otherwise.
+// 
+int dump(const Circuit&     cir,
+         const std::string& dump_file = "");
+
 } // namespace Cir
 } // namespace Sta
 
