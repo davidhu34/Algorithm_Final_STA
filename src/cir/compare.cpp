@@ -152,7 +152,7 @@ int Sta::Cir::compare_dump(const std::string& file1,
 
     std::cerr << "End cir_compare.\n";
     if (return_code == 0) {
-        std::cerr << "Both file are same.\n";
+        std::cerr << "Both files are same.\n";
     }
 
     return return_code;
