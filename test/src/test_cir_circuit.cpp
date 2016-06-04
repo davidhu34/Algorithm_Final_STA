@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "sta/test/src/util/cir_compare.h"
+#include "sta/src/cir/compare.h"
 #include "sta/src/cir/parser.h"
 
 using namespace std;
@@ -51,8 +51,8 @@ void test_circuit_state(void)
         std::cout.rdbuf(coutbuf);
     }
 
-    TestUtil::cir_compare("test/cases/case0_state.ans",
-                          "test/cases/case0_state.out");
+    Sta::Cir::compare_dump("test/cases/case0_state.ans",
+                           "test/cases/case0_state.out");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
