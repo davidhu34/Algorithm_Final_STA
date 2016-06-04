@@ -253,7 +253,7 @@ int Sta::Cir::dump(const Circuit&     cir,
         out << "\n";
     }
 
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
         // Print fanout
         const Gate* g = cir.primary_inputs[i];
         out << setw(w) << "-" + g->name + "/PI/fanout";
