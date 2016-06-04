@@ -30,7 +30,8 @@ void test_write(void) {
                       cir, 10, 7, paths, values, input_vecs);
     ASSERT(return_code == 0, << "Find answer failed.\n");
 
-    write(cir, 10, 7, paths, values, input_vecs);
+    write(cir, 10, 7, paths, values, input_vecs, 
+          "test/cases/case0_true_path_set");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
