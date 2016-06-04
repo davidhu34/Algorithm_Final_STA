@@ -13,6 +13,9 @@ void test_hash_str(void);
 // test_util_prime.cpp
 void test_prime_gt(void);
 
+// test_util_hash_set.cpp
+void test_hash_set(void);
+
 // test_util_hash_map.cpp
 void test_hash_map(void);
 
@@ -47,6 +50,9 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_util_prime.cpp\n";
     test_prime_gt();
+
+    std::cerr << "\ntest_util_hash_set.cpp\n";
+    test_hash_set();
 
     std::cerr << "\ntest_util_hash_map.cpp\n";
     test_hash_map();
