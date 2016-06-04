@@ -29,10 +29,10 @@ void test_circuit_state(void)
 
     using namespace Sta;
 
-    Cir::Circuit* Ckt = new Cir::Circuit();
+    Cir::Circuit Ckt;
     ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
-    Cir::Parser* parser = new Cir::Parser( inf, Ckt );
-    if ( parser->parseCase() )
+    Cir::Parser parser(inf, &Ckt);
+    if ( parser.parseCase() )
     {
         // Trying to redirect all things to cout to fout.
 
@@ -45,7 +45,7 @@ void test_circuit_state(void)
         // Make cout's bufferptr point to buffer of fout.
         std::cout.rdbuf(fout.rdbuf());
 
-        Ckt->printState();
+        Ckt.printState();
 
         // Restore cout's stream buffer.
         std::cout.rdbuf(coutbuf);
