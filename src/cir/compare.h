@@ -1,13 +1,10 @@
 #ifndef STA_TEST_UTIL_CIR_COMPARE_H
 #define STA_TEST_UTIL_CIR_COMPARE_H
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <map>
-#include <set>
+#include <string>
 
-namespace TestUtil {
+namespace Sta {
+namespace Cir {
 
 // Check compare state files of two circuits. State file of a circuit
 // has the following format:
@@ -58,9 +55,15 @@ namespace TestUtil {
 // - file1: State file of circuit 1.
 // - file2: State file of circuit 2.
 //
-void cir_compare(const std::string& file1,
+// #### Output
+//
+// Return 0 if compared successfully and they are same. 
+// Return 1 otherwise.
+//
+int compare_dump(const std::string& file1,
                  const std::string& file2);
 
-} // namespace TestUtil
+} // namespace Cir
+} // namespace Sta
 
 #endif // STA_TEST_UTIL_CIR_COMPARE_H

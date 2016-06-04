@@ -39,23 +39,23 @@ void test_hash_str(void) {
     }
 
     // Calculate and print collitions.
-    std::cerr << "Collisions:\n";
+    //std::cerr << "Collisions:\n";
 
     int max_num_in_bucket = 0;
 
     for (size_t i = 0; i < vec.size(); ++i) {
         if (dict.count(vec[i]) > 1) {
-            std::cout << vec[i] << ": ";
+            //std::cout << vec[i] << ": ";
 
             std::pair<Iterc, Iterc> p = dict.equal_range(vec[i]);
 
             int num_in_bucket = 0;
             while (p.first != p.second) {
-                std::cerr << p.first->second << " ";
+                //std::cerr << p.first->second << " ";
                 ++p.first;
                 ++num_in_bucket;
             }
-            std::cerr << "\n";
+            //std::cerr << "\n";
 
             if (num_in_bucket > max_num_in_bucket) {
                 max_num_in_bucket = num_in_bucket;

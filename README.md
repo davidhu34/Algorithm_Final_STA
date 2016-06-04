@@ -78,10 +78,13 @@ sta verify -t <time_constraint>
 ```
 
 Verify a true path set. For each path in true path set, check whether
-it is within time constraint and slack constraint, and whether the
-given input vector can prove that path is a true path. It extract
-path and input vector from `true_path_set_file`, and verify it.
-It does not check any other value stated in `true_path_set_file`.
+
+1. It is within time constraint and slack constraint, 
+2. The given input vector can prove that path is a true path. 
+3. The correctness of value along the path.
+
+It extract path and input vector from `true_path_set_file`, and verify
+it. It does not check any other value stated in `true_path_set_file`.
 
 <dl>
 
