@@ -36,6 +36,7 @@ int parse(const std::vector<const char*>& input_files,
 //
 // - `true_path_set_file`
 // - `circuit`
+// - `time_constraint`
 //
 // #### Ouput
 //
@@ -46,16 +47,14 @@ int parse(const std::vector<const char*>& input_files,
 //     - 0: Success
 //     - 1: Failed
 //
-inline int parse_true_path_set(
+int parse_true_path_set(
     const std::string&                true_path_set_file,
-    Cir::Circuit&                     circuit,
+    const Circuit&                    circuit,
+    int                               time_constraint,
+    int                               slack_constraint,
     std::vector<Cir::Path>&           paths,
     std::vector< std::vector<bool> >& values,
-    std::vector<Cir::InputVec>&       input_vecs) {
-
-    // TODO
-    return 0;
-}
+    std::vector<Cir::InputVec>&       input_vecs);
           
 } // namespace Cir
 } // namespace Sta
