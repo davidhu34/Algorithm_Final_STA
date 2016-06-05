@@ -15,7 +15,11 @@ struct Module {
         NOR2,
         NOT1,
         PI,    // Primary input.
-        PO     // Primary output.
+        PO,    // Primary output.
+    };
+
+    enum {
+        npos = std::string::npos
     };
 
     // Data Member
@@ -25,6 +29,16 @@ struct Module {
 
     // Constructor
     explicit Module(const std::string& _name): name(_name) { }
+
+    // Find index of input pin. If not found, return npos.
+    size_t find_input_name(const std::string& pin_name) const {
+        for (size_t i = 0; i < input_names.size(); ++i) {
+            if (input_names[i] == pin_name) {
+                return i;
+            }
+        }
+        return npos;
+    }
 };
 
 struct Gate {
