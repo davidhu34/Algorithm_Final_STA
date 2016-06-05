@@ -60,7 +60,7 @@ int main(int argc, const char* argv[]) {
     std::cerr << "\ntest_util_hash_map.cpp\n";
     test_hash_map();
 
-    std::cerr << "\ntest_minisat_blbd.cpp";
+    std::cerr << "\ntest_minisat_blbd.cpp\n";
     test_minisat();
 
     std::cerr << "\ntest_cir_parser_inc.cpp\n";
