@@ -67,3 +67,35 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
     return 0;
 }
 
+int Sta::Cir::parse(const char* in_file_1,
+                    Circuit&    circuit     ) {
+
+    std::vector<const char*> in_files(1, in_file_1);
+
+    return parse(in_files, circuit);
+}
+
+int Sta::Cir::parse(const char* in_file_1,
+                    const char* in_file_2,
+                    Circuit&    circuit     ) {
+
+    std::vector<const char*> in_files(2);
+    in_files[0] = in_file_1;
+    in_files[1] = in_file_2;
+
+    return parse(in_files, circuit);
+}
+
+int Sta::Cir::parse(const char* in_file_1,
+                    const char* in_file_2,
+                    const char* in_file_3,
+                    Circuit&    circuit     ) {
+
+    std::vector<const char*> in_files(3);
+    in_files[0] = in_file_1;
+    in_files[1] = in_file_2;
+    in_files[2] = in_file_3;
+
+    return parse(in_files, circuit);
+}
+
