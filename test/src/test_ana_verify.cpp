@@ -7,6 +7,32 @@
 
 #include "sta/test/src/util/util.h"
 
+struct Record {
+    const char* cir_file_1;
+    const char* cir_file_2;
+    const char* true_path_set_file;
+    int         time_constraint;
+    int         slack_constraint;
+
+    Record(const char* _cir_file_1,
+           const char* _cir_file_2,
+           const char* _true_path_set_file,
+           int         _time_constraint,
+           int         _slack_constraint):
+        cir_file_1        (_cir_file_1        ),
+        cir_file_2        (_cir_file_2        ),
+        true_path_set_file(_true_path_set_file),
+        time_constraint   (_time_constraint   ),
+        slack_constraint  (_slack_constraint  )  { }
+};
+
+#define RECORD(n, time_constraint, slack_constraint)                    \
+    Record("test/cases/case" #n "/input/cadcontest.v",                  \
+           "test/cases/case" #n "/input/case" #n,                       \
+           "test/cases/case" #n "/true_path/case" #n "_true_path_set",  \
+           time_constraint,                                             \
+           slack_constraint)
+
 void test_verify_true_path_set(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
@@ -18,63 +44,79 @@ void test_verify_true_path_set(void) {
     using Sta::Ana::find_true_paths;
     using Sta::Ana::verify_true_path_set;
 
-    Circuit cir;
+    Record records[5] = {
+        RECORD(1, 45, 4),
+        RECORD(2, 43, 10),
+        RECORD(3, 31, 6),
+        RECORD(4, 45, 6),
+        RECORD(5, 47, 10)};
 
-    std::vector<const char*> files;
-    files.push_back("test/cases/case0_module.v");
-    files.push_back("test/cases/case0_netlist.v");
+    for (int i = 0; i < 5; ++i) {
+        Circuit cir;
 
-    int return_code = parse(files, cir);
-    ASSERT(return_code == 0, << "Parse into circuit failed.\n");
+        int return_code = parse(records[i].cir_file_1,
+                                records[i].cir_file_2,
+                                cir);
 
-    int                              time_constraint  = 10;
-    int                              slack_constraint = 7;
-    std::vector<Path>                paths;
-    std::vector< std::vector<bool> > values;
-    std::vector<InputVec>            input_vecs;
-    
-    return_code = find_true_paths(cir, 
-                                  time_constraint,
-                                  slack_constraint,
-                                  paths, 
-                                  values, 
-                                  input_vecs);
-    ASSERT(return_code == 0, << "Find answer failed.\n");
+        ASSERT(return_code == 0,
+            << "Parse circuit failed while doing case" << i << ".\n");
 
-    const char* true_path_set_file = "test/cases/case0_true_path_set";
-
-    return_code = write(cir, 
-                        time_constraint,
-                        slack_constraint,
-                        paths, 
-                        values, 
-                        input_vecs,
-                        true_path_set_file);
-    ASSERT(return_code == 0, << "Write failed.\n");
-
-    paths.clear();
-    values.clear();
-    input_vecs.clear();
-
-    return_code = parse_true_path_set(true_path_set_file,
-                                      cir,
-                                      time_constraint,
-                                      slack_constraint,
-                                      paths,
-                                      values,
+        std::vector<Path>                paths;
+        std::vector< std::vector<bool> > values;
+        std::vector<InputVec>            input_vecs;
+        
+        return_code = find_true_paths(cir, 
+                                      records[i].time_constraint,
+                                      records[i].slack_constraint,
+                                      paths, 
+                                      values, 
                                       input_vecs);
-    ASSERT(return_code == 0, << "Parse true path set failed.\n");
 
-    return_code = verify_true_path_set(cir,
-                                       time_constraint,
-                                       slack_constraint,
-                                       paths,
-                                       values,
-                                       input_vecs);
-    ASSERT(return_code == 0, << "Verification process failed.\n");
+        ASSERT(return_code == 0, 
+            << "Find answer failed while doing case" << i << ".\n");
 
-    // Clear
-    cir.clear();
+        return_code = write(cir, 
+                            records[i].time_constraint,
+                            records[i].slack_constraint,
+                            paths, 
+                            values, 
+                            input_vecs,
+                            records[i].true_path_set_file);
+
+        ASSERT(return_code == 0, 
+            << "Write file failed while doing case" << i << ".\n");
+
+        paths.clear();
+        values.clear();
+        input_vecs.clear();
+
+        return_code = parse_true_path_set(records[i].true_path_set_file,
+                                          cir,
+                                          records[i].time_constraint,
+                                          records[i].slack_constraint,
+                                          paths,
+                                          values,
+                                          input_vecs);
+
+        ASSERT(return_code == 0, 
+            << "Parse true path set file failed while doing case"
+            << i << ".\n");
+
+        return_code = verify_true_path_set(cir,
+                                           records[i].time_constraint,
+                                           records[i].slack_constraint,
+                                           paths,
+                                           values,
+                                           input_vecs);
+
+        ASSERT(return_code == 0,
+            << "Verification failed while doing case" << i << ".\n");
+
+        // Clear
+        cir.clear();
+
+        std::cerr << "Done case" << i + 1 << ".\n";
+    }
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
