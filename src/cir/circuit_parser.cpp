@@ -66,3 +66,4 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
 
     return 0;
 }
+
