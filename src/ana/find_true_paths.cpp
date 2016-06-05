@@ -281,7 +281,7 @@ static bool add_NOT_clause(Minisat::Var A,
 //
 // #### Output
 //
-// Add sensitizable path to `paths` and an input vector that can make
+// Add true path to `paths` and an input vector that can make
 // that path sensitized.
 //
 static void trace(Sta::Cir::Gate*                   po,
@@ -461,7 +461,7 @@ start_function:
     } // switch (point)
 }
 
-int Sta::Ana::find_sensitizable_paths(
+int Sta::Ana::find_true_paths(
     Cir::Circuit&                     cir,
     int                               time_constraint,
     int                               slack_constraint,
@@ -532,7 +532,7 @@ int Sta::Ana::find_sensitizable_paths(
         return 1;
     }
 
-    // Find sensitizable path.
+    // Find true path.
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
         Cir::Gate* po = cir.primary_outputs[i];
         trace(po, cir, time_constraint, slack_constraint,
