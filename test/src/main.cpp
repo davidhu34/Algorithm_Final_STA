@@ -32,10 +32,13 @@ void test_parse_module_NOT1(void);
 void test_parse(void);
 
 // test_ana_analyzer.cpp
-void test_find_sensitizable_paths(void);
+void test_find_true_paths(void);
 
 // test_cir_writer.cpp
 void test_write(void);
+
+// test_ana_verify.cpp
+void test_verify_true_path_set(void);
 
 int main(int argc, const char* argv[]) {
     // Call test function here.
@@ -70,10 +73,13 @@ int main(int argc, const char* argv[]) {
     test_parse();
 
     std::cerr << "\ntest_ana_analyzer.cpp\n";
-    test_find_sensitizable_paths();
+    test_find_true_paths();
 
     std::cerr << "\ntest_cir_writer.cpp\n";
     test_write();
+
+    std::cerr << "\ntest_ana_verify.cpp\n";
+    test_verify_true_path_set();
 
     return 0;
 }
