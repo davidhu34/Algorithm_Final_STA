@@ -1,11 +1,22 @@
 #include "sta/src/ana/analyzer.h"
 
 #include <cassert>
+#include <ctime>
 #include <iostream>
 #include <queue>
 #include <stack>
 
-#include "minisat_blbd/src/core/Solver.h"
+//#include "minisat_blbd/src/core/Solver.h"
+#include "minisat/src/core/Solver.h"
+
+#ifndef NDEBUG
+#include "sta/src/util/converter.h"
+
+static time_t      start_time;
+static double      time_difference;
+static double      time_step;
+static std::string buffer;
+#endif
 
 // Calculate maximum arrival time.
 //
@@ -445,6 +456,20 @@ start_function:
                         toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
                 }
                 input_vecs.push_back(input_vec);
+
+                #ifndef NDEBUG
+                time_difference = difftime(time(0), start_time);
+
+                if (time_difference > time_step) {
+                    time_step = time_difference + 1.0;
+                    for (size_t i = 0; i < buffer.size(); ++i) {
+                        std::cerr << "\b";
+                    }
+
+                    buffer = Sta::Util::to_str(input_vecs.size());
+                    std::cerr << buffer;
+                }
+                #endif
             }
         }
     }
@@ -459,6 +484,7 @@ start_function:
         ; // Function returned to root caller.
 
     } // switch (point)
+
 }
 
 int Sta::Ana::find_true_paths(
@@ -468,6 +494,15 @@ int Sta::Ana::find_true_paths(
     std::vector<Cir::Path>&           paths,
     std::vector< std::vector<bool> >& values,
     std::vector<Cir::InputVec>&       input_vecs) {
+
+    #ifndef NDEBUG
+    std::cerr << "Number of true path found: ";
+
+    start_time      = time(0);
+    time_difference = 0.0;
+    time_step       = 1.0;
+    buffer          = "";
+    #endif
 
     // Calculate minimum arrival time.
     calculate_min_arrival_time(cir);
@@ -538,6 +573,13 @@ int Sta::Ana::find_true_paths(
         trace(po, cir, time_constraint, slack_constraint,
               solver, paths, values, input_vecs);
     }
+
+    #ifndef NDEBUG
+    for (size_t i = 0; i < buffer.size(); ++i) {
+        std::cerr << "\b";
+    }
+    std::cerr << input_vecs.size() << "\n";
+    #endif
 
     return 0;
 }
