@@ -506,15 +506,12 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
             // Connect "from" of w and "to" of w.
             for (size_t k = 0; k < w.tos.size(); ++k) { 
 
-                // If w is not PI
-                if (w.from) {
-                    w.from->tos.push_back(w.tos[k]);
+                w.from->tos.push_back(w.tos[k]);
 
-                    if (w.tos[k]->froms.size() < w.tos_pin[k] + 1) {
-                        w.tos[k]->froms.resize(w.tos_pin[k] + 1);
-                    }
-                    w.tos[k]->froms[w.tos_pin[k]] = w.from;
+                if (w.tos[k]->froms.size() < w.tos_pin[k] + 1) {
+                    w.tos[k]->froms.resize(w.tos_pin[k] + 1);
                 }
+                w.tos[k]->froms[w.tos_pin[k]] = w.from;
             }
         }
     }
