@@ -26,12 +26,15 @@ void test_write(void) {
     std::vector< std::vector<bool> > values;
     std::vector<InputVec>            input_vecs;
     
-    return_code = find_sensitizable_paths(
+    return_code = find_true_paths(
                       cir, 10, 7, paths, values, input_vecs);
     ASSERT(return_code == 0, << "Find answer failed.\n");
 
     write(cir, 10, 7, paths, values, input_vecs, 
           "test/cases/case0_true_path_set");
+
+    // clear
+    cir.clear();
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

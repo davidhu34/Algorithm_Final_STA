@@ -35,7 +35,7 @@ static void print_connection(const Sta::Cir::Gate*    g1,
     }
 }
 
-void test_find_sensitizable_paths(void) {
+void test_find_true_paths(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
     using namespace Sta::Cir;
@@ -54,7 +54,7 @@ void test_find_sensitizable_paths(void) {
     std::vector< std::vector<bool> > values;
     std::vector<InputVec>            input_vecs;
     
-    return_code = find_sensitizable_paths(
+    return_code = find_true_paths(
                       cir, 10, 7, paths, values, input_vecs);
     ASSERT(return_code == 0, << "Find answer failed.\n");
 
@@ -75,6 +75,7 @@ void test_find_sensitizable_paths(void) {
         std::cout << "\n";
     }
 
+    // Clear
     cir.clear();
 
     std::cerr << __FUNCTION__ << "() passed.\n";

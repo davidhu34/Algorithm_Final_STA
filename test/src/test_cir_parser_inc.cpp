@@ -97,6 +97,9 @@ void test_parse_module_NAND2(void) {
         << "cir.modules[Cir::Module::NAND2].output_name = "
         << cir.modules[Cir::Module::NAND2].output_name);
 
+    // Clear
+    cir.clear();
+
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 
@@ -152,6 +155,9 @@ void test_parse_module_NOR2(void) {
         << "cir.modules[Cir::Module::NOR2].output_name = "
         << cir.modules[Cir::Module::NOR2].output_name);
 
+    // Clear
+    cir.clear();
+
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 
@@ -198,6 +204,9 @@ void test_parse_module_NOT1(void) {
     ASSERT(cir.modules[Cir::Module::NOT1].output_name == "Y",
         << "cir.modules[Cir::Module::NOT1].output_name = "
         << cir.modules[Cir::Module::NOT1].output_name);
+
+    // Clear
+    cir.clear();
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
