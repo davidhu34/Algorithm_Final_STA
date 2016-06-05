@@ -30,6 +30,18 @@ namespace Cir {
 int parse(const std::vector<const char*>& input_files,
           Circuit&                        circuit     );
 
+int parse(const char* in_file_1,
+          Circuit&    circuit     );
+
+int parse(const char* in_file_1,
+          const char* in_file_2,
+          Circuit&    circuit     );
+
+int parse(const char* in_file_1,
+          const char* in_file_2,
+          const char* in_file_3,
+          Circuit&    circuit     );
+
 // Extract paths, values and input_vecs from `true_path_set_file`.
 //
 // #### Input
