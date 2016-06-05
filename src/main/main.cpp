@@ -79,7 +79,7 @@ static void execute_find(int argc, const char* argv[]) {
     using Sta::Cir::parse;
     using Sta::Cir::write;
     using Sta::Cir::dump;
-    using Sta::Ana::find_sensitizable_paths;
+    using Sta::Ana::find_true_paths;
 
     std::vector<const char*> infiles;
     const char*              outfile              = "";
@@ -142,13 +142,13 @@ static void execute_find(int argc, const char* argv[]) {
         ASSERT(return_code == 0, << "Dump failed.")
     }
 
-    // Find all sensitizable paths.
+    // Find all true paths.
     
     std::vector<Path>                paths;
     std::vector< std::vector<bool> > values;
     std::vector<InputVec>            input_vecs;
 
-    return_code = find_sensitizable_paths(
+    return_code = find_true_paths(
                       circuit, 
                       time_constraint,  // Macro
                       slack_constraint, // Macro
@@ -156,7 +156,7 @@ static void execute_find(int argc, const char* argv[]) {
                       values, 
                       input_vecs);
 
-    ASSERT(return_code == 0, << "Find sensitizable paths failed.")
+    ASSERT(return_code == 0, << "Find true paths failed.")
 
     // Output those paths.
 
@@ -254,6 +254,8 @@ static void execute_verify(int argc, const char* argv[]) {
 
     return_code = parse_true_path_set(true_path_set_file,
                                       circuit,
+                                      time_constraint,
+                                      slack_constraint,
                                       paths,
                                       values,
                                       input_vecs);
