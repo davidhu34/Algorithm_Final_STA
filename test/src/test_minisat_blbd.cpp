@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "minisat_blbd/src/core/Solver.h"
+//#include "minisat_blbd/src/core/Solver.h"
+#include "minisat/src/core/Solver.h"
 #include "sta/test/src/util/util.h"
 
 using namespace Minisat;
