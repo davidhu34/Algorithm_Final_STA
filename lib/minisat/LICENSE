@@ -1,8 +1,3 @@
-minisat_blbd -- Copyright (c) 2014, Jingchao Chen, Donghua University, China
- 
-minisat_blbd are based on MiniSat (see below MiniSat copyrights). Permissions and copyrights of
-minisat_blbd are exactly the same as Minisat on which it is based on. (see below).
----------------------------------------------------------------------
 MiniSat -- Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
            Copyright (c) 2007-2010  Niklas Sorensson
 

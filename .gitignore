@@ -1,5 +1,5 @@
 # Object file
-**/*.o
+**/*.o*
 
 # Dependency description file
 **/*.d

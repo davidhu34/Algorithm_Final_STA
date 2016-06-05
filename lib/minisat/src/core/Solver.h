@@ -21,10 +21,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #ifndef Minisat_Solver_h
 #define Minisat_Solver_h
 
-#include "minisat_blbd/src/mtl/Vec.h"
-#include "minisat_blbd/src/mtl/Heap.h"
-#include "minisat_blbd/src/mtl/Alg.h"
-#include "minisat_blbd/src/core/SolverTypes.h"
+#include "minisat/src/mtl/Vec.h"
+#include "minisat/src/mtl/Heap.h"
+#include "minisat/src/mtl/Alg.h"
+#include "minisat/src/utils/Options.h"
+#include "minisat/src/core/SolverTypes.h"
 
 
 namespace Minisat {
@@ -104,9 +105,6 @@ public:
     void    checkGarbage(double gf);
     void    checkGarbage();
 
-
-    FILE*               output;
-
     // Extra results: (read-only member variable)
     //
     vec<lbool> model;             // If problem is satisfiable, this vector contains the model (if any).
@@ -139,8 +137,6 @@ public:
     //
     uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts;
     uint64_t dec_vars, clauses_literals, learnts_literals, max_literals, tot_literals;
-    int bitN,up;
-    vec<int> t;
 
 protected:
 
@@ -258,15 +254,6 @@ protected:
     int      level            (Var x) const;
     double   progressEstimate ()      const; // DELETE THIS ?? IT'S NOT VERY USEFUL ...
     bool     withinBudget     ()      const;
-    int      LBD(Clause& c){
-         int x = 0;
-         up++;
-         for(int k=0;k<c.size();k++){
-            int l = level(var(c[k]));
-            if(t[l] != up){ t[l] = up; x++;}
-         }
-         return x;
-     }
 
     // Static helpers:
     //

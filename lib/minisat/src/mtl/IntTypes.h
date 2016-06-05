@@ -37,11 +37,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 #include <limits.h>
 
-// For older compiler
-#ifndef UINT32_MAX
-#define UINT32_MAX 0xffffffff
-#endif
-
 //=================================================================================================
 
 #endif

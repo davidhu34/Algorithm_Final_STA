@@ -21,7 +21,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #ifndef Minisat_Queue_h
 #define Minisat_Queue_h
 
-#include "minisat_blbd/src/mtl/Vec.h"
+#include "minisat/src/mtl/Vec.h"
 
 namespace Minisat {
 
