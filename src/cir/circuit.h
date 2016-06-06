@@ -17,8 +17,8 @@ using std::vector;
 using std::map;
 using std::string;
 
-typedef std::vector<const Cir::Gate*> Path;
-typedef std::vector<bool>             InputVec;
+typedef std::vector<Cir::Gate*> Path;
+typedef std::vector<bool>       InputVec;
 
 class Circuit
 {
@@ -38,7 +38,10 @@ public:
 	
 	void testPrint ();
 	void printState () const;
-	
+
+    map<string, Gate*>& getInputs()     {return _Inputs;}
+    vector<Gate*>&      getOutputs()    {return _Outputs;}
+	vector<Gate*>&      getLogicGates() {return _LogicGates;}
 
 private:
 	void linkWire ( Gate* g, string wname, string pin );
