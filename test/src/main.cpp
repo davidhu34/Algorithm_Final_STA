@@ -25,11 +25,12 @@ void test_circuit_state(void);
 
 // test_ana_find.cpp
 void test_find_true_paths(void);
+void test_find_true_paths_single (void);
 
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
-    
+  /*  
     std::cerr << "test_example.cpp\n";
     test1();
     test2();
@@ -49,7 +50,7 @@ int main(int argc, const char* argv[]) {
     std::cerr << "\ntest_cir_circuit.cpp\n";
     test_circuit();
     test_circuit_state();
-
+*/
     std::cerr << "\ntest_ana_find.cpp\n";
     test_find_true_paths();
 

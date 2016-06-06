@@ -40,7 +40,7 @@ bool Writer::writeTruePath (
 		cout
 	<< "  " << line << "0          0 " << RF( value.back() ) << endl;
 		
-		for ( size_t pi = path.size(); pi > 0; pi-- )
+		for ( size_t pi = path.size() -1 ; pi > 0; pi-- )
 		{
 			line = w41;
 			string gate = path[pi]->getName() + "/" + getPin(path[pi], path[pi-1])

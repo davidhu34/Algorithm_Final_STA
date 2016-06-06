@@ -34,7 +34,7 @@ struct Record {
            time_constraint,                                             \
            slack_constraint)
 
-void test_find_true_paths(void) {
+void test_find_true_paths (void) {
     std::cerr << __FUNCTION__ << "():\n";
 
     using Sta::Cir::Circuit;
