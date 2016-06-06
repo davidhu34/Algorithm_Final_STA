@@ -69,7 +69,7 @@ bool Writer::writeTruePath (
 	<< "    Data Required Time" << setw(12) << _dataReqTime << endl
 	<< "    Data Arrival Time" << setw(13) << pathDelay << endl
 	<< "    ---------------------------------------------------------------------------" << endl
-	<< "    Slack" << setw(25) << _slack << endl
+	<< "    Slack" << setw(25) << (_dataReqTime - pathDelay) << endl
 	<< "  }" << endl << endl
 	<< "  Input Vector" << endl
 	<< "  {" << endl;
@@ -87,9 +87,6 @@ bool Writer::writeTruePath (
 		_onf
 	<< "  }" << endl << endl;
 	}	// end of Path
-
-	_onf
-	<< "}" << endl;
 
 	return true;
 }
