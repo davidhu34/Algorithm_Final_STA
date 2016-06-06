@@ -50,8 +50,8 @@ int main(int argc, const char* argv[]) {
     test_circuit();
     test_circuit_state();
 
-    //std::cerr << "\ntest_ana_find.cpp\n";
-    //test_find_true_paths();
+    std::cerr << "\ntest_ana_find.cpp\n";
+    test_find_true_paths();
 
     return 0;
 }
