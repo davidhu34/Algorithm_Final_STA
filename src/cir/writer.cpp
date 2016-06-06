@@ -8,7 +8,7 @@ using namespace std;
 bool Writer::writeTruePath (
 	vector< vector<Gate*> > paths,
 	vector< vector<bool> > values,
-	vector< vector<uint8_t> > input_vecs )
+	vector< vector<bool> > input_vecs )
 {
 	
 	vector<string> input_name = _ckt->getInputNames();
@@ -24,7 +24,7 @@ bool Writer::writeTruePath (
 	{
 		vector<Gate*> path = paths[i];
 		vector<bool> value = values[i];
-		vector<uint8_t> input_vec = input_vecs[i];
+		vector<bool> input_vec = input_vecs[i];
 		int pathDelay = 0;
 
 		cout

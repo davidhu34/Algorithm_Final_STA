@@ -1,5 +1,5 @@
-#ifndef STA_CIR_PARSER_H
-#define STA_CIR_PARSER_H
+#ifndef STA_CIR_WRITER_H
+#define STA_CIR_WRITER_H
 
 #include <iostream>
 #include <fstream>
@@ -16,6 +16,7 @@ namespace Sta {
 namespace Cir {
 
 using namespace std;
+
 // put function prototype here.
 class Writer
 {
@@ -30,7 +31,7 @@ public:
 	bool writeTruePath (
 		vector< vector<Gate*> > paths,
 		vector< vector<bool> > values,
-		vector< vector<uint8_t> > input_vecs );
+		vector< vector<bool> > input_vecs );
 	string RF ( bool v )	{ return v? "r": "f"; }
 
 private:
@@ -39,10 +40,10 @@ private:
 	int		_dataReqTime;
 	int		_slack;
 	Circuit*	_ckt;
-	ofstream&	_onf;
+        ofstream&	_onf;
 };
 
-} // namespace Sta
 } // namespace Cir
+} // namespace Sta
 
-#endif // STA_CIR_PARSER_H
+#endif // STA_CIR_WRITER_H
