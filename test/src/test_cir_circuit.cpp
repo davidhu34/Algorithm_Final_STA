@@ -12,7 +12,7 @@ void test_circuit(void)
     using namespace Sta;
 
     Cir::Circuit* Ckt = new Cir::Circuit();
-    ifstream inf ("test/cases/case0_netlist.v", ifstream::in);
+    ifstream inf ("test/cases/case0/input/case0", ifstream::in);
     Cir::Parser* parser = new Cir::Parser( inf, Ckt );
 
     if ( parser->parseCase() )
@@ -30,14 +30,14 @@ void test_circuit_state(void)
     using namespace Sta;
 
     Cir::Circuit Ckt;
-    ifstream inf ("test/cases/case0_netlist_nocomment.v", ifstream::in);
+    ifstream inf ("test/cases/case0/input/case0", ifstream::in);
     Cir::Parser parser(inf, &Ckt);
     if ( parser.parseCase() )
     {
         // Trying to redirect all things to cout to fout.
 
         // Redirect output to this file.
-        std::ofstream fout("test/cases/case0_state.out");
+        std::ofstream fout("test/cases/case0/output/case0.dump");
 
         // Save cout's stream buffer.
         std::streambuf* coutbuf = std::cout.rdbuf();
@@ -51,8 +51,8 @@ void test_circuit_state(void)
         std::cout.rdbuf(coutbuf);
     }
 
-    Sta::Cir::compare_dump("test/cases/case0_state.ans",
-                           "test/cases/case0_state.out");
+    Sta::Cir::compare_dump("test/cases/case0/output/case0.dump.ans",
+                           "test/cases/case0/output/case0.dump");
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
