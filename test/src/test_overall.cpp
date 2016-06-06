@@ -4,6 +4,7 @@
 #include "sta/src/cir/parser.h"
 #include "sta/src/cir/writer.h"
 #include "sta/src/ana/analyzer.h"
+#include "sta/src/cir/compare.h"
 
 #include "sta/test/src/util/util.h"
 
@@ -46,7 +47,7 @@ struct Record {
            time_constraint,                                             \
            slack_constraint)
 
-void test_verify_true_path_set(void) {
+void test_overall(void) {
     std::cerr << __FUNCTION__ << "():\n";
 
     using Sta::Cir::Circuit;
@@ -54,6 +55,9 @@ void test_verify_true_path_set(void) {
     using Sta::Cir::InputVec;
     using Sta::Cir::parse;
     using Sta::Cir::parse_true_path_set;
+    using Sta::Cir::write;
+    using Sta::Cir::dump;
+    using Sta::Cir::compare_dump;
     using Sta::Ana::find_true_paths;
     using Sta::Ana::verify_true_path_set;
 
@@ -74,6 +78,17 @@ void test_verify_true_path_set(void) {
 
         ASSERT(return_code == 0,
             << "Parse circuit failed while doing case" << i << ".\n");
+
+        return_code = dump(cir, records[i].dump_file);
+
+        ASSERT(return_code == 0,
+            << "Dump circuit failed while doing case" << i << ".\n");
+
+        return_code = compare_dump(records[i].dump_file,
+                                   records[i].dump_ans_file);
+
+        ASSERT(return_code == 0,
+            << "Compare dump failed while doing case" << i << ".\n");
 
         std::vector<Path>                paths;
         std::vector< std::vector<bool> > values;
@@ -134,3 +149,4 @@ void test_verify_true_path_set(void) {
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
+

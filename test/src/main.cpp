@@ -40,6 +40,9 @@ void test_write(void);
 // test_ana_verify.cpp
 void test_verify_true_path_set(void);
 
+// test_overall.cpp
+void test_overall(void);
+
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
@@ -78,8 +81,11 @@ int main(int argc, const char* argv[]) {
     std::cerr << "\ntest_cir_writer.cpp\n";
     test_write();
 
-    std::cerr << "\ntest_ana_verify.cpp\n";
-    test_verify_true_path_set();
+    //std::cerr << "\ntest_ana_verify.cpp\n";
+    //test_verify_true_path_set();
+
+    std::cerr << "\ntest_overall.cpp\n";
+    test_overall();
 
     return 0;
 }
