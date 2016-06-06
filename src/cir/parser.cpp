@@ -105,7 +105,7 @@ bool Parser::parseGate ( string model )
 	inputA = trimWire("A");
 	inputB = trimWire("B");
 	outputY = trimWire("Y");
-	cout<<"Y:" <<outputY<<endl;
+	//cout<<"Y:" <<outputY<<endl;
 	return _ckt->newLogicGate( gname, model, inputA, inputB, outputY )
 		&& getNextLine();
 }
@@ -124,7 +124,7 @@ bool Parser::getNextLine ()
 {
 	if ( getline( _inf, _parsingStr ) )
 	{
-		cout<<_parsingStr<<endl;
+		//cout<<_parsingStr<<endl;
 		_parsingLine++;
 		size_t commentStart = _parsingStr.find("//");
 //cout<<"comment found at: ";
