@@ -50,6 +50,15 @@ private:
 	int			_parsingLine;
 };
 
+int parse_true_path_set(
+    const std::string&                true_path_set_file,
+    const Circuit&                    cir,
+    int                               time_constraint,
+    int                               slack_constraint,
+    std::vector<Path>&                paths,
+    std::vector< std::vector<bool> >& values,
+    std::vector<InputVec>&            input_vecs);
+
 } // namespace Sta
 } // namespace Cir
 
