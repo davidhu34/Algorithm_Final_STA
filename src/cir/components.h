@@ -1,6 +1,7 @@
 #ifndef STA_CIR_COMPONENTS_H
 #define STA_CIR_COMPONENTS_H
 
+#include <stdint.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -48,12 +49,12 @@ public:
 
 	string getName ()		{ return _name; }
 	string getModel ()		{ return _model; }
-	vector<Gate*> getFanIn ()				{ return _inputs; }
-	vector<Gate*> getFanOut ()				{ return _outputs; }
+	vector<Gate*>& getFanIn ()				{ return _inputs; }
+	vector<Gate*>& getFanOut ()				{ return _outputs; }
 
-	bool		_value;
-	int        		_tag;
-	int        		_var;
+	uint8_t     _value;
+	int        	_tag;
+	int        	_var;
 	unsigned	_arrivalTime;
 
 protected:
