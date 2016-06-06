@@ -73,6 +73,14 @@ static bool is_number(const char* str) {
         exit(1);                                 \
     }
 
+// If condition evaluate to false, print error message and exit.
+//
+#define EXPECT(condition, errmsg)                \
+    if (!(condition)) {                          \
+        std::cerr << "Error: " errmsg << "\n";   \
+        exit(1);                                 \
+    }
+
 static void execute_find(int argc, const char* argv[]) {
     using Sta::Cir::Circuit;
     using Sta::Cir::Path;
@@ -109,7 +117,7 @@ static void execute_find(int argc, const char* argv[]) {
             dump_file = argv[i];
         }
         else { // Read input file names.
-            ASSERT(infile,
+            ASSERT(!infile,
                 << "Input file has already been provided:\n"
                 << "Old: " << infile << "\n"
                 << "New: " << argv[i])
@@ -139,19 +147,19 @@ static void execute_find(int argc, const char* argv[]) {
     Circuit circuit;
 
     std::ifstream inf(infile);
-    ASSERT(inf.good(),
+    EXPECT(inf.good(),
         << "Cannot open '" << infile << "'.\n")
 
     Parser parser(inf, &circuit);
 
-    ASSERT(parser.parseCase(), 
+    EXPECT(parser.parseCase(), 
         << "Parsing failed.")
 
     // Dump file if -d <dump_file> is specified.
 
     if (dump_file) {
         std::ofstream outf(dump_file);
-        ASSERT(outf.good(),
+        EXPECT(outf.good(),
             << "Cannot open '" << dump_file << "'.")
 
         std::streambuf* coutbuf = std::cout.rdbuf();
@@ -176,12 +184,12 @@ static void execute_find(int argc, const char* argv[]) {
                           values, 
                           input_vecs);
 
-    ASSERT(return_code == 0, << "Find true paths failed.")
+    EXPECT(return_code == 0, << "Find true paths failed.")
 
     // Output those paths.
 
     std::ofstream outf(outfile);
-    ASSERT(outf.good(),
+    EXPECT(outf.good(),
         << "Cannot open '" << outfile << "'.")
 
     Writer writer(outf, &circuit);
@@ -191,7 +199,7 @@ static void execute_find(int argc, const char* argv[]) {
                                        values, 
                                        input_vecs);
 
-    ASSERT(return_code, << "Write to file failed.")
+    EXPECT(return_code, << "Write to file failed.")
 
     // Clean up.
 
@@ -234,7 +242,7 @@ static void execute_verify(int argc, const char* argv[]) {
             dump_file = argv[i];
         }
         else { // Read input file names.
-            ASSERT(infile,
+            ASSERT(!infile,
                 << "Input file has already been provided:\n"
                 << "Old: " << infile << "\n"
                 << "New: " << argv[i])
@@ -264,19 +272,19 @@ static void execute_verify(int argc, const char* argv[]) {
     Circuit circuit;
     
     std::ifstream inf(infile);
-    ASSERT(inf.good(),
+    EXPECT(inf.good(),
         << "Cannot open '" << infile << "'.\n")
 
     Parser parser(inf, &circuit);
 
-    ASSERT(parser.parseCase(), 
+    EXPECT(parser.parseCase(), 
         << "Parsing failed.")
 
     // Dump file if -d <dump_file> is specified.
 
     if (dump_file) {
         std::ofstream outf(dump_file);
-        ASSERT(outf.good(),
+        EXPECT(outf.good(),
             << "Cannot open '" << dump_file << "'.")
 
         std::streambuf* coutbuf = std::cout.rdbuf();
@@ -301,7 +309,7 @@ static void execute_verify(int argc, const char* argv[]) {
                                           values,
                                           input_vecs);
 
-    ASSERT(return_code == 0, 
+    EXPECT(return_code == 0, 
         << "Parse '" << true_path_set_file << "' failed.")
 
     // Verify true path set.
@@ -313,7 +321,7 @@ static void execute_verify(int argc, const char* argv[]) {
                                        values,
                                        input_vecs);
                                        
-    ASSERT(return_code == 0, << "Verification process failed.")
+    EXPECT(return_code == 0, << "Verification process failed.")
 
     // Clean up.
 
@@ -334,7 +342,7 @@ static void execute_dump(int argc, const char* argv[]) {
             dump_file = argv[i];
         }
         else { // Read input file names.
-            ASSERT(infile,
+            ASSERT(!infile,
                 << "Input file has already been provided:\n"
                 << "Old: " << infile << "\n"
                 << "New: " << argv[i])
@@ -352,19 +360,19 @@ static void execute_dump(int argc, const char* argv[]) {
     Circuit circuit;
     
     std::ifstream inf(infile);
-    ASSERT(inf.good(),
+    EXPECT(inf.good(),
         << "Cannot open '" << infile << "'.\n")
 
     Parser parser(inf, &circuit);
 
-    ASSERT(parser.parseCase(), 
+    EXPECT(parser.parseCase(), 
         << "Parsing failed.")
 
     // Dump file.
 
     if (dump_file) {
         std::ofstream outf(dump_file);
-        ASSERT(outf.good(),
+        EXPECT(outf.good(),
             << "Cannot open '" << dump_file << "'.")
 
         std::streambuf* coutbuf = std::cout.rdbuf();

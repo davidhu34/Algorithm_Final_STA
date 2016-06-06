@@ -28,11 +28,11 @@ bool Writer::writeTruePath (
 		int pathDelay = 0;
 
 		_onf
-	<< "  Path  {  " << i << "  }" << endl << endl
+	<< "  Path  {  " << i + 1 << "  }" << endl << endl
 	<< "  A True Path List" << endl
 	<< "  {" << endl
 	<< "  ---------------------------------------------------------------------------" << endl
-	<< "  Pin    type                            Incr      Path delay" << endl
+	<< "  Pin    Type                            Incr      Path Delay" << endl
 	<< "  ---------------------------------------------------------------------------" << endl;
 		line = w41;
 		// input gate
