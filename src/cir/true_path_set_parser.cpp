@@ -319,6 +319,10 @@ int Sta::Cir::parse_true_path_set(
                 size_t idx = cir.modules[gate->module]
                                 .find_input_name(reader.token);
 
+                if (gate->froms.size() <= idx) {
+                    idx = Module::npos;
+                }
+
                 ASSERT(idx != Module::npos,
                     << "At line " << reader.line_no << ": "
                     << "Gate '" << gate->name << "' does not have "
