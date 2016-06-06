@@ -36,7 +36,8 @@ bool Writer::writeTruePath (
 	<< "  ---------------------------------------------------------------------------" << endl;
 		line = w41;
 		// input gate
-		string input = path.back()->getName() + " (in)";
+		string inputName = path.back()->getName();
+		string input = inputName + " (in)";
 		line.replace( 0, input.length(), input );
 		_onf
 	<< "  " << line << "0         0 " << RF( value.back() ) << endl;
@@ -44,15 +45,15 @@ bool Writer::writeTruePath (
 		for ( size_t pi = path.size() -2 ; pi > 0; pi-- )
 		{
 			line = w41;
-			string gate = path[pi]->getName() + "/" + getPin( path[pi], path[pi-1] )
+			string gate = path[pi]->getName() + "/" + getPin( path[pi+1], path[pi] )
 				+ " (" + path[pi]->getModel() + ")";
 			line.replace( 0, gate.length(), gate );
 			_onf
-	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi] ) << endl;
+	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi+1] ) << endl;
 
 			line[ line.find("/") + 1 ] = 'Y';
 			_onf
-	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi-1] ) << endl;
+	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi] ) << endl;
 		}
 		// output gate
 		line = w41;
@@ -75,6 +76,10 @@ bool Writer::writeTruePath (
 	
 		for ( size_t mi = 0; mi < input_vec.size(); mi++ )
 		{
+			if ( input_name[mi] == inputName)
+			_onf
+	<< "  " << setw(4) << input_name[mi] << "  =  " << RF( input_vec[mi] ) << endl;	
+			else
 			_onf
 	<< "  " << setw(4) << input_name[mi] << "  =  " << input_vec[mi] << endl;
 		}	// end of Inputs
