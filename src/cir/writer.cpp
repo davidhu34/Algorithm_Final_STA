@@ -16,7 +16,7 @@ bool Writer::writeTruePath (
 	string w10 = "          ";
 	string line = "";
 
-	cout
+	_onf
 	<< "Header  {  A True Path Set  }  " << endl << endl
 	<< "  Benchmark  {  " << _ckt->getCaseName() << "  }" << endl << endl;
 
@@ -27,7 +27,7 @@ bool Writer::writeTruePath (
 		vector<bool> input_vec = input_vecs[i];
 		int pathDelay = 0;
 
-		cout
+		_onf
 	<< "  Path  {  " << i << "  }" << endl << endl
 	<< "  A True Path List" << endl
 	<< "  {" << endl
@@ -38,7 +38,7 @@ bool Writer::writeTruePath (
 		// input gate
 		string input = path.back()->getName() + " (in)";
 		line.replace( 0, input.length(), input );
-		cout
+		_onf
 	<< "  " << line << "0         0 " << RF( value.back() ) << endl;
 		// path gates
 		for ( size_t pi = path.size() -1 ; pi > 0; pi-- )
@@ -47,23 +47,23 @@ bool Writer::writeTruePath (
 			string gate = path[pi]->getName() + "/" + getPin( path[pi], path[pi-1] )
 				+ " (" + path[pi]->getModel() + ")";
 			line.replace( 0, gate.length(), gate );
-			cout
+			_onf
 	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi] ) << endl;
 
 			line[ line.find("/") + 1 ] = 'Y';
-			cout
+			_onf
 	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi-1] ) << endl;
 		}
 		// output gate
 		line = w41;
 		string output = path.front()->getName() + " (out)";
 		line.replace( 0, output.length(), output );
-		cout
+		_onf
 	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value.front() ) << endl;
 
 
 
-		cout
+		_onf
 	<< "  ---------------------------------------------------------------------------" << endl
 	<< "    Data Required Time" << setw(12) << _dataReqTime << endl
 	<< "    Data Arrival Time" << setw(13) << pathDelay << endl
@@ -75,16 +75,18 @@ bool Writer::writeTruePath (
 	
 		for ( size_t mi = 0; mi < input_vec.size(); mi++ )
 		{
-			cout
+			_onf
 	<< "  " << setw(4) << input_name[mi] << "  =  " << input_vec[mi] << endl;
 		}	// end of Inputs
 
-		cout
+		_onf
 	<< "  }" << endl << endl;
 	}	// end of Path
 
-	cout
+	_onf
 	<< "}" << endl;
+
+	return true;
 }
 
 string Writer::getPin ( Gate* from ,Gate* to )
