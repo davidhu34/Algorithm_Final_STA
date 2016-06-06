@@ -174,6 +174,11 @@ int Sta::Ana::verify_true_path_set(
 
     #ifndef NDEBUG
     std::cerr << "Number of verified path: ";
+
+    start_time       = 0;
+    time_difference  = 0.0;
+    time_step        = 1.0;
+    buffer           = "";
     #endif
 
     int return_code = 0;
