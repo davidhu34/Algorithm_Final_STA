@@ -102,3 +102,64 @@ void test_find_true_paths(void) {
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
+
+void test_find_true_paths_single(void) {
+    std::cerr << __FUNCTION__ << "():\n";
+
+    // Create empty circuit.
+    Sta::Cir::Circuit Ckt;
+
+    // Open netlist file.
+    std::ifstream inf("test/cases/case0/input/case0");
+
+    ASSERT(inf.good(),
+        << "Cannot open 'test/cases/case0/input/case0'.\n");
+
+    // Parse netlist file into circuit.
+    Sta::Cir::Parser parser(inf, &Ckt);
+
+    ASSERT(parser.parseCase(),
+        << "Parse circuit failed while doing case0.\n");
+
+    // find_true_paths() will put its result into these variables.
+    std::vector<Path>                paths;
+    std::vector< std::vector<bool> > values;
+    std::vector<InputVec>            input_vecs;
+    
+    int return_code;
+
+    return_code = find_true_paths(Ckt,
+                                  10,  // time constraint
+                                  7,   // slack constraint
+                                  paths, 
+                                  values, 
+                                  input_vecs);
+
+    ASSERT(return_code == 0, // return_code should be 0 if success.
+        << "Find answer failed while doing case0.\n");
+
+    // Open true_path_set_file to write on it.
+    std::ofstream outf("test/cases/case0/true_path/case0_true_path_set");
+
+    ASSERT(outf.good(),
+        << "Cannot open 'test/cases/case0/true_path/case0_true_path_set'.\n");
+
+    // Create writer to write result.
+    Sta::Cir::Writer writer(outf, &Ckt);
+
+    writer.setConstraint(records[i].time_constraint,
+                         records[i].slack_constraint);
+
+    // Write result.
+    return_code = writer.writeTruePath(paths, 
+                                       values, 
+                                       input_vecs);
+
+    ASSERT(return_code, // return_code == 1 if success.
+        << "Write file failed while doing case0");
+
+    // Clear circuit.
+    Ckt.clear();
+
+    std::cerr << __FUNCTION__ << "() passed.\n";
+}
