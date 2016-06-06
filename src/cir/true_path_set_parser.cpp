@@ -260,7 +260,16 @@ int Sta::Cir::parse_true_path_set(
 
             // Read Type
             EXPECT("(")
-            std::string temp = cir.modules[gate->module].name;
+            std::string temp;
+            if (gate->module == Module::PI) {
+                temp = "in";
+            }
+            else if (gate->module == Module::PO) {
+                temp = "out";
+            }
+            else {
+                temp = cir.modules[gate->module].name;
+            }
             EXPECT(temp)
             EXPECT(")")
 
@@ -329,7 +338,15 @@ int Sta::Cir::parse_true_path_set(
 
             // Read Type
             EXPECT("(")
-            temp = cir.modules[gate->module].name;
+            if (gate->module == Module::PI) {
+                temp = "in";
+            }
+            else if (gate->module == Module::PO) {
+                temp = "out";
+            }
+            else {
+                temp = cir.modules[gate->module].name;
+            }
             EXPECT(temp)
             EXPECT(")")
 
