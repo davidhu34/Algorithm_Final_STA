@@ -353,6 +353,15 @@ int Sta::Cir::parse_true_path_set(
                 EXPECT("f")
             }
         }
+
+        ASSERT(path.front()->module == Module::PI,
+            << "True Path before line " << reader.line_no << ": "
+            << "Gate '" << path.front()->name << "' should be a PI.")
+
+        ASSERT(path.back()->module == Module::PO,
+            << "True Path before line " << reader.line_no << ": "
+            << "Gate '" << path.back()->name << "' should be a PO.")
+
         paths.push_back(path);
         values.push_back(path_value);
         
