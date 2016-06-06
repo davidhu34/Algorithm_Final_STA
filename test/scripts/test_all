@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Synopsys
+#   test_all
+#
+# Description
+#   Use the program to create output from all inputs.
+#   Then validate all outputs.
+#
+# Options
+#
+# Exit Status
+#   0 Test finished.
+#   1 Error occurred.
+
+print_usage() {
+    echo "Usage:"
+    echo "  test_all"
+}
+
+# Go to directory of script.
+cd "${BASH_SOURCE%/*}" || { echo "Error: Cannot go to script dir."; exit 1; }
+
+cir_file="../cases/case@/input/case@"
+true_path_set_file="../cases/case@/true_path/case@_true_path_set"
+dump_file="../cases/case@/output/case@.dump"
+dump_ans_file="../cases/case@/output/case@.dump.ans"
+
+time_constraint=(10 45 43 31 45 47)
+slack_constraint=(7 4 10 6 6 10)
+
+# Create outputs and validate.
+for n in {0..5}; do
+    echo "Doing case $n..."
+
+#    echo "${time_constraint[n]}"       
+#    echo "${slack_constraint[n]}"      
+#    echo "${true_path_set_file//@/$n}" 
+#    echo "${dump_file//@/$n}"          
+#    echo "${cir_file//@/$n}"
+
+    ../../bin/sta find -t "${time_constraint[n]}"       \
+                       -s "${slack_constraint[n]}"      \
+                       -o "${true_path_set_file//@/$n}" \
+                       -d "${dump_file//@/$n}"          \
+                       "${cir_file//@/$n}"
+
+    [ $? -eq 0 ] || { echo "Error: Find failed."; exit 1; }
+
+    ../../bin/sta compare "${dump_file//@/$n}" "${dump_ans_file//@/$n}"
+
+    [ $? -eq 0 ] || { echo "Error: Compare dump failed."; exit 1; }
+
+    ../../bin/sta verify -t "${time_constraint[n]}"       \
+                         -s "${slack_constraint[n]}"      \
+                         -v "${true_path_set_file//@/$n}" \
+                         "${cir_file//@/$n}"
+
+    [ $? -eq 0 ] || { echo "Error: Verification failed."; exit 1; }
+
+done
+
+echo "Test all passed."
