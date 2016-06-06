@@ -16,8 +16,8 @@ void test_write(void) {
     Circuit cir;
 
     std::vector<const char*> files;
-    files.push_back("test/cases/case0_module.v");
-    files.push_back("test/cases/case0_netlist.v");
+    files.push_back("test/cases/case0/input/cadcontest.v");
+    files.push_back("test/cases/case0/input/case0");
 
     int return_code = parse(files, cir);
     ASSERT(return_code == 0, << "Parse into circuit failed.\n");
@@ -31,7 +31,7 @@ void test_write(void) {
     ASSERT(return_code == 0, << "Find answer failed.\n");
 
     write(cir, 10, 7, paths, values, input_vecs, 
-          "test/cases/case0_true_path_set");
+          "test/cases/case0/true_path/case0_true_path_set");
 
     // clear
     cir.clear();

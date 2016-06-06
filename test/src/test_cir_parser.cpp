@@ -258,19 +258,19 @@ void test_parse(void) {
     }
 
     std::vector<const char*> file_set_B(2);
-    file_set_B[0] = "test/cases/case0_module.v";
-    file_set_B[1] = "test/cases/case0_netlist.v";
+    file_set_B[0] = "test/cases/case0/input/cadcontest.v";
+    file_set_B[1] = "test/cases/case0/input/case0";
 
     std::cout << "Validating " << file_set_B[1] << "...\n";
 
     basic_validate(file_set_B, cir);
 
-    const char* filename = "test/cases/case0_state.out";
+    const char* filename = "test/cases/case0/output/case0.dump";
     ASSERT(dump(cir, filename) == 0, << "Dump failed.\n");
 
     cir.clear();
 
-    compare_dump("test/cases/case0_state.ans", filename);
+    compare_dump("test/cases/case0/output/case0.dump.ans", filename);
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

@@ -44,8 +44,8 @@ void test_find_true_paths(void) {
     Circuit cir;
 
     std::vector<const char*> files;
-    files.push_back("test/cases/case0_module.v");
-    files.push_back("test/cases/case0_netlist.v");
+    files.push_back("test/cases/case0/input/cadcontest.v");
+    files.push_back("test/cases/case0/input/case0");
 
     int return_code = parse(files, cir);
     ASSERT(return_code == 0, << "Parse into circuit failed.\n");
