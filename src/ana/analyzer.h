@@ -6,7 +6,7 @@
 namespace Sta {
 namespace Ana {
 
-// Find sensitizable paths.
+// Find true paths.
 //
 // #### Input
 //
@@ -17,13 +17,13 @@ namespace Ana {
 //
 // #### Output
 //
-// - `paths`     : Found sensitizable paths.
+// - `paths`     : Found true paths.
 // - `values`    : Record value of gates of paths.
 // - `input_vecs`: Corresponding input vector that cause a path become
 //                 true path. Path start from PO, end at PI.
 // - Return an error code: 0 means successful; 1 means error encountered.
 //
-int find_sensitizable_paths(
+int find_true_paths(
     Cir::Circuit&                     circuit,
     int                               time_constraint,
     int                               slack_constraint,
