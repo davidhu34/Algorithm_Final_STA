@@ -8,3 +8,6 @@
 bin/unit_test
 bin/sta
 src/a.out
+
+# Dump file
+test/cases/case*/output/*.dump
