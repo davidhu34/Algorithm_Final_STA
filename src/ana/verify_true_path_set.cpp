@@ -9,7 +9,7 @@
 static time_t      start_time;
 static double      time_difference;
 static double      time_step;
-static std::string buffer;
+static std::string buffer = " ";
 #endif
 
 // Calculate _value of all gates. Please initialize PI to required
@@ -178,7 +178,7 @@ int Sta::Ana::verify_true_path_set(
     const std::vector<Cir::InputVec>&       input_vecs) {
 
     #ifndef NDEBUG
-    std::cerr << "Number of verified path: ";
+    std::cerr << "Number of verified path:  ";
     #endif
 
     int return_code = 0;
