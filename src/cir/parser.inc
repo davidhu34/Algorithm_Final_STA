@@ -508,8 +508,8 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
 
                 w.from->tos.push_back(w.tos[k]);
 
-                if (w.tos[k]->froms.size() < w.tos_pin[k] + 1) {
-                    w.tos[k]->froms.resize(w.tos_pin[k] + 1);
+                if (w.tos[k]->froms.size() < w.tos_pin[k] + 1u) {
+                    w.tos[k]->froms.resize(w.tos_pin[k] + 1u);
                 }
                 w.tos[k]->froms[w.tos_pin[k]] = w.from;
             }
