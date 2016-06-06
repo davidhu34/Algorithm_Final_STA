@@ -147,8 +147,7 @@ void test_find_true_paths_single(void) {
     // Create writer to write result.
     Sta::Cir::Writer writer(outf, &Ckt);
 
-    writer.setConstraint(records[i].time_constraint,
-                         records[i].slack_constraint);
+    writer.setConstraint(10, 7);
 
     // Write result.
     return_code = writer.writeTruePath(paths, 
