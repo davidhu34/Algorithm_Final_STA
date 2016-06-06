@@ -72,6 +72,14 @@ static bool is_number(const char* str) {
         exit(1);                                 \
     }
 
+// If condition evaluate to false, print error message and exit.
+//
+#define EXPECT(condition, errmsg)                \
+    if (!(condition)) {                          \
+        std::cerr << "Error: " errmsg << "\n";   \
+        exit(1);                                 \
+    }
+
 static void execute_find(int argc, const char* argv[]) {
     using Sta::Cir::Circuit;
     using Sta::Cir::Path;
@@ -133,13 +141,13 @@ static void execute_find(int argc, const char* argv[]) {
     Circuit circuit;
     
     int return_code = parse(infiles, circuit);
-    ASSERT(return_code == 0, << "Parsing failed.")
+    EXPECT(return_code == 0, << "Parsing failed.")
 
     // Dump file if -d <dump_file> is specified.
 
     if (dump_file) {
         return_code = dump(circuit, dump_file);
-        ASSERT(return_code == 0, << "Dump failed.")
+        EXPECT(return_code == 0, << "Dump failed.")
     }
 
     // Find all true paths.
@@ -156,7 +164,7 @@ static void execute_find(int argc, const char* argv[]) {
                       values, 
                       input_vecs);
 
-    ASSERT(return_code == 0, << "Find true paths failed.")
+    EXPECT(return_code == 0, << "Find true paths failed.")
 
     // Output those paths.
 
@@ -168,7 +176,7 @@ static void execute_find(int argc, const char* argv[]) {
                         input_vecs, 
                         outfile);
 
-    ASSERT(return_code == 0, << "Write to file failed.")
+    EXPECT(return_code == 0, << "Write to file failed.")
 
     // Clean up.
 
@@ -237,13 +245,13 @@ static void execute_verify(int argc, const char* argv[]) {
     Circuit circuit;
     
     int return_code = parse(infiles, circuit);
-    ASSERT(return_code == 0, << "Parse circuit failed.")
+    EXPECT(return_code == 0, << "Parse circuit failed.")
 
     // Dump file if -d <dump_file> is specified.
 
     if (dump_file) {
         return_code = dump(circuit, dump_file);
-        ASSERT(return_code == 0, << "Dump failed.")
+        EXPECT(return_code == 0, << "Dump failed.")
     }
 
     // Parse true_path_set_file into paths, values and input_vecs.
@@ -260,7 +268,7 @@ static void execute_verify(int argc, const char* argv[]) {
                                       values,
                                       input_vecs);
 
-    ASSERT(return_code == 0, 
+    EXPECT(return_code == 0, 
         << "Parse '" << true_path_set_file << "' failed.")
 
     // Verify true path set.
@@ -272,7 +280,7 @@ static void execute_verify(int argc, const char* argv[]) {
                                        values,
                                        input_vecs);
                                        
-    ASSERT(return_code == 0, << "Verification process failed.")
+    EXPECT(return_code == 0, << "Verification process failed.")
 
     // Clean up.
 
@@ -307,12 +315,12 @@ static void execute_dump(int argc, const char* argv[]) {
     Circuit circuit;
     
     int return_code = parse(infiles, circuit);
-    ASSERT(return_code == 0, << "Parse circuit failed.")
+    EXPECT(return_code == 0, << "Parse circuit failed.")
 
     // Dump file.
 
     return_code = dump(circuit, dump_file);
-    ASSERT(return_code == 0, << "Dump failed.")
+    EXPECT(return_code == 0, << "Dump failed.")
 
     // Clean up.
 
