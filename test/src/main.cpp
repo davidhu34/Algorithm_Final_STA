@@ -23,6 +23,9 @@ void test_minisat(void);
 void test_circuit(void);
 void test_circuit_state(void);
 
+// test_ana_find.cpp
+void test_find_true_paths(void);
+
 int main(int argc, const char* argv[]) {
     // Call test function here.
     // Comment out those you don't want to test.
@@ -40,12 +43,15 @@ int main(int argc, const char* argv[]) {
     std::cerr << "\ntest_util_hash_map.cpp\n";
     test_hash_map();
 
-    std::cerr << "\ntest_minisat_blbd.cpp";
+    std::cerr << "\ntest_minisat_blbd.cpp\n";
     test_minisat();
 
     std::cerr << "\ntest_cir_circuit.cpp\n";
     test_circuit();
     test_circuit_state();
+
+    //std::cerr << "\ntest_ana_find.cpp\n";
+    //test_find_true_paths();
 
     return 0;
 }
