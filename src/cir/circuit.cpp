@@ -42,6 +42,32 @@ void Circuit::printState () const
 
 }
 
+void Circuit::clear() {
+	typedef std::map<std::string, Wire*>::iterator IterW;
+
+	for (IterW it = _Wires.begin(); it != _Wires.end(); ++it) {
+		delete it->second;
+	}
+	_Wires.clear();
+
+	typedef std::map<std::string, Gate*>::iterator IterG;
+	
+	for (IterG it = _Inputs.begin(); it != _Inputs.end(); ++it) {
+		delete it->second;
+	}
+	_Inputs.clear();
+
+	for (size_t i = 0; i < _Outputs.size(); ++i) {
+		delete _Outputs[i];
+	}
+	_Outputs.clear();
+
+	for (size_t i = 0; i < _LogicGates.size(); ++i) {
+		delete _LogicGates[i];
+	}
+	_LogicGates.clear();
+}
+
 void Circuit::newInput ( string gname )
 { 
 	_Inputs[gname] = new INPUT(gname);
@@ -57,7 +83,7 @@ bool Circuit::newLogicGate ( string gname, string model, string inA, string inB,
 {
 	string m = case_models[model];
 	Gate* newGate;
-cout<< "new gate: "<<endl;
+//cout<< "new gate: "<<endl;
 	if ( m == "not" ) {
 		if ( inA == "" || outY == "" ) return false;
 		else

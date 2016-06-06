@@ -39,9 +39,11 @@ public:
 	void testPrint ();
 	void printState () const;
 
-    map<string, Gate*>& getInputs()     {return _Inputs;}
-    vector<Gate*>&      getOutputs()    {return _Outputs;}
+	map<string, Gate*>& getInputs()     {return _Inputs;}
+	vector<Gate*>&      getOutputs()    {return _Outputs;}
 	vector<Gate*>&      getLogicGates() {return _LogicGates;}
+
+	void clear();
 
 private:
 	void linkWire ( Gate* g, string wname, string pin );
