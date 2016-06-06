@@ -265,7 +265,16 @@ int Sta::Cir::parse_true_path_set(
 
             // Read Type
             EXPECT("(")
-            std::string temp = gate->getModel();
+            std::string temp;
+            if (gate->getModel() == "PI") {
+                temp = "in";
+            }
+            else if (gate->getModel() == "PO") {
+                temp = "out";
+            }
+            else {
+                temp = gate->getModel();
+            }
             EXPECT(temp)
             EXPECT(")")
 
@@ -314,10 +323,10 @@ int Sta::Cir::parse_true_path_set(
                 // Check whether the connected pin is correct.
 
                 size_t idx;
-                if (reader.token == "A") {
+                if (reader.token == "A" && gate->getFanIn().size() >= 1) {
                     idx = 0;
                 }
-                else if (reader.token == "B") {
+                else if (reader.token == "B" && gate->getFanIn().size() >= 2) {
                     idx = 1;
                 }
                 else {
@@ -344,7 +353,15 @@ int Sta::Cir::parse_true_path_set(
 
             // Read Type
             EXPECT("(")
-            temp = gate->getModel();
+            if (gate->getModel() == "PI") {
+                temp = "in";
+            }
+            else if (gate->getModel() == "PO") {
+                temp = "out";
+            }
+            else {
+                temp = gate->getModel();
+            }
             EXPECT(temp)
             EXPECT(")")
 
