@@ -122,18 +122,18 @@ void test_find_true_paths_single(void) {
         << "Parse circuit failed while doing case0.\n");
 
     // find_true_paths() will put its result into these variables.
-    std::vector<Path>                paths;
+    std::vector<Sta::Cir::Path>      paths;
     std::vector< std::vector<bool> > values;
-    std::vector<InputVec>            input_vecs;
+    std::vector<Sta::Cir::InputVec>  input_vecs;
     
     int return_code;
 
-    return_code = find_true_paths(Ckt,
-                                  10,  // time constraint
-                                  7,   // slack constraint
-                                  paths, 
-                                  values, 
-                                  input_vecs);
+    return_code = Sta::Ana::find_true_paths(Ckt,
+                                            10,  // time constraint
+                                            7,   // slack constraint
+                                            paths, 
+                                            values, 
+                                            input_vecs);
 
     ASSERT(return_code == 0, // return_code should be 0 if success.
         << "Find answer failed while doing case0.\n");
