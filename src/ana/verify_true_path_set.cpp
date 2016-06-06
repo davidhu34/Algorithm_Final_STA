@@ -3,6 +3,15 @@
 #include <iostream>
 #include <queue>
 
+#ifndef NDEBUG
+#include "sta/src/util/converter.h"
+
+static time_t      start_time;
+static double      time_difference;
+static double      time_step;
+static std::string buffer;
+#endif
+
 // Calculate _value of all gates. Please initialize PI to required
 // _value and all other gate to undefined _value before passing
 // circuit to me.
@@ -168,6 +177,10 @@ int Sta::Ana::verify_true_path_set(
     const std::vector< std::vector<bool> >& values,
     const std::vector<Cir::InputVec>&       input_vecs) {
 
+    #ifndef NDEBUG
+    std::cerr << "Number of verified path: ";
+    #endif
+
     int return_code = 0;
 
     for (size_t i = 0; i < paths.size(); ++i) {
@@ -176,7 +189,24 @@ int Sta::Ana::verify_true_path_set(
                                        i,
                                        values[i], 
                                        input_vecs[i]);
+
+        #ifndef NDEBUG
+        time_difference = difftime(time(0), start_time);
+
+        if (time_difference > time_step) {
+            time_step = time_difference + 1.0;
+            std::cerr << std::string(buffer.size(), '\b');
+
+            buffer = Sta::Util::to_str(i);
+            std::cerr << buffer;
+        }
+        #endif
     }
+
+    #ifndef NDEBUG
+    std::cerr << std::string(buffer.size(), '\b');
+    std::cerr << paths.size() << "\n";
+    #endif
 
     return return_code;
 }

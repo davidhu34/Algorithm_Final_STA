@@ -475,9 +475,7 @@ start_function:
 
                 if (time_difference > time_step) {
                     time_step = time_difference + 1.0;
-                    for (size_t i = 0; i < buffer.size(); ++i) {
-                        std::cerr << "\b";
-                    }
+                    std::cerr << std::string(buffer.size(), '\b');
 
                     buffer = Sta::Util::to_str(input_vecs.size());
                     std::cerr << buffer;
@@ -595,9 +593,7 @@ int Sta::Ana::find_true_paths(
     }
 
     #ifndef NDEBUG
-    for (size_t i = 0; i < buffer.size(); ++i) {
-        std::cerr << "\b";
-    }
+    std::cerr << std::string(buffer.size(), '\b');
     std::cerr << input_vecs.size() << "\n";
     #endif
 
