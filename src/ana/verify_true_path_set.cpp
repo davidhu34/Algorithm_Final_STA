@@ -3,22 +3,21 @@
 #include <iostream>
 #include <queue>
 
-// Calculate value of all gates. Please initialize PI to required
-// value and all other gate to undefined value before passing
+// Calculate _value of all gates. Please initialize PI to required
+// _value and all other gate to undefined _value before passing
 // circuit to me.
 //
 static void calculate_value(Sta::Cir::Circuit& cir) {
     using Sta::Cir::Gate;
-    using Sta::Cir::Module;
 
-    // Assign 0 to all gate's tag. It means the number of fan-in of
+    // Assign 0 to all gate's _tag. It means the number of fan-in of
     // that gate which has arrived.
     //
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        cir.primary_outputs[i]->tag = 0;
+    for (size_t i = 0; i < cir.getOutputs().size(); ++i) {
+        cir.getOutputs()[i]->_tag = 0;
     }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->tag = 0;
+    for (size_t i = 0; i < cir.getLogicGates().size(); ++i) {
+        cir.getLogicGates()[i]->_tag = 0;
     }
 
     // For all gate inside queue, all of its fan-in has arrived.
@@ -28,9 +27,14 @@ static void calculate_value(Sta::Cir::Circuit& cir) {
     std::queue<Gate*> q;
     
     // Add primary_inputs into queue.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        Gate* pi = cir.primary_inputs[i];
-        pi->arrival_time = 0;
+    typedef std::map<std::string, Gate*>::iterator Iter;
+
+    for (Iter it = cir.getInputs().begin();
+         it != cir.getInputs().end();
+         ++it                               ) {
+
+        Gate* pi = it->second;
+        pi->_arrivalTime = 0;
         q.push(pi);
     }
 
@@ -40,43 +44,38 @@ static void calculate_value(Sta::Cir::Circuit& cir) {
         q.pop();
         
         // Tell gate's fan-outs that it has arrived.
-        for (size_t i = 0; i < gate->tos.size(); ++i) {
-            Gate* fanout = gate->tos[i];
-            fanout->tag += 1;
+        for (size_t i = 0; i < gate->getFanOut().size(); ++i) {
+            Gate* fanout = gate->getFanOut()[i];
+            fanout->_tag += 1;
             
             // If that fan-out's fan-ins have all arrived
-            if (fanout->tag == fanout->froms.size()) {
+            if (fanout->_tag == fanout->getFanIn().size()) {
                 
-                // Assign value to that fan-out.
-                switch (fanout->module) {
-                case Module::NAND2:
-                    fanout->value = !(fanout->froms[0]->value &&
-                                      fanout->froms[1]->value   );
-                    break;
-
-                case Module::NOR2:
-                    fanout->value = !(fanout->froms[0]->value ||
-                                      fanout->froms[1]->value   );
-                    break;
-
-                case Module::NOT1:
-                    fanout->value = !fanout->froms[0]->value;
-                    break;
-
-                case Module::PO:
-                    fanout->value = fanout->froms[0]->value;
-                    break;
+                // Assign _value to that fan-out.
+                if (fanout->getModel() == "NAND2") {
+                    fanout->_value = !(fanout->getFanIn()[0]->_value &&
+                                      fanout->getFanIn()[1]->_value   );
+                }
+                else if (fanout->getModel() == "NOR2") {
+                    fanout->_value = !(fanout->getFanIn()[0]->_value ||
+                                      fanout->getFanIn()[1]->_value   );
+                }
+                else if (fanout->getModel() == "NOT1") {
+                    fanout->_value = !fanout->getFanIn()[0]->_value;
+                }
+                else if (fanout->getModel() == "PO") {
+                    fanout->_value = fanout->getFanIn()[0]->_value;
                 }
 
                 // Assign arrival time to that fan-out.
-                if (fanout->module == Module::PO) {
-                    fanout->arrival_time = gate->arrival_time;
+                if (fanout->getModel() == "PO") {
+                    fanout->_arrivalTime = gate->_arrivalTime;
 
                     // No need to put PO into queue, because PO does
                     // not have fan-out.
                 }
                 else {
-                    fanout->arrival_time = gate->arrival_time + 1;
+                    fanout->_arrivalTime = gate->_arrivalTime + 1;
 
                     // Add that fan-out to queue.
                     q.push(fanout);
@@ -86,18 +85,19 @@ static void calculate_value(Sta::Cir::Circuit& cir) {
     }
 }
 
-#define ASSERT(condition)                                                 \
-    if (!(condition)) {                                                   \
-        std::cerr << "Error: Gate '" << g1->name << "' in Path { "        \
-                  << path_idx + 1 << " } is not part of true path."       \
-                  << "\nnext->name  = " << next->name                     \
-                  << "\nnext->module= " << cir.modules[next->module].name \
-                  << "\nnext->value = " << (int)(next->value)             \
-                  << "\ng1->name    = " << g1->name                       \
-                  << "\ng1->value   = " << (int)(g1->value)               \
-                  << "\ng2->name    = " << g2->name                       \
-                  << "\ng2->value   = " << (int)(g2->value) << "\n";      \
-        return 1;                                                         \
+#define ASSERT(condition)                                                \
+    if (!(condition)) {                                                  \
+        std::cerr << "Error: Gate '" << g1->getName() << "' in Path { "  \
+                  << path_idx + 1 << " } is not part of true path."      \
+                  << "\nnext->getName()  = " << next->getName()          \
+                  << "\nnext->getModel() = " << next->getModel()         \
+                  << "\nnext->_value     = " << (int)(next->_value)      \
+                  << "\ng1->getName()    = " << g1->getName()            \
+                  << "\ng1->_value       = " << (int)(g1->_value)        \
+                  << "\ng2->getName()    = " << g2->getName()            \
+                  << "\ng2->_value       = " << (int)(g2->_value)        \
+                  << "\n";                                               \
+        return 1;                                                        \
     }
 
 // Verify a whether a path is a true path. Return 0 if it is true.
@@ -107,47 +107,52 @@ static int verify_true_path(Sta::Cir::Circuit&        cir,
                             const std::vector<bool>&  path_value,
                             const Sta::Cir::InputVec& input_vec  ) {
     using Sta::Cir::Gate;
-    using Sta::Cir::Module;
     
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        cir.primary_inputs[i]->value = input_vec[i];
+    typedef std::map<std::string, Gate*>::iterator Iter;
+
+    int i = 0;
+    for (Iter it = cir.getInputs().begin();
+         it != cir.getInputs().end();
+         ++it, ++i                          ) {
+
+        it->second->_value = input_vec[i];
     }
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        cir.primary_outputs[i]->value = 2;
+    for (size_t i = 0; i < cir.getOutputs().size(); ++i) {
+        cir.getOutputs()[i]->_value = 2;
     }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->value = 2;
+    for (size_t i = 0; i < cir.getLogicGates().size(); ++i) {
+        cir.getLogicGates()[i]->_value = 2;
     }
 
     calculate_value(cir);
 
     for (size_t i = 0; i < path.size() - 1; ++i) {
-        const Gate* g1   = path[i];
-        const Gate* next = path[i + 1];
-        const Gate* g2   = 0;
+        Gate* g1   = path[i];
+        Gate* next = path[i + 1];
+        Gate* g2   = 0;
 
-        if (next->module == Module::NAND2 ||
-            next->module == Module::NOR2    ) {
+        if (next->getModel() == "NAND2" ||
+            next->getModel() == "NOR2"    ) {
 
             // Try to find side input
-            if (next->froms[0] == g1) {
-                g2 = next->froms[1];
+            if (next->getFanIn()[0] == g1) {
+                g2 = next->getFanIn()[1];
             }
             else {
-                g2 = next->froms[0];
+                g2 = next->getFanIn()[0];
             }
 
-            if (next->module == Module::NAND2) {
-                ASSERT(g1->value == 0 || g2->value == 1)
+            if (next->getModel() == "NAND2") {
+                ASSERT(g1->_value == 0 || g2->_value == 1)
             }
-            else { // next->module == Module::NOR2
-                ASSERT(g1->value == 1 || g2->value == 0)
+            else { // next->getModel() == "NOR2"
+                ASSERT(g1->_value == 1 || g2->_value == 0)
             }
         }
 
 
-        if (g1->value != path_value[i]) {
-            std::cerr << "Error: Gate '" << g1->name << "' value "
+        if (g1->_value != path_value[i]) {
+            std::cerr << "Error: Gate '" << g1->getName() << "' _value "
                       << "does not match with mine.\n";
             return 1;
         }
