@@ -147,7 +147,7 @@ struct Reader {
 
 int Sta::Cir::parse_true_path_set(
     const std::string&                true_path_set_file,
-    const Circuit&                    cir,
+    Circuit&                          cir,
     int                               time_constraint,
     int                               slack_constraint,
     std::vector<Path>&                paths,
@@ -169,23 +169,28 @@ int Sta::Cir::parse_true_path_set(
     GateMap gate_map(Util::hash_str);
 
     gate_map.bucket[0].reserve(
-        cir.primary_inputs.size()  +
-        cir.primary_outputs.size() +
-        cir.logic_gates.size());
+        cir.getInputs().size()     +
+        cir.getOutputs().size()    +
+        cir.getLogicGates().size());
 
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        Gate* pi = cir.primary_inputs[i];
-        gate_map.bucket[0].push_back((GateMap::Pair(pi->name, pi)));
+    typedef std::map<std::string, Gate*>::iterator Iter;
+
+    for (Iter it = cir.getInputs().begin();
+         it != cir.getInputs().end();
+         ++it                               ) {
+
+        Gate* pi = it->second;
+        gate_map.bucket[0].push_back((GateMap::Pair(pi->getName(), pi)));
         gate_map.size += 1;
     }
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        Gate* po = cir.primary_outputs[i];
-        gate_map.bucket[0].push_back((GateMap::Pair(po->name, po)));
+    for (size_t i = 0; i < cir.getOutputs().size(); ++i) {
+        Gate* po = cir.getOutputs()[i];
+        gate_map.bucket[0].push_back((GateMap::Pair(po->getName(), po)));
         gate_map.size += 1;
     }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        Gate* g = cir.logic_gates[i];
-        gate_map.bucket[0].push_back((GateMap::Pair(g->name, g)));
+    for (size_t i = 0; i < cir.getLogicGates().size(); ++i) {
+        Gate* g = cir.getLogicGates()[i];
+        gate_map.bucket[0].push_back((GateMap::Pair(g->getName(), g)));
         gate_map.size += 1;
     }
     gate_map.rehash(Util::prime_gt(gate_map.size));
@@ -202,7 +207,7 @@ int Sta::Cir::parse_true_path_set(
     EXPECT("}")
     EXPECT("Benchmark")
     EXPECT("{")
-    EXPECT(cir.name)
+    EXPECT(cir.getCaseName())
     EXPECT("}")
 
     // Read Path
@@ -260,12 +265,12 @@ int Sta::Cir::parse_true_path_set(
 
             // Read Type
             EXPECT("(")
-            std::string temp = cir.modules[gate->module].name;
+            std::string temp = gate->getModel();
             EXPECT(temp)
             EXPECT(")")
 
             // Incr
-            if (gate->module == Module::PI) {
+            if (gate->getModel() == "PI") {
                 EXPECT("0")
             }
             else {
@@ -307,19 +312,29 @@ int Sta::Cir::parse_true_path_set(
                 reader.get_token();
 
                 // Check whether the connected pin is correct.
-                size_t idx = cir.modules[gate->module]
-                                .find_input_name(reader.token);
 
-                ASSERT(idx != Module::npos,
+                size_t idx;
+                if (reader.token == "A") {
+                    idx = 0;
+                }
+                else if (reader.token == "B") {
+                    idx = 1;
+                }
+                else {
+                    idx = std::string::npos;
+                }
+
+                ASSERT(idx != std::string::npos,
                     << "At line " << reader.line_no << ": "
-                    << "Gate '" << gate->name << "' does not have "
+                    << "Gate '" << gate->getName() << "' does not have "
                     << "input pin named '" << reader.token << "'.")
 
-                ASSERT(gate->froms[idx]->name == path.back()->name,
+                ASSERT(gate->getFanIn()[idx]->getName() == 
+                       path.back()->getName(),
                     << "At line " << reader.line_no << ": "
-                    << "Gate '" << gate->name << "' does not connect "
-                    << "to gate '" << path.back()->name << "' through "
-                    << "pin '" << reader.token << "'.")
+                    << "Gate '" << gate->getName() << "' does not "
+                    << "connect to gate '" << path.back()->getName() 
+                    << "' through pin '" << reader.token << "'.")
             }
             else { // It is PO
                 path.push_back(gate);
@@ -329,7 +344,7 @@ int Sta::Cir::parse_true_path_set(
 
             // Read Type
             EXPECT("(")
-            temp = cir.modules[gate->module].name;
+            temp = gate->getModel();
             EXPECT(temp)
             EXPECT(")")
 
@@ -337,7 +352,7 @@ int Sta::Cir::parse_true_path_set(
             EXPECT("0")
 
             // Path Delay
-            if (gate->module == Module::PO) {
+            if (gate->getModel() == "PO") {
                 temp = Util::to_str(path.size() - 2);
             }
             else {
@@ -396,7 +411,7 @@ int Sta::Cir::parse_true_path_set(
 
             gate = gate_map[reader.token];
 
-            ASSERT(gate->module == Module::PI,
+            ASSERT(gate->getModel() == "PI",
                 << "At line " << reader.line_no << ": "
                 << "Gate '" << reader.token << "' is not a primary "
                 << "input.")
@@ -404,14 +419,14 @@ int Sta::Cir::parse_true_path_set(
             // Read =
             EXPECT("=")
 
-            // Read value
+            // Read _value
             reader.get_token();
 
             if (reader.token == "0" || reader.token == "f") {
-                gate->value = 0;
+                gate->_value = 0;
             }
             else if (reader.token == "1" || reader.token == "r") {
-                gate->value = 1;
+                gate->_value = 1;
             }
             else {
                 ASSERT(false,
@@ -421,8 +436,13 @@ int Sta::Cir::parse_true_path_set(
             }
         }
 
-        for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-            input_vec.push_back(cir.primary_inputs[i]->value);
+        typedef std::map<std::string, Gate*>::iterator Iter;
+
+        for (Iter it = cir.getInputs().begin();
+             it != cir.getInputs().end();
+             ++it                               ) {
+
+            input_vec.push_back(it->second->_value);
         }
         input_vecs.push_back(input_vec);
     }
