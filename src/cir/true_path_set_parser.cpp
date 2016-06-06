@@ -371,11 +371,11 @@ int Sta::Cir::parse_true_path_set(
 
         ASSERT(path.front()->getModel() == "PI",
             << "True Path before line " << reader.line_no << ": "
-            << "Gate '" << path.front()->name << "' should be a PI.")
+            << "Gate '" << path.front()->getName() << "' should be a PI.")
 
         ASSERT(path.back()->getModel() == "PO",
             << "True Path before line " << reader.line_no << ": "
-            << "Gate '" << path.back()->name << "' should be a PO.")
+            << "Gate '" << path.back()->getName() << "' should be a PO.")
 
         paths.push_back(path);
         values.push_back(path_value);
