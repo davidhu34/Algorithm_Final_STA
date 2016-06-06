@@ -120,7 +120,7 @@ static void execute_find(int argc, const char* argv[]) {
 
     // Check arguments.
 
-    ASSERT(!infiles.empty(),     << "Missing <input_file>.")
+    ASSERT(infile,               << "Missing <input_file>.")
     ASSERT(time_constraint_str,  << "Missing '-t <time_constraint>'.")
     ASSERT(slack_constraint_str, << "Missing '-s <slack_constraint>'.")
     ASSERT(outfile,              << "Missing '-o <output_file>'.")
@@ -155,7 +155,7 @@ static void execute_find(int argc, const char* argv[]) {
             << "Cannot open '" << dump_file << "'.")
 
         std::streambuf* coutbuf = std::cout.rdbuf();
-        std::cout.rdbuf(fout.rdbuf());
+        std::cout.rdbuf(outf.rdbuf());
 
         circuit.printState();
 
@@ -168,13 +168,13 @@ static void execute_find(int argc, const char* argv[]) {
     std::vector< std::vector<bool> > values;
     std::vector<InputVec>            input_vecs;
 
-    return_code = find_true_paths(
-                      circuit, 
-                      time_constraint,
-                      slack_constraint,
-                      paths, 
-                      values, 
-                      input_vecs);
+    int return_code = find_true_paths(
+                          circuit, 
+                          time_constraint,
+                          slack_constraint,
+                          paths, 
+                          values, 
+                          input_vecs);
 
     ASSERT(return_code == 0, << "Find true paths failed.")
 
@@ -187,9 +187,9 @@ static void execute_find(int argc, const char* argv[]) {
     Writer writer(outf, &circuit);
     writer.setConstraint(time_constraint, slack_constraint);
     
-    return_code = write(paths, 
-                        values, 
-                        input_vecs);
+    return_code = writer.writeTruePath(paths, 
+                                       values, 
+                                       input_vecs);
 
     ASSERT(return_code, << "Write to file failed.")
 
@@ -245,7 +245,7 @@ static void execute_verify(int argc, const char* argv[]) {
 
     // Check arguments.
 
-    ASSERT(!infiles.empty(),     << "Missing <input_file>.")
+    ASSERT(infile,               << "Missing <input_file>.")
     ASSERT(true_path_set_file,   << "Missing '-v <true_path_set_file>'.")
     ASSERT(time_constraint_str,  << "Missing '-t <time_constraint>'.")
     ASSERT(slack_constraint_str, << "Missing '-s <slack_constraint>'.")
@@ -280,7 +280,7 @@ static void execute_verify(int argc, const char* argv[]) {
             << "Cannot open '" << dump_file << "'.")
 
         std::streambuf* coutbuf = std::cout.rdbuf();
-        std::cout.rdbuf(fout.rdbuf());
+        std::cout.rdbuf(outf.rdbuf());
 
         circuit.printState();
 
@@ -293,13 +293,13 @@ static void execute_verify(int argc, const char* argv[]) {
     std::vector< std::vector<bool> > values;
     std::vector<InputVec>            input_vecs;
 
-    return_code = parse_true_path_set(true_path_set_file,
-                                      circuit,
-                                      time_constraint,
-                                      slack_constraint,
-                                      paths,
-                                      values,
-                                      input_vecs);
+    int return_code = parse_true_path_set(true_path_set_file,
+                                          circuit,
+                                          time_constraint,
+                                          slack_constraint,
+                                          paths,
+                                          values,
+                                          input_vecs);
 
     ASSERT(return_code == 0, 
         << "Parse '" << true_path_set_file << "' failed.")
@@ -345,7 +345,7 @@ static void execute_dump(int argc, const char* argv[]) {
 
     // Check arguments.
 
-    ASSERT(!infiles.empty(), << "Missing <input_file>.")
+    ASSERT(infile, << "Missing <input_file>.")
 
     // Parse input files into circuit.
     
@@ -368,7 +368,7 @@ static void execute_dump(int argc, const char* argv[]) {
             << "Cannot open '" << dump_file << "'.")
 
         std::streambuf* coutbuf = std::cout.rdbuf();
-        std::cout.rdbuf(fout.rdbuf());
+        std::cout.rdbuf(outf.rdbuf());
 
         circuit.printState();
 
