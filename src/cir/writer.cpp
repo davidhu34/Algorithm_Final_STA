@@ -35,24 +35,33 @@ bool Writer::writeTruePath (
 	<< "  Pin    type                            Incr      Path delay" << endl
 	<< "  ---------------------------------------------------------------------------" << endl;
 		line = w41;
+		// input gate
 		string input = path.back()->getName() + " (in)";
 		line.replace( 0, input.length(), input );
 		cout
-	<< "  " << line << "0          0 " << RF( value.back() ) << endl;
-		
-		for ( size_t pi = path.size(); pi > 0; pi-- )
+	<< "  " << line << "0         0 " << RF( value.back() ) << endl;
+		// path gates
+		for ( size_t pi = path.size() -1 ; pi > 0; pi-- )
 		{
 			line = w41;
-			string gate = path[pi]->getName() + "/" + getPin(path[pi], path[pi-1])
-				+ "(" + path[pi]->getModel() + ")";
+			string gate = path[pi]->getName() + "/" + getPin( path[pi], path[pi-1] )
+				+ " (" + path[pi]->getModel() + ")";
 			line.replace( 0, gate.length(), gate );
 			cout
-	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi] ) <<endl;
+	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi] ) << endl;
 
 			line[ line.find("/") + 1 ] = 'Y';
 			cout
-	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi-1] ) <<endl;
-		} //end of Gates
+	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi-1] ) << endl;
+		}
+		// output gate
+		line = w41;
+		string output = path.front()->getName() + " (out)";
+		line.replace( 0, output.length(), output );
+		cout
+	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value.front() ) << endl;
+
+
 
 		cout
 	<< "  ---------------------------------------------------------------------------" << endl
