@@ -94,8 +94,8 @@ through this gate, the input of that true path can only take one
 value (if it can take 1, then it cannot take 0; if it can take 0,
 then it cannot take 1).
 
-Gate |True |This |First |Prev |
----- |---- |---- |----- |---- |----
+Gate |True |This |First |Prev |Needed?
+---- |---- |---- |----- |---- |-------
 NAND |A    |1    |A     |0X   |
 NAND |A    |1    |B     |01   |sup
 NAND |A    |1    |AB    |0X   |sup
