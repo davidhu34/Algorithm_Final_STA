@@ -12,33 +12,23 @@ static double      time_step;
 static std::string buffer;
 #endif
 
-// Calculate value of all gates. Please initialize PI to required
-// value and all other gate to undefined value before passing
-// circuit to me.
+// Calculate value and arrival time of all gates. Please initialize 
+// PI to required value and all other gate to undefined value before
+// passing circuit to me.
 //
-static void calculate_value(Sta::Cir::Circuit& cir) {
+static void calculate_value_and_arrival_time(Sta::Cir::Circuit& cir) {
     using Sta::Cir::Gate;
     using Sta::Cir::Module;
 
-    // Assign 0 to all gate's tag. It means the number of fan-in of
-    // that gate which has arrived.
-    //
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        cir.primary_outputs[i]->tag = 0;
-    }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->tag = 0;
-    }
-
-    // For all gate inside queue, all of its fan-in has arrived.
-    // Every gate inside queue has already known arrival time.
-    // This queue should be sorted according to arrival time.
+    // This is the front wave. Every gate inside queue has known 
+    // arrival time. This queue should be sorted according to
+    // arrival time.
     //
     std::queue<Gate*> q;
     
     // Add primary_inputs into queue.
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        Gate* pi = cir.primary_inputs[i];
+        Gate* pi         = cir.primary_inputs[i];
         pi->arrival_time = 0;
         q.push(pi);
     }
@@ -48,51 +38,57 @@ static void calculate_value(Sta::Cir::Circuit& cir) {
         Gate* gate = q.front();
         q.pop();
         
-        // Tell gate's fan-outs that it has arrived.
+        // Let all of gate's fan-out that does not in queue nor
+        // visited check their inputs' value and arrival time. If
+        // a fan-out decide that it knows its value and arrival
+        // time now, add it into queue.
+        //
         for (size_t i = 0; i < gate->tos.size(); ++i) {
             Gate* fanout = gate->tos[i];
-            fanout->tag += 1;
             
-            // If that fan-out's fan-ins have all arrived
-            if (fanout->tag == fanout->froms.size()) {
-                
-                // Assign value to that fan-out.
+            if (fanout->value == 2) { // Not in queue nor visited.
                 switch (fanout->module) {
                 case Module::NAND2:
-                    fanout->value = !(fanout->froms[0]->value &&
-                                      fanout->froms[1]->value   );
+                #define FANOUT_CHECK_ITS_INPUT(v0, v1)                    \
+                    if (gate->value == v0) {                              \
+                        fanout->value        = v1;                        \
+                        fanout->arrival_time = gate->arrival_time + 1;    \
+                        q.push(fanout);                                   \
+                    }                                                     \
+                    else { /* gate->value == 1 */                         \
+                        if (fanout->froms[0]->value != 2 &&               \
+                            fanout->froms[1]->value != 2   ) {            \
+                                                                          \
+                            assert(fanout->froms[0]->value == v1);        \
+                            assert(fanout->froms[1]->value == v1);        \
+                                                                          \
+                            fanout->value        = v0;                    \
+                            fanout->arrival_time = gate->arrival_time + 1;\
+                            q.push(fanout);                               \
+                        }                                                 \
+                    }
+
+                    FANOUT_CHECK_ITS_INPUT(0, 1)
                     break;
 
                 case Module::NOR2:
-                    fanout->value = !(fanout->froms[0]->value ||
-                                      fanout->froms[1]->value   );
+                    FANOUT_CHECK_ITS_INPUT(1, 0)
                     break;
 
                 case Module::NOT1:
-                    fanout->value = !fanout->froms[0]->value;
+                    fanout->value        = !gate->value;
+                    fanout->arrival_time = gate->arrival_time + 1;
+                    q.push(fanout);
                     break;
 
                 case Module::PO:
-                    fanout->value = fanout->froms[0]->value;
+                    fanout->value        = gate->value;
+                    fanout->arrival_time = gate->arrival_time;
                     break;
                 }
-
-                // Assign arrival time to that fan-out.
-                if (fanout->module == Module::PO) {
-                    fanout->arrival_time = gate->arrival_time;
-
-                    // No need to put PO into queue, because PO does
-                    // not have fan-out.
-                }
-                else {
-                    fanout->arrival_time = gate->arrival_time + 1;
-
-                    // Add that fan-out to queue.
-                    q.push(fanout);
-                }
             }
-        }
-    }
+        } // for each fanout of gate
+    } // while (!q.empty())
 }
 
 #define ASSERT(condition)                                                 \
@@ -102,10 +98,13 @@ static void calculate_value(Sta::Cir::Circuit& cir) {
                   << "\nnext->name  = " << next->name                     \
                   << "\nnext->module= " << cir.modules[next->module].name \
                   << "\nnext->value = " << (int)(next->value)             \
+                  << "\nnext->a_time= " << next->arrival_time             \
                   << "\ng1->name    = " << g1->name                       \
                   << "\ng1->value   = " << (int)(g1->value)               \
+                  << "\ng1->a_time  = " << g1->arrival_time               \
                   << "\ng2->name    = " << g2->name                       \
                   << "\ng2->value   = " << (int)(g2->value) << "\n";      \
+                  << "\ng2->a_time  = " << g1->arrival_time               \
         return 1;                                                         \
     }
 
@@ -135,26 +134,42 @@ static int verify_true_path(Sta::Cir::Circuit&        cir,
         const Gate* next = path[i + 1];
         const Gate* g2   = 0;
 
-        if (next->module == Module::NAND2 ||
-            next->module == Module::NOR2    ) {
-
-            // Try to find side input
-            if (next->froms[0] == g1) {
-                g2 = next->froms[1];
-            }
-            else {
-                g2 = next->froms[0];
-            }
-
-            if (next->module == Module::NAND2) {
-                ASSERT(g1->value == 0 || g2->value == 1)
-            }
-            else { // next->module == Module::NOR2
-                ASSERT(g1->value == 1 || g2->value == 0)
-            }
+        switch (next->module) {
+        case Module::NAND2: {
+        #define CHECK_GATE(v0, v1, afirst, bfirst)               \
+            /* Try to find side input */                         \
+            if (next->froms[0] == g1) {                          \
+                g2 = next->froms[1];                             \
+            }                                                    \
+            else {                                               \
+                g2 = next->froms[0];                             \
+            }                                                    \
+                                                                 \
+            uint8_t Y = next->value;                             \
+            uint8_t A = g1->value;                               \
+            uint8_t B = g2->value;                               \
+            int     d = g1->arrival_time - g2->arrival_time;     \
+            /* d >  0: g2 arrived first.      */                 \
+            /* d <  0: g1 arrived first.      */                 \
+            /* d == 0: they arrived together. */                 \
+                                                                 \
+            ASSERT((Y ==  0 && A ==  1 && B ==  1 && bfirst) ||  \
+                   (Y ==  0 && A ==  1 && B ==  1 && d == 0) ||  \
+                   (Y ==  1 && A ==  0 && B ==  0 && afirst) ||  \
+                   (Y ==  1 && A ==  0 && B ==  0 && d == 0) ||  \
+                   (Y == v1 && A == v0 && B == v1 && d <  0) ||  \
+                   (Y == v1 && A == v0 && B == v1 && d >  0) ||  \
+                   (Y == v1 && A == v0 && B == v1 && d == 0)   )
+            
+            CHECK_GATE(0, 1, d < 0, d > 0)
+            break;
         }
-
-
+        case Module::NOR2: {
+            CHECK_GATE(1, 0, d > 0, d < 0)
+            break;
+        }
+        } // switch
+        
         if (g1->value != path_value[i]) {
             std::cerr << "Error: Gate '" << g1->name << "' value "
                       << "does not match with mine.\n";
