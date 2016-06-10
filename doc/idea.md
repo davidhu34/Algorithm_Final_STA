@@ -26,11 +26,11 @@
 
 - ?
 
-## How to Calculate Arrival Time of All Gates
+## How to Calculate Max Arrival Time of All Gates
 
 - From input pins, do breadth first traverse toward output pins. Add
-  a node to queue only if its fan-in has all arrived. Its arrival time
-  is known if it can be added into queue.
+  a node to queue only if its fan-in has all arrived. Its max arrival
+  time is known if it can be added into queue.
 
 #### Time Complexity
 
@@ -48,30 +48,25 @@
 
 ### Method 1 (Brute Force)
 
-- Find all paths within constraint and collect them in a path list.
-
 - Try all possible permutation of input vectors.
 
-- For each input vector, assume circuit has become stable (ignoring
-  delay), then find value of all points in the circuit.
-
-- With arrival time and value at each point, we can know whether a
-  path is sensitizable. For each path in path list, check whether it
-  is sensitizable.
+- For each input vector, simulate it and note down which gate is
+  part of a true path. Then, do depth first traverse from PI to PO,
+  walking through only gate that is part of true path. If you reach
+  PO, add (without duplication) this path into true path set.
 
 #### Time Complexity
 
-- Find all paths within constaint: ?
-
 - Try all possible permutation: O(2^|PI|).
 
-- Find value of all points for an input vector: O(|E|).
+- Simulation: O(|E|).
 
-- Check all paths in path list: O(|P| * |p|) where |P| is number of
-  paths and |p| is average number of node in a path.
+- Depth first traverse: ?
 
-- Overall time complexity is ? + O(2^|PI| * |E|) + O(|P| * |p|), and 
-  O(2^|PI| * |E|) will probably dominate.
+- For each true path found, add to true path set: O(|P| * |p|) where
+  |P| is number of true path found and |p| is average path length.
+
+- Overall time complexity is O(2^|PI| * (|E| + ? + |P| * |p|)).
 
 #### Note
 
@@ -79,7 +74,7 @@
 
 ### Method 2 (Backtracking)
 
-- Calculate min arrival time of all gates.
+- Calculate min and max arrival time of all gates.
 
 - Basically the idea is trace from output pins toward input pins. Try
   every possibility (condition) that make a path become a true path.
@@ -90,28 +85,9 @@
 How many state do we need to check?
 
 Assume that, given this gate's value, for each true path that pass
-through this gate, the input of that true path can only take one
+through this gate, the PI of that true path can only take one
 value (if it can take 1, then it cannot take 0; if it can take 0,
 then it cannot take 1).
-
-Gate |True |This |First |Prev |Needed?
----- |---- |---- |----- |---- |-------
-NAND |A    |1    |A     |0X   |
-NAND |A    |1    |B     |01   |sup
-NAND |A    |1    |AB    |0X   |sup
-NAND |A    |1    |AB    |01   |sup
-NAND |A    |0    |A     |0X   |imp
-NAND |A    |0    |B     |11   |
-NAND |A    |0    |AB    |0X   |imp
-NAND |A    |0    |AB    |11   |sup
-NOR  |A    |1    |A     |1X   |imp
-NOR  |A    |1    |B     |00   |
-NOR  |A    |1    |AB    |1X   |imp
-NOR  |A    |1    |AB    |00   |sup
-NOR  |A    |0    |A     |1X   |
-NOR  |A    |0    |B     |10   |sup
-NOR  |A    |0    |AB    |1X   |sup
-NOR  |A    |0    |AB    |10   |sup
 
 State table:
 
@@ -225,18 +201,9 @@ NOR  |B    |1    |11   |AB    |imp
 
 - Gate : Type of gate.
 - True : Make which input pin to become true path?
-- This : Assume this gate has this value.
+- Y, AB: Assume this gate has this value.
 - First: Which input pin arrive first?
-- Prev : What value should each input pin has if I want to make
-         specified pin to become a true path? 1X means A = 1 and
-         B can be any value.
-- sup  : Superfluous, the state of this Prev is checked in other row.
-- imp  : Impossible, the state of this Prev is impossible for given
-         value of This.
-
-So, we need to check 4 states for NAND gate, (2 to make pin A become
-true path, another 2 to make pin B become true path), 4 states for
-NOR gate, and 2 states for NOT gate.
+- imp  : Impossible, this state does not match gate type.
 
 - Pseudo code:
 
@@ -385,4 +352,445 @@ function trace()
 
 - TODO
 
+### Method 4 (Wave)
+
+```
+gate = queue.front()
+queue.pop()
+
+if gate->type == NAND
+    // 0 = falling
+    // 1 = rising
+    // 2 = undefined
+    //
+    if      (Y, A, B) == (0, 0, 0) -> bad
+    else if (Y, A, B) == (0, 0, 1) -> bad
+    else if (Y, A, B) == (0, 0, 2) -> bad
+    else if (Y, A, B) == (0, 1, 0) -> bad
+    else if (Y, A, B) == (0, 1, 1)
+    else if (Y, A, B) == (0, 1, 2) -> B = 1
+    else if (Y, A, B) == (0, 2, 0) -> bad
+    else if (Y, A, B) == (0, 2, 1) -> A = 1
+    else if (Y, A, B) == (0, 2, 2) -> A = 1, B = 1
+
+    else if (Y, A, B) == (1, 0, 0)
+    else if (Y, A, B) == (1, 0, 1)
+    else if (Y, A, B) == (1, 0, 2)
+    else if (Y, A, B) == (1, 1, 0)
+    else if (Y, A, B) == (1, 1, 1) -> bad
+    else if (Y, A, B) == (1, 1, 2) -> B = 0
+    else if (Y, A, B) == (1, 2, 0)
+    else if (Y, A, B) == (1, 2, 1) -> A = 0
+    else if (Y, A, B) == (1, 2, 2)
+
+    else if (Y, A, B) == (2, 0, 0) -> Y = 1
+    else if (Y, A, B) == (2, 0, 1) -> Y = 1
+    else if (Y, A, B) == (2, 0, 2) -> Y = 1
+    else if (Y, A, B) == (2, 1, 0) -> Y = 1
+    else if (Y, A, B) == (2, 1, 1) -> Y = 0
+    else if (Y, A, B) == (2, 1, 2)
+    else if (Y, A, B) == (2, 2, 0) -> Y = 1
+    else if (Y, A, B) == (2, 2, 1)
+    else if (Y, A, B) == (2, 2, 2)
+
+    // T: True path
+    // - X: No
+    // - A
+    // - B
+    //
+    // Yt, At, Bt: Arrival time known
+    // - 0 = unknown
+    // - 1 = known
+    //
+    // Q: Compare arrival time
+    // - 0 = unknown
+    // - 1 = Att <  Btt
+    // - 2 = Att >  Btt
+    // - 3 = Att == Btt
+    //
+    if      (T, Yt, At, Bt, Q) == (X, 0, 0, 0, 0)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 0, 1, 0)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 0, 0)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 1, 1)
+        if      (Y, A, B) == (0, 1, 1) -> Ytt = Btt + 1
+        else if (Y, A, B) == (1, 0, 0) -> Ytt = Att + 1
+        else if (Y, A, B) == (1, 0, 1) -> Ytt = Att + 1
+        else if (Y, A, B) == (1, 0, 2) -> Ytt = Att + 1
+        else if (Y, A, B) == (1, 1, 0) -> Ytt = Btt + 1
+        else if (Y, A, B) == (1, 2, 0) 
+        else if (Y, A, B) == (1, 2, 2)
+        else if (Y, A, B) == (2, 1, 2) -> Ytt = Btt + 1
+        else if (Y, A, B) == (2, 2, 1)
+        else if (Y, A, B) == (2, 2, 2)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 1, 2)
+        if      (Y, A, B) == (0, 1, 1) -> Ytt = Att + 1
+        else if (Y, A, B) == (1, 0, 0) -> Ytt = Btt + 1
+        else if (Y, A, B) == (1, 0, 1) -> Ytt = Att + 1
+        else if (Y, A, B) == (1, 0, 2) 
+        else if (Y, A, B) == (1, 1, 0) -> Ytt = Btt + 1
+        else if (Y, A, B) == (1, 2, 0) -> Ytt = Btt + 1
+        else if (Y, A, B) == (1, 2, 2)
+        else if (Y, A, B) == (2, 1, 2)
+        else if (Y, A, B) == (2, 2, 1) -> Ytt = Att + 1
+        else if (Y, A, B) == (2, 2, 2)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 1, 3) -> Ytt = Att + 1
+    else if (T, Yt, At, Bt, Q) == (X, 1, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 1) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 3) -> wont
+
+    else if (T, Yt, At, Bt, Q) == (A, 0, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 1, 1) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 1, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 1, 3) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 0, 0)
+        if      (Y, A, B) == (0, 1, 1) -> Att must >= Btt
+            if !(Bmint <= Att) -> bad
+        else if (Y, A, B) == (1, 0, 0) -> Att must <= Btt
+            if !(Bmaxt >= Att) -> bad
+        else if (Y, A, B) == (1, 0, 1)
+        else if (Y, A, B) == (1, 0, 2) -> Att must <= Btt or B = 1
+            if !(Bmaxt >= Att) -> B = 1
+        else if (Y, A, B) == (1, 1, 0) -> wont
+        else if (Y, A, B) == (1, 2, 0) -> wont
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 1, 1)
+        if      (Y, A, B) == (0, 1, 1) -> bad
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (1, 0, 1)
+        else if (Y, A, B) == (1, 0, 2)
+        else if (Y, A, B) == (1, 1, 0) -> wont
+        else if (Y, A, B) == (1, 2, 0) -> wont
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 1, 2)
+        if      (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (1, 0, 0) -> bad
+        else if (Y, A, B) == (1, 0, 1)
+        else if (Y, A, B) == (1, 0, 2) -> B = 1
+        else if (Y, A, B) == (1, 1, 0) -> wont
+        else if (Y, A, B) == (1, 2, 0) -> wont
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 1, 3)
+        if      (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (1, 0, 1)
+        else if (Y, A, B) == (1, 0, 2)
+        else if (Y, A, B) == (1, 1, 0) -> wont
+        else if (Y, A, B) == (1, 2, 0) -> wont
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+
+    else if (T, Yt, At, Bt, Q) == (B, 0, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 1, 1) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 1, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 1, 3) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 0, 1, 0)
+        if      (Y, A, B) == (0, 1, 1) -> Att must <= Btt
+            if !(Amint <= Btt) -> bad
+        else if (Y, A, B) == (1, 0, 0) -> Att must >= Btt
+            if !(Amaxt >= Btt) -> bad
+        else if (Y, A, B) == (1, 0, 1) -> wont
+        else if (Y, A, B) == (1, 0, 2) -> wont
+        else if (Y, A, B) == (1, 1, 0) 
+        else if (Y, A, B) == (1, 2, 0) -> Att must >= Btt or A = 1
+            if !(Amaxt >= Btt) -> A = 1
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 1, 1)
+        if      (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (1, 0, 0) -> bad
+        else if (Y, A, B) == (1, 0, 1) -> wont
+        else if (Y, A, B) == (1, 0, 2) -> wont
+        else if (Y, A, B) == (1, 1, 0) 
+        else if (Y, A, B) == (1, 2, 0) 
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 1, 2)
+        if      (Y, A, B) == (0, 1, 1) -> bad
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (1, 0, 1) -> wont
+        else if (Y, A, B) == (1, 0, 2) -> wont
+        else if (Y, A, B) == (1, 1, 0)
+        else if (Y, A, B) == (1, 2, 0) -> A = 1
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 1, 3)
+        if      (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (1, 0, 1) -> wont
+        else if (Y, A, B) == (1, 0, 2) -> wont
+        else if (Y, A, B) == (1, 1, 0)
+        else if (Y, A, B) == (1, 2, 0)
+        else if (Y, A, B) == (1, 2, 2) -> wont
+        else if (Y, A, B) == (2, 1, 2) -> wont
+        else if (Y, A, B) == (2, 2, 1) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+
+else if gate->type == NOR
+    // 0 = falling
+    // 1 = rising
+    // 2 = undefined
+    //
+    if      (Y, A, B) == (0, 0, 0) -> bad
+    else if (Y, A, B) == (0, 0, 1)
+    else if (Y, A, B) == (0, 0, 2) -> B = 1
+    else if (Y, A, B) == (0, 1, 0)
+    else if (Y, A, B) == (0, 1, 1)
+    else if (Y, A, B) == (0, 1, 2)
+    else if (Y, A, B) == (0, 2, 0) -> A = 1
+    else if (Y, A, B) == (0, 2, 1)
+    else if (Y, A, B) == (0, 2, 2)
+
+    else if (Y, A, B) == (1, 0, 0)
+    else if (Y, A, B) == (1, 0, 1) -> bad
+    else if (Y, A, B) == (1, 0, 2) -> B = 0
+    else if (Y, A, B) == (1, 1, 0) -> bad
+    else if (Y, A, B) == (1, 1, 1) -> bad
+    else if (Y, A, B) == (1, 1, 2) -> bad
+    else if (Y, A, B) == (1, 2, 0) -> A = 0
+    else if (Y, A, B) == (1, 2, 1) -> bad
+    else if (Y, A, B) == (1, 2, 2) -> A = 0, B = 0
+
+    else if (Y, A, B) == (2, 0, 0) -> Y = 1
+    else if (Y, A, B) == (2, 0, 1) -> Y = 0
+    else if (Y, A, B) == (2, 0, 2)
+    else if (Y, A, B) == (2, 1, 0) -> Y = 0
+    else if (Y, A, B) == (2, 1, 1) -> Y = 0
+    else if (Y, A, B) == (2, 1, 2) -> Y = 0
+    else if (Y, A, B) == (2, 2, 0) 
+    else if (Y, A, B) == (2, 2, 1) -> Y = 0
+    else if (Y, A, B) == (2, 2, 2)
+
+    // T: True path
+    // - X: No
+    // - A
+    // - B
+    //
+    // Yt, At, Bt: Arrival time known
+    // - 0 = unknown
+    // - 1 = known
+    //
+    // Q: Compare arrival time
+    // - 0 = unknown
+    // - 1 = Att <  Btt
+    // - 2 = Att >  Btt
+    // - 3 = Att == Btt
+    //
+    if      (T, Yt, At, Bt, Q) == (X, 0, 0, 0, 0)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 0, 1, 0)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 0, 0)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 1, 1)
+        if      (Y, A, B) == (0, 0, 1) -> Ytt = Btt + 1
+        else if (Y, A, B) == (0, 1, 0) -> Ytt = Att + 1
+        else if (Y, A, B) == (0, 1, 1) -> Ytt = Att + 1
+        else if (Y, A, B) == (0, 1, 2) -> Ytt = Att + 1
+        else if (Y, A, B) == (0, 2, 1)
+        else if (Y, A, B) == (0, 2, 2)
+        else if (Y, A, B) == (1, 0, 0) -> Ytt = Btt + 1
+        else if (Y, A, B) == (2, 0, 2) -> Ytt = Btt + 1
+        else if (Y, A, B) == (2, 2, 0) 
+        else if (Y, A, B) == (2, 2, 2)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 1, 2)
+        if      (Y, A, B) == (0, 0, 1) -> Ytt = Btt + 1
+        else if (Y, A, B) == (0, 1, 0) -> Ytt = Att + 1
+        else if (Y, A, B) == (0, 1, 1) -> Ytt = Btt + 1
+        else if (Y, A, B) == (0, 1, 2)
+        else if (Y, A, B) == (0, 2, 1) -> Ytt = Btt + 1
+        else if (Y, A, B) == (0, 2, 2)
+        else if (Y, A, B) == (1, 0, 0) -> Ytt = Att + 1
+        else if (Y, A, B) == (2, 0, 2)
+        else if (Y, A, B) == (2, 2, 0) -> Ytt = Att + 1
+        else if (Y, A, B) == (2, 2, 2)
+    else if (T, Yt, At, Bt, Q) == (X, 0, 1, 1, 3) -> Ytt = Att + 1
+    else if (T, Yt, At, Bt, Q) == (X, 1, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 1) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 3) -> wont
+
+    else if (T, Yt, At, Bt, Q) == (A, 0, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 1, 1) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 1, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 0, 1, 1, 3) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 0, 0)
+        if      (Y, A, B) == (0, 0, 1) -> wont
+        else if (Y, A, B) == (0, 1, 0)
+        else if (Y, A, B) == (0, 1, 1) -> Att must <= Btt
+            if !(Bmaxt >= Att) -> bad
+        else if (Y, A, B) == (0, 1, 2) -> Att must <= Btt or B = 0
+            if !(Bmaxt >= Att) -> B = 0
+        else if (Y, A, B) == (0, 2, 1) -> wont
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0) -> Att must >= Btt
+            if !(Bmint <= Att) -> bad
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 1, 1)
+        if      (Y, A, B) == (0, 0, 1) -> wont
+        else if (Y, A, B) == (0, 1, 0)
+        else if (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (0, 1, 2)
+        else if (Y, A, B) == (0, 2, 1) -> wont
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0) -> bad
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 1, 2)
+        if      (Y, A, B) == (0, 0, 1) -> wont
+        else if (Y, A, B) == (0, 1, 0)
+        else if (Y, A, B) == (0, 1, 1) -> bad
+        else if (Y, A, B) == (0, 1, 2) -> B = 0
+        else if (Y, A, B) == (0, 2, 1) -> wont
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont  
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (A, 1, 1, 1, 3)
+        if      (Y, A, B) == (0, 0, 1) -> wont
+        else if (Y, A, B) == (0, 1, 0)
+        else if (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (0, 1, 2)
+        else if (Y, A, B) == (0, 2, 1) -> wont
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont  
+        else if (Y, A, B) == (2, 2, 2) -> wont
+
+    else if (T, Yt, At, Bt, Q) == (B, 0, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 0, 1, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 1, 1) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 1, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 0, 1, 1, 3) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 0, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 0, 1, 0)
+        if      (Y, A, B) == (0, 0, 1)
+        else if (Y, A, B) == (0, 1, 0) -> wont
+        else if (Y, A, B) == (0, 1, 1) -> Att must >= Btt
+            if !(Amaxt >= Btt) -> bad
+        else if (Y, A, B) == (0, 1, 2) -> wont
+        else if (Y, A, B) == (0, 2, 1) -> Att must >= Btt or A = 0
+            if !(Amaxt >= Btt) -> A = 0
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0) -> Att must <= Btt
+            if !(Amint <= Btt) -> bad
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 0, 0) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 1, 1)
+        if      (Y, A, B) == (0, 0, 1)
+        else if (Y, A, B) == (0, 1, 0) -> wont
+        else if (Y, A, B) == (0, 1, 1) -> bad
+        else if (Y, A, B) == (0, 1, 2) -> wont
+        else if (Y, A, B) == (0, 2, 1) -> A = 0
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 1, 2)
+        if      (Y, A, B) == (0, 0, 1)
+        else if (Y, A, B) == (0, 1, 0) -> wont
+        else if (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (0, 1, 2) -> wont
+        else if (Y, A, B) == (0, 2, 1)
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0) -> bad
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont 
+        else if (Y, A, B) == (2, 2, 2) -> wont
+    else if (T, Yt, At, Bt, Q) == (B, 1, 1, 1, 3)
+        if      (Y, A, B) == (0, 0, 1)
+        else if (Y, A, B) == (0, 1, 0) -> wont
+        else if (Y, A, B) == (0, 1, 1)
+        else if (Y, A, B) == (0, 1, 2) -> wont
+        else if (Y, A, B) == (0, 2, 1)
+        else if (Y, A, B) == (0, 2, 2) -> wont
+        else if (Y, A, B) == (1, 0, 0)
+        else if (Y, A, B) == (2, 0, 2) -> wont
+        else if (Y, A, B) == (2, 2, 0) -> wont 
+        else if (Y, A, B) == (2, 2, 2) -> wont
+
+else if gate->type == NOT
+    // 0 = falling
+    // 1 = rising
+    // 2 = undefined
+    //
+    if      (Y, A) == (0, 0) -> bad
+    else if (Y, A) == (0, 1)
+    else if (Y, A) == (0, 2) -> A = 1
+    else if (Y, A) == (1, 0)
+    else if (Y, A) == (1, 1) -> bad
+    else if (Y, A) == (1, 2) -> A = 0
+    else if (Y, A) == (2, 0) -> Y = 1
+    else if (Y, A) == (2, 1) -> Y = 0
+    else if (Y, A) == (2, 2)
+
+    // T: True path
+    // - X: No
+    // - A
+    //
+    // Yt, At: Arrival time known
+    // - 0 = unknown
+    // - 1 = known
+    //
+    if      (T, Yt, At) == (X, 0, 0)
+    else if (T, Yt, At) == (X, 0, 1) -> Ytt = Att + 1
+    else if (T, Yt, At) == (A, 1, 0) -> wont
+    else if (T, Yt, At) == (A, 1, 1)
+
+else if gate->type == PI
+    // T: True path
+    // - X: No
+    // - A
+    //
+    // Yt: Arrival time known
+    // - 0 = unknown
+    // - 1 = known
+    //
+    if      (T, Yt) == (X, 0) -> Ytt = 0
+    else if (T, Yt) == (X, 1)
+    else if (T, Yt) == (A, 0) -> wont
+    else if (T, Yt) == (A, 1)
+
+else // gate->type == PO
+
+```
 
