@@ -3,11 +3,41 @@
 #include <cassert>
 #include <ctime>
 #include <iostream>
-#include <queue>
 #include <stack>
 
-//#include "minisat_blbd/src/core/Solver.h"
 #include "minisat/src/core/Solver.h"
+
+namespace {
+
+// Variables of SAT solver that can be reused.
+struct VarStack {
+    size_t           idx;
+    std::vector<int> vars;
+    Minisat::Solver& solver;
+
+    explicit VarStack(Minisat::Solver& _solver): 
+        idx    (0      ),
+        vars   (16     ),
+        solver (_solver) {
+
+        for (size_t i = 0; i < vars.size(); ++i) {
+            vars[i] = solver.newVar();
+        }
+    }
+
+    int get_var() {
+        if (idx == vars.size()) {
+            vars.push_back(solver.newVar());
+        }
+        return vars[idx++];
+    }
+
+    void clear() {
+        idx = 0;
+    }
+};
+
+} // namespace
 
 #ifndef NDEBUG
 #include "sta/src/util/converter.h"
@@ -18,150 +48,8 @@ static double      time_step;
 static std::string buffer;
 #endif
 
-// Calculate maximum arrival time.
-//
-// #### Input
-//
-// - `cir`
-//
-static void calculate_max_arrival_time(Sta::Cir::Circuit& cir) {
-    using Sta::Cir::Gate;
-    using Sta::Cir::Module;
-
-    // Assign 0 to all gate's tag. It means the number of fan-in of
-    // that gate which has arrived.
-    //
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        cir.primary_outputs[i]->tag = 0;
-    }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->tag = 0;
-    }
-
-    // For all gate inside queue, all of its fan-in has arrived.
-    // Every gate inside queue has already known arrival time.
-    // This queue should be sorted according to arrival time.
-    //
-    std::queue<Gate*> q;
-    
-    // Add primary_inputs into queue.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        Gate* pi = cir.primary_inputs[i];
-        pi->arrival_time = 0;
-        q.push(pi);
-    }
-
-    // While queue is not empty
-    while (!q.empty()) {
-        Gate* gate = q.front();
-        q.pop();
-        
-        // Tell gate's fan-outs that it has arrived.
-        for (size_t i = 0; i < gate->tos.size(); ++i) {
-            Gate* fanout = gate->tos[i];
-            fanout->tag += 1;
-            
-            // If that fan-out's fan-ins have all arrived
-            if (fanout->tag == fanout->froms.size()) {
-                
-                // Assign arrival time to that fan-out.
-                if (fanout->module == Module::PO) {
-                    fanout->arrival_time = gate->arrival_time;
-
-                    // No need to put PO into queue, because PO does
-                    // not have fan-out.
-                }
-                else {
-                    fanout->arrival_time = gate->arrival_time + 1;
-
-                    // Add that fan-out to queue.
-                    q.push(fanout);
-                }
-            }
-        }
-    }
-}
-
-// Calculate minimum arrival time.
-//
-// #### Input
-//
-// - `cir`
-//
-static void calculate_min_arrival_time(Sta::Cir::Circuit& cir) {
-    using Sta::Cir::Gate;
-    using Sta::Cir::Module;
-
-    // Assign 0 to all gate's tag.
-    // 0: Not yet visited, not in queue.
-    // 1: In queue, not visited.
-    // 2: Visited, not in queue.
-    //
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        cir.primary_outputs[i]->tag = 0;
-    }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->tag = 0;
-    }
-
-    // For all gate inside queue, at least 1 of its fan-in has arrived.
-    // Every gate inside queue has already known min arrival time.
-    // This queue should be sorted according to min arrival time.
-    //
-    std::queue<Gate*> q;
-    
-    // Add primary_inputs into queue.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        Gate* pi = cir.primary_inputs[i];
-        pi->arrival_time = 0;
-        q.push(pi);
-        pi->tag = 1;
-    }
-
-    // While queue is not empty
-    while (!q.empty()) {
-        Gate* gate = q.front();
-        q.pop();
-        
-        for (size_t i = 0; i < gate->tos.size(); ++i) {
-            Gate* fanout = gate->tos[i];
-            
-            // If fanout is not visited nor in queue
-            if (fanout->tag == 0) {
-                
-                // Assign arrival time to that fan-out.
-                if (fanout->module == Module::PO) {
-                    fanout->arrival_time = gate->arrival_time;
-
-                    // No need to put PO into queue, because PO does
-                    // not have fan-out.
-                    fanout->tag = 2;
-                }
-                else {
-                    fanout->arrival_time = gate->arrival_time + 1;
-
-                    // Add that fan-out to queue.
-                    q.push(fanout);
-                    fanout->tag = 1;
-                }
-
-            }
-        }
-    }
-}
-
 // Add NAND clause into solver.
-//
-// #### Input
-//
-// - `A`
-// - `B`
-// - `C`
-// - `solver`
-//
-// #### Output
-//
-// True if success, false otherwise.
+// Return True if success, false otherwise.
 //
 static bool add_NAND_clause(Minisat::Var A, 
                             Minisat::Var B, 
@@ -183,17 +71,7 @@ static bool add_NAND_clause(Minisat::Var A,
 }
 
 // Add NOR clause into solver.
-//
-// #### Input
-//
-// - `A`
-// - `B`
-// - `C`
-// - `solver`
-//
-// #### Output
-//
-// True if success, false otherwise.
+// Return True if success, false otherwise.
 //
 static bool add_NOR_clause(Minisat::Var A, 
                            Minisat::Var B, 
@@ -215,16 +93,7 @@ static bool add_NOR_clause(Minisat::Var A,
 }
 
 // Add NOR clause into solver.
-//
-// #### Input
-//
-// - `A`
-// - `C`
-// - `solver`
-//
-// #### Output
-//
-// True if success, false otherwise.
+// Return True if success, false otherwise.
 //
 static bool add_NOT_clause(Minisat::Var A, 
                            Minisat::Var C, 
@@ -239,6 +108,32 @@ static bool add_NOT_clause(Minisat::Var A,
     }
 
     return true;
+}
+
+// Add a clause to exclude this solution, so that we can get
+// another solution.
+static void add_clause_to_exclude(
+    const Sta::Cir::Circuit&  cir,
+    const Sta::Cir::InputVec& input_vec,
+    int                       new_var,
+    Minisat::Solver&          solver) {
+
+    using Minisat::mkLit;
+
+    Minisat::vec<Minisat::Lit> clause;
+    clause.push(mkLit(new_var));
+
+    for (size_t i = 0; i < input_vec.size(); ++i) {
+        if (input_vec[i]) {
+            clause.push(mkLit(cir.primary_inputs[i]->var, 1));
+        }
+        else {
+            clause.push(mkLit(cir.primary_outputs[i]->var));
+        }
+    }
+
+    solver.addClause_(clause);
+    assert(solver.okay());
 }
 
 // Call function and create a return point. `n` is the return point
@@ -283,31 +178,25 @@ static bool add_NOT_clause(Minisat::Var A,
 // Basically the idea is trace from output pins toward input pins. Try
 // every possibility (condition) that make a path become a true path.
 // Check whether our assumption has any contradiction.
-//
-// #### Input
-//
-// - `po`
-// - `cir`
-// - `solver`
-//
-// #### Output
-//
-// Add true path to `paths` and an input vector that can make
-// that path sensitized.
+// It will fill `paths`, `values` and `input_vector`.
 //
 static void trace(Sta::Cir::Gate*                   po,
                   Sta::Cir::Circuit&                cir,
+                  Sta::Cir::Circuit&                cir2,
                   int                               time_constraint,
                   int                               slack_constraint,
                   Minisat::Solver&                  solver,
+                  VarStack&                         var_stack,
                   std::vector<Sta::Cir::Path>&      paths, 
-                  std::vector< std::vector<bool> >& values,
+                  std::vector<Sta::Cir::PathValue>& values,
                   std::vector<Sta::Cir::InputVec>&  input_vecs) {
 
     using Sta::Cir::Gate;
     using Sta::Cir::Path;
+    using Sta::Cir::PathValue;
     using Sta::Cir::InputVec;
     using Sta::Cir::Module;
+    using Sta::Ana::verify_true_path;
     using Minisat::mkLit;
     using Minisat::toInt;
 
@@ -340,7 +229,7 @@ pop_function:
 start_function:
     gate = path.back();
 
-    if (gate->arrival_time > slack) {
+    if (gate->min_arrival_time > slack) {
         goto pop_function;
     }
 
@@ -439,36 +328,70 @@ start_function:
 
     else if (gate->module == Module::PI) {
         if (slack + 1 < slack_constraint) {
-            if (solver.solve(assumptions)) {
-                paths.push_back(path);
 
-                // Record value of all gate along a path.
-                std::vector<bool> path_value(path.size());
-                for (size_t i = 0; i < path.size(); ++i) {
-                    path_value[i] = path[i]->value;
-                }
-                values.push_back(path_value);
+            // I will add additional assumption into it.
+            // Later I will shrink it back to original size.
+            int original_size = assumptions.size();
+
+            while (solver.solve(assumptions)) {
 
                 // Record input vector.
                 InputVec input_vec(cir.primary_inputs.size());
                 for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
                     input_vec[i] = 
-                        toInt(solver.model[cir.primary_inputs[i]->var]) ^ 1;
+                        !toInt(solver.model[cir.primary_inputs[i]->var]);
                 }
-                input_vecs.push_back(input_vec);
 
-                #ifndef NDEBUG
-                time_difference = difftime(time(0), start_time);
+                if (verify_true_path(cir2, path, input_vec) == 0) {
+                    // Remove unneeded clause
+                    for (size_t i = 0; i < var_stack.idx; ++i) {
+                        solver.addClause(mkLit(var_stack.vars[i]));
+                        assert(solver.okay());
+                    }
+                    solver.simplify();
+                    assert(solver.okay());
 
-                if (time_difference > time_step) {
-                    time_step = time_difference + 1.0;
-                    std::cerr << std::string(buffer.size(), '\b');
+                    // Clear var_stack
+                    var_stack.clear();
 
-                    buffer = Sta::Util::to_str(input_vecs.size());
-                    std::cerr << buffer;
+                    // Add path to true path list.
+                    paths.push_back(path);
+                    input_vecs.push_back(input_vec);
+
+                    // Record value of all gate along a path.
+                    PathValue path_value(path.size());
+                    for (size_t i = 0; i < path.size(); ++i) {
+                        path_value[i] = path[i]->value;
+                    }
+                    values.push_back(path_value);
+
+                    // Output number of found true path.
+                    #ifndef NDEBUG
+                    time_difference = difftime(time(0), start_time);
+
+                    if (time_difference > time_step) {
+                        time_step = time_difference + 1.0;
+                        std::cerr << std::string(buffer.size(), '\b');
+
+                        buffer = Sta::Util::to_str(input_vecs.size());
+                        std::cerr << buffer;
+                    }
+                    #endif
+
+                    break;
                 }
-                #endif
+                else {
+                    // Try to get next possible answer.
+                    int var = var_stack.get_var();
+                    add_clause_to_exclude(cir, input_vec, var, solver);
+                    assumptions.push(mkLit(var, 1));
+                }
             }
+
+            // Shrink back to original size.
+            // Since Lit is POD, no need to call its destructor.
+            assumptions.shrink(assumptions.size() - original_size);
+            std::cerr << "ha";
         }
     }
 
@@ -486,12 +409,12 @@ start_function:
 }
 
 int Sta::Ana::find_true_paths(
-    Cir::Circuit&                     cir,
-    int                               time_constraint,
-    int                               slack_constraint,
-    std::vector<Cir::Path>&           paths,
-    std::vector< std::vector<bool> >& values,
-    std::vector<Cir::InputVec>&       input_vecs) {
+    Cir::Circuit&                cir,
+    int                          time_constraint,
+    int                          slack_constraint,
+    std::vector<Cir::Path>&      paths,
+    std::vector<Cir::PathValue>& values,
+    std::vector<Cir::InputVec>&  input_vecs) {
 
     #ifndef NDEBUG
     std::cerr << "Number of true path found: ";
@@ -565,11 +488,14 @@ int Sta::Ana::find_true_paths(
         return 1;
     }
 
+    Cir::Circuit cir2     (cir);
+    VarStack     var_stack(solver);
+
     // Find true path.
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
         Cir::Gate* po = cir.primary_outputs[i];
-        trace(po, cir, time_constraint, slack_constraint,
-              solver, paths, values, input_vecs);
+        trace(po, cir, cir2, time_constraint, slack_constraint,
+              solver, var_stack, paths, values, input_vecs);
     }
 
     #ifndef NDEBUG
