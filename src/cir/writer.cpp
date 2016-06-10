@@ -67,13 +67,13 @@ static void print_connection(int                      delay,
 }
 
 int Sta::Cir::write(
-    const Circuit&                          cir,
-    int                                     time_constraint,
-    int                                     slack_constraint,
-    const std::vector<Path>&                paths,
-    const std::vector< std::vector<bool> >& values,
-    const std::vector<InputVec>&            input_vecs,
-    const std::string&                      outfile          ) {
+    const Circuit&                cir,
+    int                           time_constraint,
+    int                           slack_constraint,
+    const std::vector<Path>&      paths,
+    const std::vector<PathValue>& values,
+    const std::vector<InputVec>&  input_vecs,
+    const std::string&            outfile          ) {
 
     using std::setw;
 
