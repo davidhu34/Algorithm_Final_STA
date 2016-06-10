@@ -18,8 +18,6 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
         if (!fin.good()) {
             std::cerr << "Error: Cannot open file '"
                       << input_files[i] << "'\n";
-
-            circuit.clear();
             return 1;
         }
 
@@ -54,7 +52,6 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
                 }
 
                 if (err_code) { // Error code is not 0.
-                    circuit.clear();
                     return err_code;
                 }
             }
