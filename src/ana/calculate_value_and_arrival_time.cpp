@@ -45,6 +45,12 @@ void Sta::Ana::calculate_value_and_arrival_time(Cir::Circuit& cir) {
                         if (fanout->froms[0]->value == v1 &&              \
                             fanout->froms[1]->value == v1   ) {           \
                                                                           \
+                            assert(gate->arrival_time ==                  \
+                                   (fanout->froms[0]->arrival_time >      \
+                                    fanout->froms[1]->arrival_time ?      \
+                                    fanout->froms[0]->arrival_time :      \
+                                    fanout->froms[1]->arrival_time  ));   \
+                                                                          \
                             fanout->value        = v0;                    \
                             fanout->arrival_time = gate->arrival_time + 1;\
                             q.push(fanout);                               \
