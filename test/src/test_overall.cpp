@@ -141,9 +141,6 @@ void test_overall(void) {
         ASSERT(return_code == 0,
             << "Verification failed while doing case" << i << ".\n");
 
-        // Clear
-        cir.clear();
-
         std::cerr << "Done case" << i << ".\n";
     }
 

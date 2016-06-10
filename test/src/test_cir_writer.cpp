@@ -33,8 +33,5 @@ void test_write(void) {
     write(cir, 10, 7, paths, values, input_vecs, 
           "test/cases/case0/true_path/case0_true_path_set");
 
-    // clear
-    cir.clear();
-
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

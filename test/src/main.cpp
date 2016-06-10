@@ -21,6 +21,7 @@ void test_hash_map(void);
 
 // test_minisat_blbd.cpp
 void test_minisat(void);
+void test_minisat_2(void);
 
 // test_cir_parser_inc.cpp
 void test_get_token(void);
@@ -30,6 +31,9 @@ void test_parse_module_NOT1(void);
 
 // test_cir_parser.cpp
 void test_parse(void);
+
+// test_cir_copy.cpp
+void test_circuit_copy(void);
 
 // test_ana_analyzer.cpp
 void test_find_true_paths(void);
@@ -65,6 +69,7 @@ int main(int argc, const char* argv[]) {
 
     std::cerr << "\ntest_minisat_blbd.cpp\n";
     test_minisat();
+    test_minisat_2();
 
     std::cerr << "\ntest_cir_parser_inc.cpp\n";
     test_get_token();
@@ -75,17 +80,20 @@ int main(int argc, const char* argv[]) {
     std::cerr << "\ntest_cir_parser.cpp\n";
     test_parse();
 
+    std::cerr << "\ntest_cir_copy.cpp\n";
+    test_circuit_copy();
+
     std::cerr << "\ntest_ana_analyzer.cpp\n";
     test_find_true_paths();
 
     std::cerr << "\ntest_cir_writer.cpp\n";
     test_write();
 
-    //std::cerr << "\ntest_ana_verify.cpp\n";
-    //test_verify_true_path_set();
+    std::cerr << "\ntest_ana_verify.cpp\n";
+    test_verify_true_path_set();
 
     std::cerr << "\ntest_overall.cpp\n";
     test_overall();
-
+    
     return 0;
 }

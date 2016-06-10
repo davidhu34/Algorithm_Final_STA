@@ -83,6 +83,7 @@ static bool is_number(const char* str) {
 static void execute_find(int argc, const char* argv[]) {
     using Sta::Cir::Circuit;
     using Sta::Cir::Path;
+    using Sta::Cir::PathValue;
     using Sta::Cir::InputVec;
     using Sta::Cir::parse;
     using Sta::Cir::write;
@@ -152,9 +153,9 @@ static void execute_find(int argc, const char* argv[]) {
 
     // Find all true paths.
     
-    std::vector<Path>                paths;
-    std::vector< std::vector<bool> > values;
-    std::vector<InputVec>            input_vecs;
+    std::vector<Path>      paths;
+    std::vector<PathValue> values;
+    std::vector<InputVec>  input_vecs;
 
     return_code = find_true_paths(
                       circuit, 
@@ -177,15 +178,12 @@ static void execute_find(int argc, const char* argv[]) {
                         outfile);
 
     EXPECT(return_code == 0, << "Write to file failed.")
-
-    // Clean up.
-
-    circuit.clear();
 }
 
 static void execute_verify(int argc, const char* argv[]) {
     using Sta::Cir::Circuit;
     using Sta::Cir::Path;
+    using Sta::Cir::PathValue;
     using Sta::Cir::InputVec;
     using Sta::Cir::parse;
     using Sta::Cir::parse_true_path_set;
@@ -256,9 +254,9 @@ static void execute_verify(int argc, const char* argv[]) {
 
     // Parse true_path_set_file into paths, values and input_vecs.
 
-    std::vector<Path>                paths;
-    std::vector< std::vector<bool> > values;
-    std::vector<InputVec>            input_vecs;
+    std::vector<Path>      paths;
+    std::vector<PathValue> values;
+    std::vector<InputVec>  input_vecs;
 
     return_code = parse_true_path_set(true_path_set_file,
                                       circuit,
@@ -281,10 +279,6 @@ static void execute_verify(int argc, const char* argv[]) {
                                        input_vecs);
                                        
     EXPECT(return_code == 0, << "Verification process failed.")
-
-    // Clean up.
-
-    circuit.clear();
 }
 
 static void execute_dump(int argc, const char* argv[]) {
@@ -321,10 +315,6 @@ static void execute_dump(int argc, const char* argv[]) {
 
     return_code = dump(circuit, dump_file);
     EXPECT(return_code == 0, << "Dump failed.")
-
-    // Clean up.
-
-    circuit.clear();
 }
 
 static void execute_compare(int argc, const char* argv[]) {

@@ -231,8 +231,6 @@ void test_parse(void) {
     using Sta::Cir::compare_dump;
     using Sta::Cir::dump;
 
-    Circuit cir;
-
     const char* case_num[10] = {
         "test/cases/case1/input/cadcontest.v",
         "test/cases/case1/input/case1",
@@ -246,6 +244,7 @@ void test_parse(void) {
         "test/cases/case5/input/case5"};
 
     for (int i = 0; i < 10; i += 2) {
+        Circuit cir;
         std::cout << "Validating " << case_num[i + 1] << "...\n";
 
         std::vector<const char*> file_set(2);
@@ -253,8 +252,6 @@ void test_parse(void) {
         file_set[1] = case_num[i + 1];
 
         basic_validate(file_set, cir);
-
-        cir.clear();
     }
 
     std::vector<const char*> file_set_B(2);
@@ -263,12 +260,11 @@ void test_parse(void) {
 
     std::cout << "Validating " << file_set_B[1] << "...\n";
 
+    Circuit cir;
     basic_validate(file_set_B, cir);
 
     const char* filename = "test/cases/case0/output/case0.dump";
     ASSERT(dump(cir, filename) == 0, << "Dump failed.\n");
-
-    cir.clear();
 
     compare_dump("test/cases/case0/output/case0.dump.ans", filename);
 

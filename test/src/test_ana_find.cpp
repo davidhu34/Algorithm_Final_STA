@@ -75,9 +75,6 @@ void test_find_true_paths(void) {
         std::cout << "\n";
     }
 
-    // Clear
-    cir.clear();
-
     std::cerr << __FUNCTION__ << "() passed.\n";
 }
 

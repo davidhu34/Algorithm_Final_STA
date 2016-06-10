@@ -1,8 +1,8 @@
+#include <cassert>
 #include <iostream>
 #include <vector>
 
 #include "minisat/src/core/Solver.h"
-#include "sta/test/src/util/util.h"
 
 using namespace Minisat;
 
@@ -171,5 +171,24 @@ void test_minisat(void) {
         std::cout << "Unsatisfiable.\n";
     }
         
+    std::cerr << __FUNCTION__ << "() passed.\n";
+}
+
+void test_minisat_2(void) {
+    std::cerr << __FUNCTION__ << "():\n";
+
+    Solver solver;
+    Var    A = solver.newVar(), 
+           B = solver.newVar();
+
+    assert(solver.addClause(mkLit(A), mkLit(B)));
+    assert(solver.addClause(mkLit(A)));
+
+    std::cout << "Number of clause = " << solver.nClauses() << "\n";
+
+    assert(solver.simplify());
+
+    std::cout << "Number of clause = " << solver.nClauses() << "\n";
+
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

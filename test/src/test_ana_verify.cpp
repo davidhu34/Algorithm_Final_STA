@@ -126,9 +126,6 @@ void test_verify_true_path_set(void) {
         ASSERT(return_code == 0,
             << "Verification failed while doing case" << i << ".\n");
 
-        // Clear
-        cir.clear();
-
         std::cerr << "Done case" << i << ".\n";
     }
 
