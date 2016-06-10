@@ -46,7 +46,8 @@ struct Gate {
     uint8_t            module;       // NAND2, NOR2, NOT1, PI or PO
     uint8_t            value;        // 1:true, 0:false or 2:floating.
     uint16_t           tag;          // Needed when using some algo.
-    int32_t            arrival_time; 
+    int                arrival_time; 
+    int                min_arrival_time; 
     int                var;          // SAT variable.
     std::string        name;
     std::vector<Gate*> froms;
@@ -59,11 +60,9 @@ struct Gate {
         name   (_name)    { }
 };
 
-// Path type.
-typedef std::vector<Gate*> Path;
-
-// Input vector type.
-typedef std::vector<uint8_t> InputVec;
+typedef std::vector<Gate*>   Path;
+typedef std::vector<bool>    PathValue;
+typedef std::vector<bool>    InputVec;
 
 struct Circuit {
     // Data Member
@@ -84,9 +83,11 @@ struct Circuit {
         modules.push_back(Module("out"  ));
     }
 
-    // Free all gates allocated in circuit.
-    //
-    void clear();
+    // Copy Constructor: It performs deep copy.
+    Circuit(const Circuit& circuit);
+
+    // Destructor: Free all gates allocated in circuit.
+    ~Circuit();
 };
 
 } // namespace Cir
