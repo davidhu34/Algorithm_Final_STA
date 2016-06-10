@@ -60,13 +60,13 @@ int parse(const char* in_file_1,
 //     - 1: Failed
 //
 int parse_true_path_set(
-    const std::string&                true_path_set_file,
-    const Circuit&                    circuit,
-    int                               time_constraint,
-    int                               slack_constraint,
-    std::vector<Cir::Path>&           paths,
-    std::vector< std::vector<bool> >& values,
-    std::vector<Cir::InputVec>&       input_vecs);
+    const std::string&           true_path_set_file,
+    const Circuit&               circuit,
+    int                          time_constraint,
+    int                          slack_constraint,
+    std::vector<Cir::Path>&      paths,
+    std::vector<Cir::PathValue>& values,
+    std::vector<Cir::InputVec>&  input_vecs);
           
 } // namespace Cir
 } // namespace Sta
