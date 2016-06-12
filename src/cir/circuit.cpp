@@ -150,7 +150,7 @@ vector<string> Circuit::getInputNames () const
 	return names;
 };
 
-vector< vector<Gate*> > truepathBruteForce ( vector<bool> input_vec )
+vector< vector<Gate*> > Circuit::truepathBruteForce ( vector<bool> input_vec )
 {
 	// assue input_vec matches input
 	vector<Gate*> pending;
@@ -158,15 +158,16 @@ vector< vector<Gate*> > truepathBruteForce ( vector<bool> input_vec )
 		iit != _Inputs.end(); iit++ ) {
 		pending.push_back( iit->second );
 	}
-	while ( !pendin.empty() )
+	while ( !pending.empty() )
 	{
 		vector<Gate*> pendingNew;
 		for ( size_t i = 0; i < pending.size(); i++ )
 		{
 			if ( pending[i]->checkOutputValue() ) {
-				vector<Gate> outs = pending[i]->getFanOut();
+				vector<Gate*> outs = pending[i]->getFanOut();
+				pendingNew.insert( pendingNew.end(), outs.begin(), outs.end() );
 			} else {
-				pendingNew.push_back( pending[i] )
+				pendingNew.push_back( pending[i] );
 			}
 		}
 	}

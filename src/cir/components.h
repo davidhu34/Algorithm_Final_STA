@@ -61,6 +61,8 @@ public:
 	unsigned	_arrivalTime;
 
 protected:
+	getInputValues () = 0;
+
 	string	 		_name;
 	string 			_model;
 	vector<Gate*>		_inputs;
