@@ -150,5 +150,26 @@ vector<string> Circuit::getInputNames ()
 	return names;
 };
 
+vector< vector<Gate*> > truepathBruteForce ( vector<bool> input_vec )
+{
+	// assue input_vec matches input
+	vector<Gate*> pending;
+	for ( map< string, Gate*>::iterator iit = _Inputs.begin();
+		iit != _Inputs.end(); iit++ ) {
+		pending.push_back( iit->second );
+	}
+	while ( !pendin.empty() )
+	{
+		vector<Gate*> pendingNew;
+		for ( size_t i = 0; i < pending.size(); i++ )
+		{
+			if ( pending[i]->checkOutputValue() ) {
+				vector<Gate> outs = pending[i]->getFanOut();
+			} else {
+				pendingNew.push_back( pending[i] )
+			}
+		}
+	}
+};
 } // namespace Cir
 } // namespace Sta

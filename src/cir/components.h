@@ -48,6 +48,7 @@ public:
 	
 	virtual void printNames () = 0;
 	virtual void printState () const = 0;
+	virtual bool checkOutputValue () = 0; 
 
 	string getName ()		{ return _name; }
 	string getModel ()		{ return _model; }
