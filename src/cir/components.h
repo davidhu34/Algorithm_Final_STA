@@ -46,14 +46,14 @@ public:
 
 	virtual void connectGate ( Gate* gate, string pin ) = 0;
 	
-	virtual void printNames () = 0;
+	virtual void printNames () const = 0;
 	virtual void printState () const = 0;
 	virtual bool checkOutputValue () = 0; 
 
-	string getName ()		{ return _name; }
-	string getModel ()		{ return _model; }
-	vector<Gate*>& getFanIn ()				{ return _inputs; }
-	vector<Gate*>& getFanOut ()				{ return _outputs; }
+	string getName () const  { return _name; }
+	string getModel () const { return _model; }
+	vector<Gate*>& getFanIn () { return _inputs; }
+	vector<Gate*>& getFanOut () { return _outputs; }
 
 	uint8_t     _value;
 	int        	_tag;
@@ -82,7 +82,7 @@ public:
 			_outputs.push_back(gate);
 		} else return;
 	}
-	void printNames ()
+	void printNames () const
 	{
 		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
@@ -118,7 +118,7 @@ public:
 			_outputs.push_back(gate);
 		} else return;
 	}
-	void printNames ()
+	void printNames () const
 	{
 		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<", B: "<<_inputs[1]->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
@@ -154,7 +154,7 @@ public:
 			_outputs.push_back(gate);
 		} else return;
 	}
-	void printNames ()
+	void printNames () const
 	{
 		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<", B: "<<_inputs[1]->getName()<<", Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
@@ -183,7 +183,7 @@ public:
 	{
 //cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "Y" )  _outputs.push_back(gate); }
-	void printNames ()
+	void printNames () const
 	{
 		cout<<_name<<":  "<<" Y: ";
 		for ( size_t i = 0; i < _outputs.size(); i++ ) cout<<_outputs[i]->getName();
@@ -207,7 +207,7 @@ public:
 //cout<<"connect "<< pin << " of "<< _name << ": " << gate->getName() << endl;
 		if ( pin == "A" )  _inputs[0] = gate; }
 	
-	void printNames ()
+	void printNames () const
 	{
 		cout<<_name<<":  "<<"A: "<<_inputs[0]->getName()<<endl;
 	}

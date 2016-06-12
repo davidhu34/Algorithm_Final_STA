@@ -50,6 +50,32 @@ private:
 	int			_parsingLine;
 };
 
+// Extract paths, values and input_vecs from `true_path_set_file`.
+//
+// #### Input
+//
+// - `true_path_set_file`
+// - `circuit`
+// - `time_constraint`
+//
+// #### Ouput
+//
+// - `paths`
+// - `values`
+// - `input_vecs`
+// - Return code
+//     - 0: Success
+//     - 1: Failed
+//
+int parse_true_path_set(
+    const std::string&                true_path_set_file,
+    Circuit&                          cir,
+    int                               time_constraint,
+    int                               slack_constraint,
+    std::vector<Path>&                paths,
+    std::vector< std::vector<bool> >& values,
+    std::vector<InputVec>&            input_vecs);
+
 } // namespace Sta
 } // namespace Cir
 

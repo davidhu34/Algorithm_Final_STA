@@ -12,7 +12,7 @@ using namespace std;
 namespace Sta {
 namespace Cir {
 
-void Circuit::testPrint () 
+void Circuit::testPrint () const
 {
 	for ( size_t i =0; i < _LogicGates.size(); i++ )
 	_LogicGates[i]->printNames();
@@ -141,10 +141,10 @@ void Circuit::connectGates ()
 	}
 };
 
-vector<string> Circuit::getInputNames ()
+vector<string> Circuit::getInputNames () const
 {
 	vector<string> names;
-	for ( map< string, Gate*>::iterator it = _Inputs.begin();
+	for ( map< string, Gate*>::const_iterator it = _Inputs.begin();
 		it != _Inputs.end(); it++) 
 		names.push_back( it->first );
 	return names;

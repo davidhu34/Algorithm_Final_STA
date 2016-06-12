@@ -16,7 +16,7 @@ bool Writer::writeTruePath (
 	string w10 = "          ";
 	string line = "";
 
-	cout
+	_onf
 	<< "Header  {  A True Path Set  }  " << endl << endl
 	<< "  Benchmark  {  " << _ckt->getCaseName() << "  }" << endl << endl;
 
@@ -27,64 +27,68 @@ bool Writer::writeTruePath (
 		vector<bool> input_vec = input_vecs[i];
 		int pathDelay = 0;
 
-		cout
-	<< "  Path  {  " << i << "  }" << endl << endl
+		_onf
+	<< "  Path  {  " << i + 1 << "  }" << endl << endl
 	<< "  A True Path List" << endl
 	<< "  {" << endl
 	<< "  ---------------------------------------------------------------------------" << endl
-	<< "  Pin    type                            Incr      Path delay" << endl
+	<< "  Pin    Type                            Incr      Path Delay" << endl
 	<< "  ---------------------------------------------------------------------------" << endl;
 		line = w41;
 		// input gate
-		string input = path.back()->getName() + " (in)";
+		string inputName = path.back()->getName();
+		string input = inputName + " (in)";
 		line.replace( 0, input.length(), input );
-		cout
+		_onf
 	<< "  " << line << "0         0 " << RF( value.back() ) << endl;
 		// path gates
-		for ( size_t pi = path.size() -1 ; pi > 0; pi-- )
+		for ( size_t pi = path.size() -2 ; pi > 0; pi-- )
 		{
 			line = w41;
-			string gate = path[pi]->getName() + "/" + getPin( path[pi], path[pi-1] )
+			string gate = path[pi]->getName() + "/" + getPin( path[pi+1], path[pi] )
 				+ " (" + path[pi]->getModel() + ")";
 			line.replace( 0, gate.length(), gate );
-			cout
-	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi] ) << endl;
+			_onf
+	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value[pi+1] ) << endl;
 
 			line[ line.find("/") + 1 ] = 'Y';
-			cout
-	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi-1] ) << endl;
+			_onf
+	<< "  " << line << "1" << setw(10) << ++pathDelay << " " << RF( value[pi] ) << endl;
 		}
 		// output gate
 		line = w41;
 		string output = path.front()->getName() + " (out)";
 		line.replace( 0, output.length(), output );
-		cout
+		_onf
 	<< "  " << line << "0" << setw(10) << pathDelay << " " << RF( value.front() ) << endl;
 
 
 
-		cout
+		_onf
 	<< "  ---------------------------------------------------------------------------" << endl
 	<< "    Data Required Time" << setw(12) << _dataReqTime << endl
 	<< "    Data Arrival Time" << setw(13) << pathDelay << endl
 	<< "    ---------------------------------------------------------------------------" << endl
-	<< "    Slack" << setw(25) << _slack << endl
+	<< "    Slack" << setw(25) << (_dataReqTime - pathDelay) << endl
 	<< "  }" << endl << endl
 	<< "  Input Vector" << endl
 	<< "  {" << endl;
 	
 		for ( size_t mi = 0; mi < input_vec.size(); mi++ )
 		{
-			cout
+			if ( input_name[mi] == inputName)
+			_onf
+	<< "  " << setw(4) << input_name[mi] << "  =  " << RF( input_vec[mi] ) << endl;	
+			else
+			_onf
 	<< "  " << setw(4) << input_name[mi] << "  =  " << input_vec[mi] << endl;
 		}	// end of Inputs
 
-		cout
+		_onf
 	<< "  }" << endl << endl;
 	}	// end of Path
 
-	cout
-	<< "}" << endl;
+	return true;
 }
 
 string Writer::getPin ( Gate* from ,Gate* to )

@@ -31,6 +31,34 @@ int find_true_paths(
     std::vector< std::vector<bool> >& values,
     std::vector<Cir::InputVec>&       input_vecs);
 
+// Verify a true path set. For each path in true path set, check whether
+// 
+// 1. It is within time constraint and slack constraint, 
+// 2. The given input vector can prove that path is a true path. 
+// 3. The correctness of value along the path.
+// 
+// #### Input
+//
+// - `circuit`
+// - `time_constraint`
+// - `slack_constraint`
+// - `paths`
+// - `values`
+// - `input_vecs`
+//
+// #### Output
+//
+// It will print out any error it found. If there is any error, return 1.
+// Else return 0.
+//
+int verify_true_path_set(
+    Cir::Circuit&                           circuit,
+    int                                     time_constraint,
+    int                                     slack_constraint,
+    const std::vector<Cir::Path>&           paths,
+    const std::vector< std::vector<bool> >& values,
+    const std::vector<Cir::InputVec>&       input_vecs);
+
 } // namespace Ana
 } // namespace Sta
 

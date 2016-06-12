@@ -25,7 +25,7 @@ void test_circuit_state(void);
 
 // test_ana_find.cpp
 void test_find_true_paths(void);
-void test_find_true_paths_single (void);
+void test_find_true_paths_single(void);
 
 int main(int argc, const char* argv[]) {
     // Call test function here.
@@ -52,7 +52,8 @@ int main(int argc, const char* argv[]) {
     test_circuit_state();
 */
     std::cerr << "\ntest_ana_find.cpp\n";
-    test_find_true_paths_single();
+    test_find_true_paths();
+    //test_find_true_paths_single();
 
     return 0;
 }

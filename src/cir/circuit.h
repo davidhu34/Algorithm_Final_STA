@@ -27,7 +27,7 @@ public:
 	void setModels ( map< string, string> models )		{ case_models = models; }
 	map<string, string> getModels () 	{ return case_models; }
 	void setCaseName ( string cname )	{ case_name = cname; }
-	string getCaseName ()			{ return case_name; }
+	string getCaseName () const         {return case_name; }
 	void newWire ( string wname )		{ _Wires[wname] = new Wire(); }
 	void newInput ( string gname );
 	void newOutput ( string gname );
@@ -35,9 +35,9 @@ public:
 	void connectGates ();
 	vector< vector<Gate*> > truepathBruteForce ( vector<bool> input_vec );
 	
-	vector<string> getInputNames ();
+	vector<string> getInputNames () const;
 	
-	void testPrint ();
+	void testPrint () const;
 	void printState () const;
 
 	map<string, Gate*>& getInputs()     {return _Inputs;}
