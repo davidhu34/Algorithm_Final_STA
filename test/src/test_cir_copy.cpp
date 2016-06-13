@@ -61,11 +61,11 @@ void test_circuit_copy(void) {
     for (int i = 0; i < 6; ++i) {
         Circuit cir;
 
-        int return_code = parse(records[i].cir_file_1,
-                                records[i].cir_file_2,
-                                cir);
+        bool success = parse(records[i].cir_file_1,
+                             records[i].cir_file_2,
+                             cir);
 
-        assert(return_code == 0);
+        assert(success);
 
         Circuit cir2(cir);
 

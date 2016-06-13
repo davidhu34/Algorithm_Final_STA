@@ -134,7 +134,7 @@ struct Reader {
 #define ASSERT(condition, errmsg)                \
     if (!(condition)) {                          \
         std::cerr << "Error: " errmsg << "\n";   \
-        return 1;                                \
+        return false;                            \
     }
 
 #define EXPECT(str)                                                 \
@@ -145,7 +145,7 @@ struct Reader {
         << reader.token << "' was found instead.")
 
 
-int Sta::Cir::parse_true_path_set(
+bool Sta::Cir::parse_true_path_set(
     const std::string&                true_path_set_file,
     const Circuit&                    cir,
     int                               time_constraint,
@@ -159,7 +159,7 @@ int Sta::Cir::parse_true_path_set(
     if (!fin.good()) {
         std::cerr << "Error: Cannot open file '" << true_path_set_file
                   << "'.\n";
-        return 1;
+        return false;
     }
 
     // Map gate name to gate pointer.
@@ -457,5 +457,5 @@ int Sta::Cir::parse_true_path_set(
         input_vecs.push_back(input_vec);
     }
 
-    return 0;
+    return true;
 }

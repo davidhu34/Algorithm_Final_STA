@@ -4,7 +4,7 @@
 #include <string>
 
 #include "sta/test/src/util/util.h"
-#include "sta/src/cir/parser.inc"
+#include "sta/src/cir/circuit_parser.inc"
 
 void test_get_token(void) {
     std::cerr << __FUNCTION__ << "():\n";
@@ -75,7 +75,7 @@ void test_parse_module_NAND2(void) {
 
     Cir::Circuit cir;
 
-    ASSERT(parse_module_NAND2(sin, cir) == 0, );
+    ASSERT(parse_module_NAND2(sin, cir), );
 
     ASSERT(cir.modules[Cir::Module::NAND2].name == "NAND2",
         << "cir.modules[Cir::Module::NAND2].name = "
@@ -130,7 +130,7 @@ void test_parse_module_NOR2(void) {
 
     Cir::Circuit cir;
 
-    ASSERT(parse_module_NOR2(sin, cir) == 0, );
+    ASSERT(parse_module_NOR2(sin, cir), );
 
     ASSERT(cir.modules[Cir::Module::NOR2].name == "NOR2",
         << "cir.modules[Cir::Module::NOR2].name = "
@@ -181,7 +181,7 @@ void test_parse_module_NOT1(void) {
 
     Cir::Circuit cir;
 
-    ASSERT(parse_module_NOT1(sin, cir) == 0, );
+    ASSERT(parse_module_NOT1(sin, cir), );
 
     ASSERT(cir.modules[Cir::Module::NOT1].name == "NOT1",
         << "cir.modules[Cir::Module::NOT1].name = " 

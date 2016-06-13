@@ -144,11 +144,10 @@ reread:
 //
 // #### Output
 //
-// - Error code
-//     - 0: Successful
-//     - 1: Error
+// Return true is parse succeed. Return false otherwise.
 //  
-static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
+static bool parse_module_NAND2(std::istream&      fin, 
+                               Sta::Cir::Circuit& cir ) {
     using namespace Sta::Cir;
 
     while (get_token(fin) != ";") { } // Ignore until ";".
@@ -180,7 +179,7 @@ static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
         }
     }
 
-    return 0;
+    return true;
 }
 
 // Parse module NOR2. Just try to get name of pins. Ignore everything
@@ -193,11 +192,9 @@ static int parse_module_NAND2(std::istream& fin, Sta::Cir::Circuit& cir) {
 //
 // #### Output
 //
-// - Error code
-//     - 0: Successful
-//     - 1: Error
+// Return true is parse succeed. Return false otherwise.
 //  
-static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
+static bool parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
     using namespace Sta::Cir;
 
     while (get_token(fin) != ";") { } // Ignore until ";".
@@ -229,7 +226,7 @@ static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
         }
     }
 
-    return 0;
+    return true;
 }
 
 // Parse module NOT1. Just try to get name of pins. Ignore everything
@@ -242,11 +239,9 @@ static int parse_module_NOR2(std::istream& fin, Sta::Cir::Circuit& cir) {
 //
 // #### Output
 //
-// - Error code
-//     - 0: Successful
-//     - 1: Error
+// Return true is parse succeed. Return false otherwise.
 //  
-static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
+static bool parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
     using namespace Sta::Cir;
 
     while (get_token(fin) != ";") { } // Ignore until ";".
@@ -273,7 +268,7 @@ static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
         }
     }
 
-    return 0;
+    return true;
 }
 
 // Parse netlist module.
@@ -291,11 +286,10 @@ static int parse_module_NOT1(std::istream& fin, Sta::Cir::Circuit& cir) {
 //
 // #### Output
 //
-// - Error code
-//     - 0: Successful
-//     - 1: Error
+// Return true is parse succeed. Return false otherwise.
 //  
-static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
+static bool parse_netlist_module(std::istream&      fin, 
+                                 Sta::Cir::Circuit& cir ) {
     using namespace Sta::Cir;
     using Sta::Util::HashMap;
     using Sta::Util::hash_str;
@@ -392,7 +386,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 else {
                     std::cerr << "Error: Pin '" << token
                               << "' not recognized.\n";
-                    return 1;
+                    return false;
                 }
 
                 token = get_token(fin); // ")"
@@ -439,7 +433,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 else {
                     std::cerr << "Error: Pin '" << token
                               << "' not recognized.\n";
-                    return 1;
+                    return false;
                 }
 
                 token = get_token(fin); // ")"
@@ -482,7 +476,7 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
                 else {
                     std::cerr << "Error: Pin '" << token
                               << "' not recognized.\n";
-                    return 1;
+                    return false;
                 }
 
                 token = get_token(fin); // ")"
@@ -516,6 +510,6 @@ static int parse_netlist_module(std::istream& fin, Sta::Cir::Circuit& cir) {
         }
     }
 
-    return 0;
+    return true;
 }
 

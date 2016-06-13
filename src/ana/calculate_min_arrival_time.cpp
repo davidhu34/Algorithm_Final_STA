@@ -2,7 +2,7 @@
 
 #include <queue>
 
-void Sta::Ana::calculate_min_arrival_time(Cir::Circuit& cir) {
+void Sta::Ana::calculate_min_arrival_time(const Cir::Circuit& cir) {
     using Cir::Gate;
     using Cir::Module;
 

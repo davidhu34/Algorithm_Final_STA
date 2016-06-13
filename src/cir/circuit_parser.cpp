@@ -7,10 +7,10 @@
 #include "sta/src/util/hash_map.h"
 
 // Include helper functions for parser.cpp
-#include "sta/src/cir/parser.inc"
+#include "sta/src/cir/circuit_parser.inc"
 
-int Sta::Cir::parse(const std::vector<const char*>& input_files,
-                    Circuit&                        circuit     ) {
+bool Sta::Cir::parse(const std::vector<const char*>& input_files,
+                     Circuit&                        circuit     ) {
     
     // Parse all input files.
     for (size_t i = 0; i < input_files.size(); ++i) {
@@ -18,7 +18,7 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
         if (!fin.good()) {
             std::cerr << "Error: Cannot open file '"
                       << input_files[i] << "'\n";
-            return 1;
+            return false;
         }
 
         // Parse token by token, and take action depending on what token
@@ -33,26 +33,26 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
                 while (get_token(fin, 1) != "\n") { }
             }
             else if (token == "module") {
-                int err_code = 0;
+                bool success = true;
 
                 token = get_token(fin); // Read module name.
 
                 if (token == "NAND2") {
-                    err_code = parse_module_NAND2(fin, circuit);
+                    success &= parse_module_NAND2(fin, circuit);
                 }
                 else if (token == "NOR2") {
-                    err_code = parse_module_NOR2(fin, circuit);
+                    success &= parse_module_NOR2(fin, circuit);
                 }
                 else if (token == "NOT1") {
-                    err_code = parse_module_NOT1(fin, circuit);
+                    success &= parse_module_NOT1(fin, circuit);
                 }
                 else { // It is the netlist.
                     circuit.name = token;
-                    err_code = parse_netlist_module(fin, circuit);
+                    success &= parse_netlist_module(fin, circuit);
                 }
 
-                if (err_code) { // Error code is not 0.
-                    return err_code;
+                if (!success) { // Error code is not 0.
+                    return false;
                 }
             }
             else { // Token not recognized or not important,
@@ -61,20 +61,20 @@ int Sta::Cir::parse(const std::vector<const char*>& input_files,
         }
     }
 
-    return 0;
+    return true;
 }
 
-int Sta::Cir::parse(const char* in_file_1,
-                    Circuit&    circuit     ) {
+bool Sta::Cir::parse(const char* in_file_1,
+                     Circuit&    circuit     ) {
 
     std::vector<const char*> in_files(1, in_file_1);
 
     return parse(in_files, circuit);
 }
 
-int Sta::Cir::parse(const char* in_file_1,
-                    const char* in_file_2,
-                    Circuit&    circuit     ) {
+bool Sta::Cir::parse(const char* in_file_1,
+                     const char* in_file_2,
+                     Circuit&    circuit     ) {
 
     std::vector<const char*> in_files(2);
     in_files[0] = in_file_1;
@@ -83,10 +83,10 @@ int Sta::Cir::parse(const char* in_file_1,
     return parse(in_files, circuit);
 }
 
-int Sta::Cir::parse(const char* in_file_1,
-                    const char* in_file_2,
-                    const char* in_file_3,
-                    Circuit&    circuit     ) {
+bool Sta::Cir::parse(const char* in_file_1,
+                     const char* in_file_2,
+                     const char* in_file_3,
+                     Circuit&    circuit     ) {
 
     std::vector<const char*> in_files(3);
     in_files[0] = in_file_1;

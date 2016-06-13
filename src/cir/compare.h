@@ -57,11 +57,11 @@ namespace Cir {
 //
 // #### Output
 //
-// Return 0 if compared successfully and they are same. 
-// Return 1 otherwise.
+// Return true if compared successfully and they are same. 
+// Return false otherwise.
 //
-int compare_dump(const std::string& file1,
-                 const std::string& file2);
+bool compare_dump(const std::string& file1,
+                  const std::string& file2);
 
 } // namespace Cir
 } // namespace Sta
