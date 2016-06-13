@@ -54,26 +54,6 @@ bool find_true_paths(
     std::vector<Cir::PathValue>& values,
     std::vector<Cir::InputVec>&  input_vecs);
 
-// Check whether there is any conflict in the circuit with this
-// assignment of value and arrival time.
-//
-// `path` is vector of gate that you are trying to make it to become
-// a true path. `subpath` is additional gates that you've touched
-// while trying to make a path to become a true path.
-//
-// It will modify gates inside the circuit.
-//
-// Please make sure that all gates' min and max arrival time is
-// calculated.
-//
-// Return true if no conflict. Return false otherwise.
-//
-bool no_conflict(const Cir::Circuit&   cir,
-                 const Cir::Path&      path,
-                 const Cir::PathValue& path_value,
-                 const Cir::Path&      subpath,
-                 const Cir::PathValue& subpath_value);
-
 // Verify a true path set. For each path in true path set, check whether
 // 
 // 1. It is within time constraint and slack constraint, 
