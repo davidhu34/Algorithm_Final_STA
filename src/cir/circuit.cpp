@@ -150,26 +150,39 @@ vector<string> Circuit::getInputNames () const
 	return names;
 };
 
+void Circuit::resetBF ()
+{
+	for ( map< string, Gate*>::iterator iit = _Inputs.begin();
+		iit != _Inputs.end(); iit++ )
+		iit->second->bfReset();
+	for ( size_t i = 0; i < _Outputs.size(); i++ )
+		_Outputs[i]->bfReset();
+	for ( size_t i = 0; i < _LogicGates.size(); i++ )
+		_LogicGates[i]->bfReset();
+}
 vector< vector<Gate*> > Circuit::truepathBruteForce ( vector<bool> input_vec )
 {
 	// assue input_vec matches input
 	vector<Gate*> pending;
 	for ( map< string, Gate*>::iterator iit = _Inputs.begin();
-		iit != _Inputs.end(); iit++ ) {
+		iit != _Inputs.end(); iit++ )
 		pending.push_back( iit->second );
-	}
+	for ( size_t i = 0; i < pending.size(); i++ )
+		pending[i]->setBFInput( input_vec[i] );
+
 	while ( !pending.empty() )
 	{
-		vector<Gate*> pendingNew;
+		vector<bool> inputReady = vector<bool>( false, pending.size() );
 		for ( size_t i = 0; i < pending.size(); i++ )
-		{
-			if ( pending[i]->checkOutputValue() ) {
+			if ( pending[i]->checkArrival() )
+				inputReady[i] = true;
+		for ( size_t i = 0; i < pending.size(); i++ )
+			if ( inputReady[i] )
+			{
+				pending[i]->checkTruePath();
 				vector<Gate*> outs = pending[i]->getFanOut();
-				pendingNew.insert( pendingNew.end(), outs.begin(), outs.end() );
-			} else {
-				pendingNew.push_back( pending[i] );
+				pending.insert( pending.end(), outs.begin(), outs.end() );
 			}
-		}
 	}
 };
 } // namespace Cir

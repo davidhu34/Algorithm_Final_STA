@@ -48,7 +48,10 @@ public:
 	
 	virtual void printNames () const = 0;
 	virtual void printState () const = 0;
-	virtual bool checkOutputValue () = 0; 
+
+	virtual bool checkArrival () = 0;
+	virtual void checkTruePath () = 0;
+	virtual void bfReset () = 0;
 
 	string getName () const  { return _name; }
 	string getModel () const { return _model; }
@@ -61,12 +64,14 @@ public:
 	unsigned	_arrivalTime;
 
 protected:
-	getInputValues () = 0;
-
 	string	 		_name;
 	string 			_model;
 	vector<Gate*>		_inputs;
 	vector<Gate*>		_outputs;	// empty for OUTPUT
+
+	int _bfDelay;
+	bool _bfOutput;
+
 	friend class Circuit;
 };
 
@@ -103,6 +108,30 @@ public:
 
 		cout<<"\n";
 	}
+
+	void bfReset ()
+	{
+		_bfDelay = -1;
+		_bfOutput = false;
+		_bfIsTP = false;
+		_bfPrevDelay = -1;
+	}
+	bool checkArrival ()
+	{
+		if ( _bfPrevDelay == -1 )
+			_bfPrevDelay = _inputs[0].getBfDelay();
+		return _bfPrevDelay != -1;
+	}
+	void checkTruePath ()
+	{
+		_bfIsTP = true;
+		_bfOutput = !( _inputs[0].getBfOutput() );
+		_bfDelay = _bfPrevDelay + 1;
+	}
+
+private:
+	bool _bfIsTP;
+	int _bfPrevDelay;
 };
 class NAND: public Gate
 {
@@ -139,7 +168,63 @@ public:
 
 		cout<<"\n";
 	}
+
+	void bfReset ()
+	{
+		_bfDelay = -1;
+		_bfOutput = false;
+		_bfIsTP = [ false, false ];
+		_bfPrevDelay = [ -1, -1 ];
+	}
+	bool checkArrival ()
+	{
+		for ( int i = 0; i < 2; i++ )
+			if ( _bfPrevDelay[i] == -1 )
+				_bfPrevDelay[i] = _inputs[i]->getBfDelay();
+		return _bfPrevDelay[0] != -1 && _bfPrevDelay[1] != -1;
+	}
+	void checkTruePath ()
+	{
+		int delay1 = _bfPrevDelay[0];
+		int delay2 = _bfPrevDelay[1];
+		bool V1 = _inputs[0].getBfOutput();
+		bool V2 = _inputs[1].getBfOutput();
+		if ( delay1 == delay2 ) {
+			if ( V1 && V2 ) {
+				_bfOutput = false;
+				_bfIsTP[0] = true;
+				_bfIsTP[1] = true;
+			} else {
+				_bfOutput = true;
+				if (!V1) _bfIsTP[1] = true;
+				if (!V2) _bfIsTP[0] = true;
+			}
+		} else if ( delay1 > delay2 ) {
+			if ( V1 && V2 ) {
+				_bfOutput = false;
+				_bfIsTP[0] = true;
+			} else {
+				_bfOutput = true;
+				if (!V2) _bfIsTP[1] = true;
+				else _bfIsTP[0] = true;
+			}
+		} else if ( delay2 > delay1 ) {
+			if ( V1 && V2 ) {
+				_bfOutput = false;
+				_bfIsTP[1] = true;
+			} else {
+				_bfOutput = true;
+				if (!V1) _bfIsTP[0] = true;
+				else _bfIsTP[1] = true;
+			}
+		}
+	}
+
+private:
+	bool _bfIsTP[2];
+	int _bfPrevDelay[2];
 };
+
 class NOR: public Gate
 {
 public:
@@ -175,6 +260,61 @@ public:
 
 		cout<<"\n";
 	}
+
+	void bfReset ()
+	{
+		_bfDelay = -1;
+		_bfOutput = false;
+		_bfIsTP = [ false, false ];
+		_bfPrevDelay = [ -1, -1 ];
+	}
+	bool checkArrival ()
+	{
+		for ( int i = 0; i < 2; i++ )
+			if ( _bfPrevDelay[i] == -1 )
+				_bfPrevDelay[i] = _inputs[i]->getBfDelay();
+		return _bfPrevDelay[0] != -1 && _bfPrevDelay[1] != -1;
+	}
+	void checkTruePath ()
+	{
+		int delay1 = _bfPrevDelay[0];
+		int delay2 = _bfPrevDelay[1];
+		bool V1 = _inputs[0].getBfOutput();
+		bool V2 = _inputs[1].getBfOutput();
+		if ( delay1 == delay2 ) {
+			if ( !V1 && !V2 ) {
+				_bfOutput = true;
+				_bfIsTP[0] = true;
+				_bfIsTP[1] = true;
+			} else {
+				_bfOutput = false;
+				if (V1) _bfIsTP[1] = true;
+				if (V2) _bfIsTP[0] = true;
+			}
+		} else if ( delay1 > delay2 ) {
+			if ( !V1 && !V2 ) {
+				_bfOutput = true;
+				_bfIsTP[0] = true;
+			} else {
+				_bfOutput = false;
+				if (V2) _bfIsTP[1] = true;
+				else _bfIsTP[0] = true;
+			}
+		} else if ( delay2 > delay1 ) {
+			if ( !V1 && !V2 ) {
+				_bfOutput = true;
+				_bfIsTP[1] = true;
+			} else {
+				_bfOutput = false;
+				if (V1) _bfIsTP[0] = true;
+				else _bfIsTP[1] = true;
+			}
+		}
+	}
+
+private:
+	bool _bfIsTP[2];
+	int _bfPrevDelay[2];
 };
 
 class INPUT: public Gate
@@ -199,6 +339,18 @@ public:
 
 		cout<<"\n";
 	}
+
+	void setBFInput ( bool v ) { _bfOutput = v; }
+	void bfReset ()
+	{
+		_bfDelay = -1;
+		_bfOutput = false;
+	}
+	bool checkArrival () { return true; }
+	void checkTruePath ()
+	{
+		_bfDelay = 0;
+	}
 };
 class OUTPUT: public Gate
 {
@@ -217,6 +369,30 @@ public:
 	{
 		cout<<"-"<<_name<<"/"<<_model<<"/fanin "<<_inputs[0]->getName()<<"\n";
 	}
+
+	void bfReset ()
+	{
+		_bfDelay = -1;
+		_bfOutput = false;
+		_bfIsTP = false;
+		_bfPrevDelay = -1;
+	}
+	bool checkArrival ()
+	{
+		if ( _bfPrevDelay == -1 )
+			_bfPrevDelay = _inputs[0].getBfDelay();
+		return _bfPrevDelay != -1;
+	}
+	void checkTruePath ()
+	{
+		_bfIsTP = true;
+		_bfOutput = _inputs[0].getBfOutput();
+		_bfDelay = _bfPrevDelay + 1;
+	}
+
+private:
+	bool _bfIsTP;
+	int _bfPrevDelay;
 };
 
 } // namespace Cir
