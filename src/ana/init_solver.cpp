@@ -1,8 +1,7 @@
+#include "sta/src/ana/helper.h"
+
 #include <assert.h>
 #include <iostream>
-
-#include "sta/src/cir/circuit.h"
-#include "minisat/src/core/Solver.h"
 
 // Add NAND clause into solver.
 // Return True if success, false otherwise.
@@ -59,18 +58,11 @@ static bool add_NOT_clause(Minisat::Var A,
     return false;
 }
 
-// Initialize SAT Solver with circuit. It will set gate's var and add
-// clauses into solver.
-//
-// Please make sure circuit is connected correctly.
-//
-// Return true if success. Return false otherwise.
-//
-static bool init_solver(const Sta::Cir::Circuit& cir, 
-                        Minisat::Solver&         solver) {
+bool Sta::Ana::init_solver(const Cir::Circuit& cir, 
+                           Minisat::Solver&    solver) {
 
-    using Sta::Cir::Gate;
-    using Sta::Cir::Module;
+    using Cir::Gate;
+    using Cir::Module;
 
     // Assign SAT variable to gate.
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {

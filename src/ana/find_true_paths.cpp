@@ -4,7 +4,7 @@
 #include <stack>
 
 #include "minisat/src/core/Solver.h"
-#include "sta/src/ana/init_solver.inc"
+#include "sta/src/ana/helper.h"
 
 #ifndef NDEBUG
 #include <time.h>
