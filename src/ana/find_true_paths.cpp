@@ -3,6 +3,9 @@
 #include <assert.h>
 #include <stack>
 
+#include "minisat/src/core/Solver.h"
+#include "sta/src/ana/init_solver.inc"
+
 #ifndef NDEBUG
 #include <time.h>
 #include <iostream>
@@ -94,6 +97,7 @@ static void trace(Sta::Cir::Gate*                   po,
                   const Sta::Cir::Circuit&          cir,
                   int                               time_constraint,
                   int                               slack_constraint,
+                  Minisat::Solver&                  solver,
                   std::vector<Sta::Cir::Path>&      paths, 
                   std::vector<Sta::Cir::PathValue>& values,
                   std::vector<Sta::Cir::InputVec>&  input_vecs) {
@@ -326,11 +330,15 @@ bool Sta::Ana::find_true_paths(
     calculate_max_arrival_time(cir);
     reset_gate_value(cir);
 
+    Minisat::Solver solver;
+    bool success = init_solver(cir, solver);
+    assert(success);
+
     // Find true path.
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
         Cir::Gate* po = cir.primary_outputs[i];
         trace(po, cir, time_constraint, slack_constraint,
-              paths, values, input_vecs);
+              solver, paths, values, input_vecs);
     }
 
     #ifndef NDEBUG
