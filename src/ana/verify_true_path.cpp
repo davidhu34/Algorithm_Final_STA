@@ -1,7 +1,5 @@
 #include "sta/src/ana/analyzer.h"
 
-#include "sta/src/ana/helper.h"
-
 // `g1` is online signal, `g2` is side input.
 //
 static uint8_t pack_state(const Sta::Cir::Gate* gY,
