@@ -115,6 +115,27 @@ bool verify_true_path(const Cir::Circuit&  cir,
 bool verify_true_path(const Cir::Circuit&  cir,
                       const Cir::Path&     path,
                       const Cir::InputVec& input_vec);
+
+// Calculate value and arrival time of all gates. 
+//
+// It will modify gates inside the circuit.
+//
+void calculate_value_and_arrival_time(
+    const Cir::Circuit&  circuit,
+    const Cir::InputVec& input_vec);
+
+// Calculate maximum arrival time.
+//
+// It will modify gates inside the circuit.
+//
+void calculate_max_arrival_time(const Cir::Circuit& circuit);
+
+// Calculate minimum arrival time.
+//
+// It will modify gates inside the circuit.
+//
+void calculate_min_arrival_time(const Cir::Circuit& circuit);
+
 } // namespace Ana
 } // namespace Sta
 
