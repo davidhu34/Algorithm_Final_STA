@@ -4,6 +4,7 @@
 #include <stack>
 
 #include "minisat/src/core/Solver.h"
+#include "sta/src/ana/init_solver.inc"
 
 namespace {
 
@@ -60,68 +61,6 @@ static void reset_gate_value(const Sta::Cir::Circuit& cir) {
     RESET_GATE_VALUE_FOR_GROUP(primary_inputs)
     RESET_GATE_VALUE_FOR_GROUP(primary_outputs)
     RESET_GATE_VALUE_FOR_GROUP(logic_gates)
-}
-
-// Add NAND clause into solver.
-// Return True if success, false otherwise.
-//
-static bool add_NAND_clause(Minisat::Var A, 
-                            Minisat::Var B, 
-                            Minisat::Var C, 
-                            Minisat::Solver& solver) {
-    using Minisat::mkLit;
-
-    if (!solver.addClause(mkLit(A), mkLit(C))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(B), mkLit(C))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(A, 1), mkLit(B, 1), mkLit(C, 1))) {
-        return false;
-    }
-
-    return true;
-}
-
-// Add NOR clause into solver.
-// Return True if success, false otherwise.
-//
-static bool add_NOR_clause(Minisat::Var A, 
-                           Minisat::Var B, 
-                           Minisat::Var C, 
-                           Minisat::Solver& solver) {
-    using Minisat::mkLit;
-
-    if (!solver.addClause(mkLit(A, 1), mkLit(C, 1))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(B, 1), mkLit(C, 1))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(A), mkLit(B), mkLit(C))) {
-        return false;
-    }
-
-    return true;
-}
-
-// Add NOR clause into solver.
-// Return True if success, false otherwise.
-//
-static bool add_NOT_clause(Minisat::Var A, 
-                           Minisat::Var C, 
-                           Minisat::Solver& solver) {
-    using Minisat::mkLit;
-
-    if (!solver.addClause(mkLit(A), mkLit(C))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(A, 1), mkLit(C, 1))) {
-        return false;
-    }
-
-    return true;
 }
 
 // Add a clause to exclude this solution, so that we can get
@@ -462,53 +401,8 @@ bool Sta::Ana::find_true_paths(
     reset_gate_value(cir);
 
     Minisat::Solver solver;
-
-    // Assign SAT variable to gate.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        cir.primary_inputs[i]->var = solver.newVar();
-    }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->var = solver.newVar();
-    }
-
-    // Add clauses into solver.
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        Cir::Gate* gate = cir.logic_gates[i];
-        bool       success;
-
-        switch (gate->module) {
-        case Cir::Module::NAND2:
-            success = add_NAND_clause(gate->froms[0]->var,
-                                      gate->froms[1]->var,
-                                      gate->var,
-                                      solver);
-            break;
-
-        case Cir::Module::NOR2:
-            success = add_NOR_clause(gate->froms[0]->var,
-                                     gate->froms[1]->var,
-                                     gate->var,
-                                     solver);
-            break;
-
-        case Cir::Module::NOT1:
-            success = add_NOT_clause(gate->froms[0]->var,
-                                     gate->var,
-                                     solver);
-            break;
-        } // switch (gate->module)
-
-        if (!success) {
-            std::cerr << "Error: Clause conflicts while adding clause.\n";
-            return 1;
-        }
-    }
-
-    // Simplify
-    if (!solver.simplify()) {
-        std::cerr << "Error: Clause conflicts while simplifying.\n";
-        return 1;
-    }
+    bool success = init_solver(cir, solver);
+    assert(success);
 
     Cir::Circuit cir2     (cir);
     VarStack     var_stack(solver);
