@@ -45,8 +45,7 @@ static void basic_validate(const std::vector<const char*>& files,
 
     using namespace Sta::Cir;
 
-    int ret = parse(files, cir);
-    ASSERT(!ret, << "parse() return " << ret << "\n");
+    ASSERT(parse(files, cir), << "parse() failed.\n");
 
     // Make sure all modules has correct number of input and
     // output names.
@@ -264,7 +263,7 @@ void test_parse(void) {
     basic_validate(file_set_B, cir);
 
     const char* filename = "test/cases/case0/output/case0.dump";
-    ASSERT(dump(cir, filename) == 0, << "Dump failed.\n");
+    ASSERT(dump(cir, filename), << "Dump failed.\n");
 
     compare_dump("test/cases/case0/output/case0.dump.ans", filename);
 

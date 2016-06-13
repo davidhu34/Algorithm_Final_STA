@@ -47,16 +47,15 @@ void test_find_true_paths(void) {
     files.push_back("test/cases/case0/input/cadcontest.v");
     files.push_back("test/cases/case0/input/case0");
 
-    int return_code = parse(files, cir);
-    ASSERT(return_code == 0, << "Parse into circuit failed.\n");
+    ASSERT(parse(files, cir),
+        << "Parse into circuit failed.\n");
 
     std::vector<Path>                paths;
     std::vector< std::vector<bool> > values;
     std::vector<InputVec>            input_vecs;
     
-    return_code = find_true_paths(
-                      cir, 10, 7, paths, values, input_vecs);
-    ASSERT(return_code == 0, << "Find answer failed.\n");
+    ASSERT(find_true_paths(cir, 10, 7, paths, values, input_vecs),
+        << "Find answer failed.\n");
 
     // Print out all paths.
     for (size_t i = 0; i < paths.size(); ++i) {

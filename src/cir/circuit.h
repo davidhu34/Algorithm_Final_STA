@@ -1,6 +1,7 @@
 #ifndef STA_CIR_CIRCUIT_H
 #define STA_CIR_CIRCUIT_H
 
+#include <limits.h>
 #include <stdint.h>
 #include <vector>
 #include <string>
@@ -19,7 +20,7 @@ struct Module {
     };
 
     enum {
-        npos = std::string::npos
+        npos = SIZE_MAX
     };
 
     // Data Member
@@ -41,13 +42,21 @@ struct Module {
     }
 };
 
+namespace Time {
+    enum {
+        UNKNOWN = INT_MAX
+    };
+}
+
 struct Gate {
     // Data Member
     uint8_t            module;       // NAND2, NOR2, NOT1, PI or PO
     uint8_t            value;        // 1:true, 0:false or 2:floating.
-    uint16_t           tag;          // Needed when using some algo.
+    uint8_t            tag;          // Needed when using some algo.
+    bool               is_true_path; // Needed for no_conflict().
     int                arrival_time; 
     int                min_arrival_time; 
+    int                max_arrival_time; 
     int                var;          // SAT variable.
     std::string        name;
     std::vector<Gate*> froms;

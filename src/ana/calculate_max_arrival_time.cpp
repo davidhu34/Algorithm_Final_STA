@@ -2,13 +2,7 @@
 
 #include <queue>
 
-// Calculate maximum arrival time.
-//
-// #### Input
-//
-// - `cir`
-//
-void Sta::Ana::calculate_max_arrival_time(Cir::Circuit& cir) {
+void Sta::Ana::calculate_max_arrival_time(const Cir::Circuit& cir) {
     using Cir::Gate;
     using Cir::Module;
 
@@ -31,7 +25,7 @@ void Sta::Ana::calculate_max_arrival_time(Cir::Circuit& cir) {
     // Add primary_inputs into queue.
     for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
         Gate* pi = cir.primary_inputs[i];
-        pi->arrival_time = 0;
+        pi->max_arrival_time = 0;
         q.push(pi);
     }
 
@@ -50,13 +44,13 @@ void Sta::Ana::calculate_max_arrival_time(Cir::Circuit& cir) {
                 
                 // Assign arrival time to that fan-out.
                 if (fanout->module == Module::PO) {
-                    fanout->arrival_time = gate->arrival_time;
+                    fanout->max_arrival_time = gate->max_arrival_time;
 
                     // No need to put PO into queue, because PO does
                     // not have fan-out.
                 }
                 else {
-                    fanout->arrival_time = gate->arrival_time + 1;
+                    fanout->max_arrival_time = gate->max_arrival_time + 1;
 
                     // Add that fan-out to queue.
                     q.push(fanout);

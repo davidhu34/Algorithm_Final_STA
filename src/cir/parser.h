@@ -22,25 +22,23 @@ namespace Cir {
 // #### Output
 //
 // - `circuit`: A circuit to be returned.
-// - Error code.
-//     - 0: Execute successfully.
-//     - 1: Cannot open file.
-//     - 2: Other.
 //
-int parse(const std::vector<const char*>& input_files,
-          Circuit&                        circuit     );
+// Return true is parse succeed. Return false otherwise.
+//
+bool parse(const std::vector<const char*>& input_files,
+           Circuit&                        circuit     );
 
-int parse(const char* in_file_1,
-          Circuit&    circuit     );
+bool parse(const char* in_file_1,
+           Circuit&    circuit     );
 
-int parse(const char* in_file_1,
-          const char* in_file_2,
-          Circuit&    circuit     );
+bool parse(const char* in_file_1,
+           const char* in_file_2,
+           Circuit&    circuit     );
 
-int parse(const char* in_file_1,
-          const char* in_file_2,
-          const char* in_file_3,
-          Circuit&    circuit     );
+bool parse(const char* in_file_1,
+           const char* in_file_2,
+           const char* in_file_3,
+           Circuit&    circuit     );
 
 // Extract paths, values and input_vecs from `true_path_set_file`.
 //
@@ -55,11 +53,10 @@ int parse(const char* in_file_1,
 // - `paths`
 // - `values`
 // - `input_vecs`
-// - Return code
-//     - 0: Success
-//     - 1: Failed
 //
-int parse_true_path_set(
+// Return true is parse succeed. Return false otherwise.
+//
+bool parse_true_path_set(
     const std::string&           true_path_set_file,
     const Circuit&               circuit,
     int                          time_constraint,

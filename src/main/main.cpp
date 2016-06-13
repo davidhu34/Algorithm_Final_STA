@@ -141,14 +141,14 @@ static void execute_find(int argc, const char* argv[]) {
     
     Circuit circuit;
     
-    int return_code = parse(infiles, circuit);
-    EXPECT(return_code == 0, << "Parsing failed.")
+    bool success = parse(infiles, circuit);
+    EXPECT(success, << "Parsing failed.")
 
     // Dump file if -d <dump_file> is specified.
 
     if (dump_file) {
-        return_code = dump(circuit, dump_file);
-        EXPECT(return_code == 0, << "Dump failed.")
+        success = dump(circuit, dump_file);
+        EXPECT(success, << "Dump failed.")
     }
 
     // Find all true paths.
@@ -157,27 +157,27 @@ static void execute_find(int argc, const char* argv[]) {
     std::vector<PathValue> values;
     std::vector<InputVec>  input_vecs;
 
-    return_code = find_true_paths(
-                      circuit, 
-                      time_constraint,  // Macro
-                      slack_constraint, // Macro
-                      paths, 
-                      values, 
-                      input_vecs);
+    success = find_true_paths(
+                  circuit, 
+                  time_constraint,  // Macro
+                  slack_constraint, // Macro
+                  paths, 
+                  values, 
+                  input_vecs);
 
-    EXPECT(return_code == 0, << "Find true paths failed.")
+    EXPECT(success, << "Find true paths failed.")
 
     // Output those paths.
 
-    return_code = write(circuit, 
-                        time_constraint, 
-                        slack_constraint, 
-                        paths, 
-                        values, 
-                        input_vecs, 
-                        outfile);
+    success = write(circuit, 
+                    time_constraint, 
+                    slack_constraint, 
+                    paths, 
+                    values, 
+                    input_vecs, 
+                    outfile);
 
-    EXPECT(return_code == 0, << "Write to file failed.")
+    EXPECT(success, << "Write to file failed.")
 }
 
 static void execute_verify(int argc, const char* argv[]) {
@@ -242,14 +242,14 @@ static void execute_verify(int argc, const char* argv[]) {
     
     Circuit circuit;
     
-    int return_code = parse(infiles, circuit);
-    EXPECT(return_code == 0, << "Parse circuit failed.")
+    int success = parse(infiles, circuit);
+    EXPECT(success, << "Parse circuit failed.")
 
     // Dump file if -d <dump_file> is specified.
 
     if (dump_file) {
-        return_code = dump(circuit, dump_file);
-        EXPECT(return_code == 0, << "Dump failed.")
+        success = dump(circuit, dump_file);
+        EXPECT(success, << "Dump failed.")
     }
 
     // Parse true_path_set_file into paths, values and input_vecs.
@@ -258,27 +258,27 @@ static void execute_verify(int argc, const char* argv[]) {
     std::vector<PathValue> values;
     std::vector<InputVec>  input_vecs;
 
-    return_code = parse_true_path_set(true_path_set_file,
-                                      circuit,
-                                      time_constraint,
-                                      slack_constraint,
-                                      paths,
-                                      values,
-                                      input_vecs);
+    success = parse_true_path_set(true_path_set_file,
+                                  circuit,
+                                  time_constraint,
+                                  slack_constraint,
+                                  paths,
+                                  values,
+                                  input_vecs);
 
-    EXPECT(return_code == 0, 
+    EXPECT(success, 
         << "Parse '" << true_path_set_file << "' failed.")
 
     // Verify true path set.
     
-    return_code = verify_true_path_set(circuit,
-                                       time_constraint,
-                                       slack_constraint,
-                                       paths,
-                                       values,
-                                       input_vecs);
+    success = verify_true_path_set(circuit,
+                                   time_constraint,
+                                   slack_constraint,
+                                   paths,
+                                   values,
+                                   input_vecs);
                                        
-    EXPECT(return_code == 0, << "Verification process failed.")
+    EXPECT(success, << "Verification process failed.")
 }
 
 static void execute_dump(int argc, const char* argv[]) {
@@ -308,13 +308,13 @@ static void execute_dump(int argc, const char* argv[]) {
     
     Circuit circuit;
     
-    int return_code = parse(infiles, circuit);
-    EXPECT(return_code == 0, << "Parse circuit failed.")
+    int success = parse(infiles, circuit);
+    EXPECT(success, << "Parse circuit failed.")
 
     // Dump file.
 
-    return_code = dump(circuit, dump_file);
-    EXPECT(return_code == 0, << "Dump failed.")
+    success = dump(circuit, dump_file);
+    EXPECT(success, << "Dump failed.")
 }
 
 static void execute_compare(int argc, const char* argv[]) {

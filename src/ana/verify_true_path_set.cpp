@@ -1,9 +1,9 @@
 #include "sta/src/ana/analyzer.h"
 
-#include <ctime>
 #include <iostream>
 
 #ifndef NDEBUG
+#include <time.h>
 #include "sta/src/util/converter.h"
 
 static time_t      start_time;
@@ -14,8 +14,8 @@ static std::string buffer;
 
 // Wrap verify_true_path() to output error messages.
 //
-static int verify_true_path_wrapper(
-    Sta::Cir::Circuit&         cir,
+static bool verify_true_path_wrapper(
+    const Sta::Cir::Circuit&   cir,
     const Sta::Cir::Path&      path,
     size_t                     path_idx,
     const Sta::Cir::PathValue& path_value,
@@ -24,47 +24,48 @@ static int verify_true_path_wrapper(
     using Sta::Cir::Gate;
     using Sta::Cir::Module;
 
-    const Gate* gA = 0;
-    const Gate* gB = 0;
+    const Gate* g1 = 0;
+    const Gate* g2 = 0;
     const Gate* gY = 0;
 
-    int return_code = Sta::Ana::verify_true_path(
-                          cir, path, input_vec, gA, gB, gY);
+    bool is_true_path = Sta::Ana::verify_true_path(
+                            cir, path, input_vec, g1, g2, gY);
 
-    if (return_code != 0) {
-        std::cout << "\nError: Gate '" << gA->name << "' in Path { "      
-                  << path_idx + 1 << " } is not part of true path."       
-                  << gY->name
-                  << "\n- module       = " << cir.modules[gY->module].name 
-                  << "\n- value        = " << (int)(gY->value)             
-                  << "\n- arrival_time = " << gY->arrival_time             
-                  << gA->name                       
-                  << "\n- value        = " << (int)(gA->value)               
-                  << "\n- arrival_time = " << gA->arrival_time               
-                  << gB->name                       
-                  << "\n- value        = " << (int)(gB->value)               
-                  << "\n- arrival_time = " << gB->arrival_time;
-
-        std::cerr << "\nNumber of examined path: " << buffer;             
-
-        return return_code;
-    }
-    
     for (size_t i = 0; i < path.size(); ++i) {
         const Gate* g = path[i];
         
         if (g->value != path_value[i]) {
             std::cerr << "Error: Gate " << g->name << "'s value "
-                      << "does not match with simulated value.\n";
-            return 1;
+                      << "in Path { " << path_idx + 1 << " } does "
+                      << "not match with simulated value.\n";
+            return false;
         }
     }
 
-    return 0;
+    if (!is_true_path) {
+        std::cout << "\nError: Gate '" << g1->name << "' in Path { "      
+                  << path_idx + 1 << " } is not part of true path."       
+                  << "\n" << gY->name
+                  << "\n- module       = " << cir.modules[gY->module].name 
+                  << "\n- value        = " << (int)(gY->value)             
+                  << "\n- arrival_time = " << gY->arrival_time             
+                  << "\n" << g1->name                       
+                  << "\n- value        = " << (int)(g1->value)               
+                  << "\n- arrival_time = " << g1->arrival_time               
+                  << "\n" << g2->name                       
+                  << "\n- value        = " << (int)(g2->value)               
+                  << "\n- arrival_time = " << g2->arrival_time;
+
+        std::cerr << "\nNumber of examined path: " << buffer;             
+
+        return false;
+    }
+    
+    return true;
 }
 
-int Sta::Ana::verify_true_path_set(
-    Cir::Circuit&                      cir,
+bool Sta::Ana::verify_true_path_set(
+    const Cir::Circuit&                cir,
     int                                time_constraint,
     int                                slack_constraint,
     const std::vector<Cir::Path>&      paths,
@@ -80,15 +81,16 @@ int Sta::Ana::verify_true_path_set(
     buffer           = "";
     #endif
 
-    int return_code = 0;
+    bool passed = true;
 
     for (size_t i = 0; i < paths.size(); ++i) {
-        return_code |= verify_true_path_wrapper(
-                           cir, 
-                           paths[i], 
-                           i,
-                           values[i], 
-                           input_vecs[i]);
+        if (!verify_true_path_wrapper(cir, 
+                                      paths[i], 
+                                      i,
+                                      values[i], 
+                                      input_vecs[i])) {
+            passed = false;
+        }
 
         #ifndef NDEBUG
         time_difference = difftime(time(0), start_time);
@@ -108,5 +110,5 @@ int Sta::Ana::verify_true_path_set(
     std::cerr << paths.size() << "\n";
     #endif
 
-    return return_code;
+    return passed;
 }

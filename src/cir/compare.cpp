@@ -30,17 +30,17 @@ static std::ostream& operator<<(std::ostream& out,
 #define ASSERT(condition, errmsg)                \
     if (!(condition)) {                          \
         std::cerr << "Error: " errmsg << "\n";   \
-        return 1;                                \
+        return false;                            \
     }
 
 #define EXPECT(condition, errmsg)                \
     if (!(condition)) {                          \
         std::cerr << "Error: " errmsg << "\n";   \
-        return_code = 1;                         \
+        same = false;                            \
     }
 
-int Sta::Cir::compare_dump(const std::string& file1,
-                           const std::string& file2) {
+bool Sta::Cir::compare_dump(const std::string& file1,
+                            const std::string& file2) {
 
     using Util::hash_str;
     using Util::prime_gt;
@@ -52,7 +52,7 @@ int Sta::Cir::compare_dump(const std::string& file1,
     TokenMap token_map(hash_str);
     Str      token;
     Str      key_token;
-    int      return_code = 0;
+    bool     same = true;
 
     token_map.bucket.resize(prime_gt(256));
     std::cerr << "Reading " << file1 << "...\n";
@@ -120,7 +120,7 @@ int Sta::Cir::compare_dump(const std::string& file1,
                 std::cerr << "Error: Couln't find key token '"
                           << key_token << "' in token_map.\n";
 
-                return_code = 1;
+                same = false;
 
                 // Fast forward until next key token.
                 char c;
@@ -151,9 +151,9 @@ int Sta::Cir::compare_dump(const std::string& file1,
     }
 
     std::cerr << "End cir_compare.\n";
-    if (return_code == 0) {
+    if (same) {
         std::cerr << "Both files are same.\n";
     }
 
-    return return_code;
+    return same;
 }

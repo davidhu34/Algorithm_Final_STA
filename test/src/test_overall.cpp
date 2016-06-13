@@ -72,73 +72,73 @@ void test_overall(void) {
     for (int i = 0; i < 6; ++i) {
         Circuit cir;
 
-        int return_code = parse(records[i].cir_file_1,
-                                records[i].cir_file_2,
-                                cir);
+        bool success = parse(records[i].cir_file_1,
+                             records[i].cir_file_2,
+                             cir);
 
-        ASSERT(return_code == 0,
+        ASSERT(success,
             << "Parse circuit failed while doing case" << i << ".\n");
 
-        return_code = dump(cir, records[i].dump_file);
+        success = dump(cir, records[i].dump_file);
 
-        ASSERT(return_code == 0,
+        ASSERT(success,
             << "Dump circuit failed while doing case" << i << ".\n");
 
-        return_code = compare_dump(records[i].dump_file,
-                                   records[i].dump_ans_file);
+        success = compare_dump(records[i].dump_file,
+                               records[i].dump_ans_file);
 
-        ASSERT(return_code == 0,
+        ASSERT(success,
             << "Compare dump failed while doing case" << i << ".\n");
 
         std::vector<Path>                paths;
         std::vector< std::vector<bool> > values;
         std::vector<InputVec>            input_vecs;
         
-        return_code = find_true_paths(cir, 
-                                      records[i].time_constraint,
-                                      records[i].slack_constraint,
-                                      paths, 
-                                      values, 
-                                      input_vecs);
+        success = find_true_paths(cir, 
+                                  records[i].time_constraint,
+                                  records[i].slack_constraint,
+                                  paths, 
+                                  values, 
+                                  input_vecs);
 
-        ASSERT(return_code == 0, 
+        ASSERT(success, 
             << "Find answer failed while doing case" << i << ".\n");
 
-        return_code = write(cir, 
-                            records[i].time_constraint,
-                            records[i].slack_constraint,
-                            paths, 
-                            values, 
-                            input_vecs,
-                            records[i].true_path_set_file);
+        success = write(cir, 
+                        records[i].time_constraint,
+                        records[i].slack_constraint,
+                        paths, 
+                        values, 
+                        input_vecs,
+                        records[i].true_path_set_file);
 
-        ASSERT(return_code == 0, 
+        ASSERT(success, 
             << "Write file failed while doing case" << i << ".\n");
 
         paths.clear();
         values.clear();
         input_vecs.clear();
 
-        return_code = parse_true_path_set(records[i].true_path_set_file,
-                                          cir,
-                                          records[i].time_constraint,
-                                          records[i].slack_constraint,
-                                          paths,
-                                          values,
-                                          input_vecs);
+        success = parse_true_path_set(records[i].true_path_set_file,
+                                      cir,
+                                      records[i].time_constraint,
+                                      records[i].slack_constraint,
+                                      paths,
+                                      values,
+                                      input_vecs);
 
-        ASSERT(return_code == 0, 
+        ASSERT(success, 
             << "Parse true path set file failed while doing case"
             << i << ".\n");
 
-        return_code = verify_true_path_set(cir,
-                                           records[i].time_constraint,
-                                           records[i].slack_constraint,
-                                           paths,
-                                           values,
-                                           input_vecs);
+        success = verify_true_path_set(cir,
+                                       records[i].time_constraint,
+                                       records[i].slack_constraint,
+                                       paths,
+                                       values,
+                                       input_vecs);
 
-        ASSERT(return_code == 0,
+        ASSERT(success,
             << "Verification failed while doing case" << i << ".\n");
 
         std::cerr << "Done case" << i << ".\n";

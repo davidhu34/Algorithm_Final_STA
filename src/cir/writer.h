@@ -12,34 +12,32 @@ namespace Cir {
 // Write paths and input vectors in format specified by requirement.md
 // into stdout or a file.
 //
-// #### Input
+// Input
 //
 // - paths     : To be printed. Path is defined in cir module.
 // - input_vecs: To be printed. InputVec is defined in cir module.
 // - outfile   : Output file name, default to empty. If it is empty,
 //               write to stdout.
 //
-// #### Output
+// Output
 //
-// - Error code.
-//     - 0: Execute successfully.
-//     - 1: Cannot open file.
-//     - 2: Other.
+// Return true if writer success. Return false otherwise.
 //
-int write(const Circuit&                circuit,
-          int                           time_constraint,
-          int                           slack_constraint,
-          const std::vector<Path>&      paths,
-          const std::vector<PathValue>& values,
-          const std::vector<InputVec>&  input_vecs,
-          const std::string&            outfile = "");
+bool write(const Circuit&                circuit,
+           int                           time_constraint,
+           int                           slack_constraint,
+           const std::vector<Path>&      paths,
+           const std::vector<PathValue>& values,
+           const std::vector<InputVec>&  input_vecs,
+           const std::string&            outfile = "");
 
 // Dump circuit connection information. This is for circuit checking.
-// If `dump_file` is empty string, dump to stdout. Return 0 if
-// operation succes. Return 1 otherwise.
+// If `dump_file` is empty string, dump to stdout. 
+//
+// Return true is operation success. Return false otherwise.
 // 
-int dump(const Circuit&     cir,
-         const std::string& dump_file = "");
+bool dump(const Circuit&     cir,
+          const std::string& dump_file = "");
 
 } // namespace Cir
 } // namespace Sta

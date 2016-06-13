@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -66,7 +67,7 @@ static void print_connection(int                      delay,
         << setw(value_fw) << (g1_val ? "r" : "f") << "\n";
 }
 
-int Sta::Cir::write(
+bool Sta::Cir::write(
     const Circuit&                cir,
     int                           time_constraint,
     int                           slack_constraint,
@@ -74,6 +75,9 @@ int Sta::Cir::write(
     const std::vector<PathValue>& values,
     const std::vector<InputVec>&  input_vecs,
     const std::string&            outfile          ) {
+
+    assert(paths.size() == values.size());
+    assert(input_vecs.size() == paths.size());
 
     using std::setw;
 
@@ -89,7 +93,7 @@ int Sta::Cir::write(
         fout.open(outfile.c_str());
         if (!fout.good()) {
             std::cerr << "Error: Cannot open file " << outfile << ".\n";
-            return 1;
+            return false;
         }
         buf = fout.rdbuf();
     }
@@ -104,6 +108,8 @@ int Sta::Cir::write(
         << "Benchmark { " << cir.name << " }\n\n";
 
     for (size_t i = 0; i < paths.size(); ++i) {
+        assert(paths[i].size() == values[i].size());
+
         out << "Path { " << i + 1 << " }\n\n";
 
         // Print path
@@ -143,6 +149,8 @@ int Sta::Cir::write(
             << "{\n";
 
         for (size_t j = 0; j < input_vecs[i].size(); ++j) {
+            assert(input_vecs[i].size() == cir.primary_inputs.size());
+
             out << setw(13) << cir.primary_inputs[j]->name
                 << setw(2)  << "="
                 << setw(15);
@@ -160,11 +168,11 @@ int Sta::Cir::write(
     }
     out << std::right;
 
-    return 0;
+    return true;
 }
 
-int Sta::Cir::dump(const Circuit&     cir,
-                   const std::string& dump_file) {
+bool Sta::Cir::dump(const Circuit&     cir,
+                    const std::string& dump_file) {
 
     using std::setw;
 
@@ -181,7 +189,7 @@ int Sta::Cir::dump(const Circuit&     cir,
         if (!fout.good()) {
             std::cerr << "Error: Cannot open file " << dump_file
                       << ".\n";
-            return 1;
+            return false;
         }
         buf = fout.rdbuf();
     }
@@ -264,5 +272,5 @@ int Sta::Cir::dump(const Circuit&     cir,
         out << "\n";
     }
 
-    return 0;
+    return true;
 }
