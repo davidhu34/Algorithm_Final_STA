@@ -1,45 +1,11 @@
 #include "sta/src/ana/analyzer.h"
 
-#include <cassert>
-#include <ctime>
-#include <iostream>
+#include <assert.h>
 #include <stack>
 
-#include "minisat/src/core/Solver.h"
-
-namespace {
-
-// Variables of SAT solver that can be reused.
-struct VarStack {
-    size_t           idx;
-    std::vector<int> vars;
-    Minisat::Solver& solver;
-
-    explicit VarStack(Minisat::Solver& _solver): 
-        idx    (0      ),
-        vars   (16     ),
-        solver (_solver) {
-
-        for (size_t i = 0; i < vars.size(); ++i) {
-            vars[i] = solver.newVar();
-        }
-    }
-
-    int get_var() {
-        if (idx == vars.size()) {
-            vars.push_back(solver.newVar());
-        }
-        return vars[idx++];
-    }
-
-    void clear() {
-        idx = 0;
-    }
-};
-
-} // namespace
-
 #ifndef NDEBUG
+#include <time.h>
+#include <iostream>
 #include "sta/src/util/converter.h"
 
 static time_t      start_time;
@@ -48,92 +14,33 @@ static double      time_step;
 static std::string buffer;
 #endif
 
-// Add NAND clause into solver.
-// Return True if success, false otherwise.
-//
-static bool add_NAND_clause(Minisat::Var A, 
-                            Minisat::Var B, 
-                            Minisat::Var C, 
-                            Minisat::Solver& solver) {
-    using Minisat::mkLit;
-
-    if (!solver.addClause(mkLit(A), mkLit(C))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(B), mkLit(C))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(A, 1), mkLit(B, 1), mkLit(C, 1))) {
-        return false;
+#define RESET_GATE_VALUE_FOR_GROUP(group)                            \
+    for (size_t i = 0; i < cir.group.size(); ++i) {                  \
+        cir.group[i]->value = 2;                                     \
     }
 
-    return true;
+static void reset_gate_value(const Sta::Cir::Circuit& cir) {
+    using Sta::Cir::Time::UNKNOWN;
+    using Sta::Cir::Gate;
+
+    RESET_GATE_VALUE_FOR_GROUP(primary_inputs)
+    RESET_GATE_VALUE_FOR_GROUP(primary_outputs)
+    RESET_GATE_VALUE_FOR_GROUP(logic_gates)
 }
 
-// Add NOR clause into solver.
-// Return True if success, false otherwise.
-//
-static bool add_NOR_clause(Minisat::Var A, 
-                           Minisat::Var B, 
-                           Minisat::Var C, 
-                           Minisat::Solver& solver) {
-    using Minisat::mkLit;
+static void reset_gate_value(const Sta::Cir::Circuit&   cir,
+                             const Sta::Cir::Path&      path,
+                             const Sta::Cir::PathValue& path_value,
+                             const Sta::Cir::Path&      subpath,
+                             const Sta::Cir::PathValue& subpath_value) {
+    reset_gate_value(cir);
 
-    if (!solver.addClause(mkLit(A, 1), mkLit(C, 1))) {
-        return false;
+    for (size_t i = 0; i < path.size(); ++i) {
+        path[i]->value = path_value[i];
     }
-    if (!solver.addClause(mkLit(B, 1), mkLit(C, 1))) {
-        return false;
+    for (size_t i = 0; i < subpath.size(); ++i) {
+        subpath[i]->value = subpath_value[i];
     }
-    if (!solver.addClause(mkLit(A), mkLit(B), mkLit(C))) {
-        return false;
-    }
-
-    return true;
-}
-
-// Add NOR clause into solver.
-// Return True if success, false otherwise.
-//
-static bool add_NOT_clause(Minisat::Var A, 
-                           Minisat::Var C, 
-                           Minisat::Solver& solver) {
-    using Minisat::mkLit;
-
-    if (!solver.addClause(mkLit(A), mkLit(C))) {
-        return false;
-    }
-    if (!solver.addClause(mkLit(A, 1), mkLit(C, 1))) {
-        return false;
-    }
-
-    return true;
-}
-
-// Add a clause to exclude this solution, so that we can get
-// another solution.
-static void add_clause_to_exclude(
-    const Sta::Cir::Circuit&  cir,
-    const Sta::Cir::InputVec& input_vec,
-    int                       new_var,
-    Minisat::Solver&          solver) {
-
-    using Minisat::mkLit;
-
-    Minisat::vec<Minisat::Lit> clause;
-    clause.push(mkLit(new_var));
-
-    for (size_t i = 0; i < input_vec.size(); ++i) {
-        if (input_vec[i]) {
-            clause.push(mkLit(cir.primary_inputs[i]->var, 1));
-        }
-        else {
-            clause.push(mkLit(cir.primary_outputs[i]->var));
-        }
-    }
-
-    solver.addClause_(clause);
-    assert(solver.okay());
 }
 
 // Call function and create a return point. `n` is the return point
@@ -141,39 +48,42 @@ static void add_clause_to_exclude(
 // return point index must be unique. Please do not put semicolon
 // after calling this function.
 //
-#define CALL_FUNCTION(n)     \
-    continue_point.push(n);  \
-    goto start_function;     \
-    case n:
+#define CALL_FUNCTION(n)      \
+    continue_point.push(n);   \
+    goto start_function;      \
+    lbl_ ## n:
 
 // Perform code substitution. Please do not put semicolon after
 // calling these functions.
 //
 // CAUTION: SURROUND THEM WITH BRACES WHEN USE WITH BRANCH OR LOOP.
 //
-#define ASSIGN(gate, v)                    \
-    gate->value = v;                       \
-    assumptions.push(mkLit(gate->var, !v));
-
-#define UNASSIGN(gate)                     \
-    assumptions.pop();                     \
-    gate->value = 2;
-
-#define PUSH_GATE(gate)                    \
+#define PUSH_PATH(gate)                    \
     path.push_back(gate);                  \
+    path_value.push_back(gate->value);     \
     slack -= 1;
 
-#define POP_GATE_1()                       \
+#define POP_PATH_1()                       \
     slack += 1;                            \
+    path_value.pop_back();                 \
     path.pop_back();                       \
     gate = path.back();                    
 
-#define POP_GATE_2()                       \
+#define POP_PATH_2()                       \
     slack += 1;                            \
+    path_value.pop_back();                 \
     path.pop_back();                       \
     gate = path.back();                    \
     gA = gate->froms[0];                   \
     gB = gate->froms[1];                   
+
+#define PUSH_SUBPATH(gate)                 \
+    subpath.push_back(gate);               \
+    subpath_value.push_back(gate->value);  \
+
+#define POP_SUBPATH()                      \
+    subpath_value.pop_back();              \
+    subpath.pop_back();                    \
 
 // Basically the idea is trace from output pins toward input pins. Try
 // every possibility (condition) that make a path become a true path.
@@ -181,12 +91,9 @@ static void add_clause_to_exclude(
 // It will fill `paths`, `values` and `input_vector`.
 //
 static void trace(Sta::Cir::Gate*                   po,
-                  Sta::Cir::Circuit&                cir,
-                  Sta::Cir::Circuit&                cir2,
+                  const Sta::Cir::Circuit&          cir,
                   int                               time_constraint,
                   int                               slack_constraint,
-                  Minisat::Solver&                  solver,
-                  VarStack&                         var_stack,
                   std::vector<Sta::Cir::Path>&      paths, 
                   std::vector<Sta::Cir::PathValue>& values,
                   std::vector<Sta::Cir::InputVec>&  input_vecs) {
@@ -196,9 +103,7 @@ static void trace(Sta::Cir::Gate*                   po,
     using Sta::Cir::PathValue;
     using Sta::Cir::InputVec;
     using Sta::Cir::Module;
-    using Sta::Ana::verify_true_path;
-    using Minisat::mkLit;
-    using Minisat::toInt;
+    using Sta::Ana::no_conflict;
 
     // Try to mimic recursive function call without using function.
     // Use continue_point and switch statement to make sure function
@@ -206,8 +111,10 @@ static void trace(Sta::Cir::Gate*                   po,
     std::stack<int> continue_point;
 
     // Static variable of that fake function.
-    Path                       path(1, po);
-    Minisat::vec<Minisat::Lit> assumptions;
+    Path      path(1, po);
+    PathValue path_value;
+    Path      subpath;
+    PathValue subpath_value;
 
     // Temporary/helper variables.
     Gate* gate;
@@ -225,191 +132,181 @@ pop_function:
     continue_point.pop();
 
     switch (point) {
+    #define CASE(n) \
+        case n: goto lbl_ ## n; break;
+
+        CASE(0)
+        CASE(1)
+        CASE(2)
+        CASE(3)
+        CASE(4)
+        CASE(5)
+        CASE(6)
+        CASE(7)
+        CASE(8)
+        CASE(9)
+        CASE(10)
+        CASE(11)
+
+        default:
+            assert(false && "Return point unknown.");
+            break;
+    } // switch (point)
 
 start_function:
     gate = path.back();
 
-    if (gate->min_arrival_time > slack) {
+    if (gate->min_arrival_time > slack + 1) {
         goto pop_function;
     }
 
-    if (slack == 0 && gate->module != Module::PI) {
+    if (slack == -1 && gate->module != Module::PI) {
         goto pop_function;
     }
 
-    if (gate->value == 2) { // Floating
-        assert(gate->module == Module::PO);
+    switch (gate->module) {
+    case Module::PO: {
+        assert(gate->value == 2); // Undefined
 
         gate->value = 0;
-        ASSIGN(gate->froms[0], 0)
-        PUSH_GATE(gate->froms[0])
+        path_value.push_back(0);
+        gate->froms[0]->value = 0;
+        PUSH_PATH(gate->froms[0])
         CALL_FUNCTION(1)
-        POP_GATE_1()
-        UNASSIGN(gate->froms[0])
+        POP_PATH_1()
+        gate->froms[0]->value = 2;
+        path_value.pop_back();
         gate->value = 2;
 
         gate->value = 1;
-        ASSIGN(gate->froms[0], 1)
-        PUSH_GATE(gate->froms[0])
+        path_value.push_back(1);
+        gate->froms[0]->value = 1;
+        PUSH_PATH(gate->froms[0])
         CALL_FUNCTION(2)
-        POP_GATE_1()
-        UNASSIGN(gate->froms[0])
+        POP_PATH_1()
+        gate->froms[0]->value = 2;
+        path_value.pop_back();
         gate->value = 2;
-    }
 
-    else if (gate->module == Module::NAND2) {
+        break;
+    } // PO
+
+    case Module::NAND2: {
         gA = gate->froms[0];
         gB = gate->froms[1];
 
-    #define MAKE_TRUE_PATH(gA, gB, v0, v1, p1, p2, p3, p4)  \
+    #define MAKE_TRUE_PATH(gA, gB, v0, v1, p1, p2)          \
         if (gate->value == v1) {                            \
             if (gA->value == 2) {                           \
-                ASSIGN(gA, v0)                              \
-                PUSH_GATE(gA)                               \
+                gA->value = v0;                             \
+                PUSH_PATH(gA)                               \
                 CALL_FUNCTION(p1)                           \
-                POP_GATE_2()                                \
-                UNASSIGN(gA)                                \
+                POP_PATH_2()                                \
+                gA->value = 2;                              \
             }                                               \
         }                                                   \
                                                             \
         else { /* gate->value == 0 */                       \
             if (gA->value == 2 && gB->value == 2) {         \
-                ASSIGN(gA, v1)                              \
-                ASSIGN(gB, v1)                              \
-                PUSH_GATE(gA)                               \
+                gA->value = v1;                             \
+                gB->value = v1;                             \
+                PUSH_SUBPATH(gB)                            \
+                PUSH_PATH(gA)                               \
                 CALL_FUNCTION(p2)                           \
-                POP_GATE_2()                                \
-                UNASSIGN(gB)                                \
-                UNASSIGN(gA)                                \
+                POP_PATH_2()                                \
+                POP_SUBPATH()                               \
+                gB->value = 2;                              \
+                gA->value = 2;                              \
             }                                               \
         }                                                   
 
         // Try to make gA become a true path.
-        
-        MAKE_TRUE_PATH(gA, gB, 0, 1, 3, 4, 5, 6)
+        MAKE_TRUE_PATH(gA, gB, 0, 1, 3, 4)
 
         // Try to make gB become a true path.
-
         // Same logic as above, just swap "gA" and "gB"
-        MAKE_TRUE_PATH(gB, gA, 0, 1, 7, 8, 9, 10)
+        MAKE_TRUE_PATH(gB, gA, 0, 1, 5, 6)
 
-    } // else if (gate->module == Module::NAND2)
+        break;
+    } // NAND2
 
-    else if (gate->module == Module::NOR2) {
+    case Module::NOR2: {
         gA = gate->froms[0];
         gB = gate->froms[1];
 
         // Try to make gA become a true path.
-        
-        MAKE_TRUE_PATH(gA, gB, 1, 0, 11, 12, 13, 14)
+        MAKE_TRUE_PATH(gA, gB, 1, 0, 7, 8)
 
         // Try to make gB become a true path
-
         // Same logic as above, just swap "gA" and "gB"
-        MAKE_TRUE_PATH(gB, gA, 1, 0, 15, 16, 17, 18)
-        
-    } // else if (gate->module == Module::NOR2)
+        MAKE_TRUE_PATH(gB, gA, 1, 0, 9, 10)
 
-    else if (gate->module == Module::NOT1) {
+        break;
+    } // NOR2
+
+    case Module::NOT1: {
         if (gate->froms[0]->value == 2) {
-            if (gate->value == 1) {
-                ASSIGN(gate->froms[0], 0)
-            }
-            else { // gate->value == 0
-                ASSIGN(gate->froms[0], 1)
-            }
-
-            PUSH_GATE(gate->froms[0])
-            CALL_FUNCTION(19)
-            POP_GATE_1()
-            UNASSIGN(gate->froms[0])
+            gate->froms[0]->value = !gate->value;
+            PUSH_PATH(gate->froms[0])
+            CALL_FUNCTION(11)
+            POP_PATH_1()
+            gate->froms[0]->value = 2;
         }
-    } // else if (gate->module == Module::NOT1)
+        break;
+    } // NOT1
 
-    else if (gate->module == Module::PI) {
-        if (slack + 1 < slack_constraint) {
-
-            // I will add additional assumption into it.
-            // Later I will shrink it back to original size.
-            int original_size = assumptions.size();
-
-            while (solver.solve(assumptions)) {
+    case Module::PI: {
+        
+        // slack + 1 is real slack, slack is one less than real slack
+        // because of --slack of PI.
+        if (slack + 1 < slack_constraint) { 
+            if (no_conflict(cir, path, path_value, subpath, 
+                            subpath_value)                 ) {
+                paths.push_back(path);
+                values.push_back(path_value);
 
                 // Record input vector.
                 InputVec input_vec(cir.primary_inputs.size());
                 for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-                    input_vec[i] = 
-                        !toInt(solver.model[cir.primary_inputs[i]->var]);
+                    input_vec[i] = cir.primary_inputs[i]->value;
                 }
+                input_vecs.push_back(input_vec);
 
-                if (verify_true_path(cir2, path, input_vec) == 0) {
-                    // Remove unneeded clause
-                    for (size_t i = 0; i < var_stack.idx; ++i) {
-                        solver.addClause(mkLit(var_stack.vars[i]));
-                        assert(solver.okay());
-                    }
-                    solver.simplify();
-                    assert(solver.okay());
+                // Output number of found true path.
+                #ifndef NDEBUG
+                time_difference = difftime(time(0), start_time);
 
-                    // Clear var_stack
-                    var_stack.clear();
+                if (time_difference > time_step) {
+                    time_step = time_difference + 1.0;
+                    std::cerr << std::string(buffer.size(), '\b');
 
-                    // Add path to true path list.
-                    paths.push_back(path);
-                    input_vecs.push_back(input_vec);
-
-                    // Record value of all gate along a path.
-                    PathValue path_value(path.size());
-                    for (size_t i = 0; i < path.size(); ++i) {
-                        path_value[i] = path[i]->value;
-                    }
-                    values.push_back(path_value);
-
-                    // Output number of found true path.
-                    #ifndef NDEBUG
-                    time_difference = difftime(time(0), start_time);
-
-                    if (time_difference > time_step) {
-                        time_step = time_difference + 1.0;
-                        std::cerr << std::string(buffer.size(), '\b');
-
-                        buffer = Sta::Util::to_str(input_vecs.size());
-                        std::cerr << buffer;
-                    }
-                    #endif
-
-                    break;
+                    buffer = Sta::Util::to_str(input_vecs.size());
+                    std::cerr << buffer;
                 }
-                else {
-                    // Try to get next possible answer.
-                    int var = var_stack.get_var();
-                    add_clause_to_exclude(cir, input_vec, var, solver);
-                    assumptions.push(mkLit(var, 1));
-                }
+                #endif
             }
 
-            // Shrink back to original size.
-            // Since Lit is POD, no need to call its destructor.
-            assumptions.shrink(assumptions.size() - original_size);
-            std::cerr << "ha";
+            // Restore cir to state before calling no_conflict()
+            reset_gate_value(cir, path, path_value, subpath, 
+                             subpath_value);
         }
-    }
+        break;
+    } // PI
 
-    else {
+    default:
         assert(false && "Error: Unknown gate type.\n");
-    }
+        break;
+    } // switch (gate->module)
 
     goto pop_function;
 
-    case 0: 
+    lbl_0:
         ; // Function returned to root caller.
-
-    } // switch (point)
 
 }
 
-int Sta::Ana::find_true_paths(
-    Cir::Circuit&                cir,
+bool Sta::Ana::find_true_paths(
+    const Cir::Circuit&          cir,
     int                          time_constraint,
     int                          slack_constraint,
     std::vector<Cir::Path>&      paths,
@@ -425,77 +322,15 @@ int Sta::Ana::find_true_paths(
     buffer          = "";
     #endif
 
-    // Calculate minimum arrival time.
     calculate_min_arrival_time(cir);
-
-    // Initialize gate value to undefined state.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        cir.primary_inputs[i]->value = 2;
-    }
-    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
-        cir.primary_outputs[i]->value = 2;
-    }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->value = 2;
-    }
-
-    Minisat::Solver solver;
-
-    // Assign SAT variable to gate.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        cir.primary_inputs[i]->var = solver.newVar();
-    }
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        cir.logic_gates[i]->var = solver.newVar();
-    }
-
-    // Add clauses into solver.
-    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
-        Cir::Gate* gate = cir.logic_gates[i];
-        bool       success;
-
-        switch (gate->module) {
-        case Cir::Module::NAND2:
-            success = add_NAND_clause(gate->froms[0]->var,
-                                      gate->froms[1]->var,
-                                      gate->var,
-                                      solver);
-            break;
-
-        case Cir::Module::NOR2:
-            success = add_NOR_clause(gate->froms[0]->var,
-                                     gate->froms[1]->var,
-                                     gate->var,
-                                     solver);
-            break;
-
-        case Cir::Module::NOT1:
-            success = add_NOT_clause(gate->froms[0]->var,
-                                     gate->var,
-                                     solver);
-            break;
-        } // switch (gate->module)
-
-        if (!success) {
-            std::cerr << "Error: Clause conflicts while adding clause.\n";
-            return 1;
-        }
-    }
-
-    // Simplify
-    if (!solver.simplify()) {
-        std::cerr << "Error: Clause conflicts while simplifying.\n";
-        return 1;
-    }
-
-    Cir::Circuit cir2     (cir);
-    VarStack     var_stack(solver);
+    calculate_max_arrival_time(cir);
+    reset_gate_value(cir);
 
     // Find true path.
     for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
         Cir::Gate* po = cir.primary_outputs[i];
-        trace(po, cir, cir2, time_constraint, slack_constraint,
-              solver, var_stack, paths, values, input_vecs);
+        trace(po, cir, time_constraint, slack_constraint,
+              paths, values, input_vecs);
     }
 
     #ifndef NDEBUG
@@ -503,5 +338,5 @@ int Sta::Ana::find_true_paths(
     std::cerr << input_vecs.size() << "\n";
     #endif
 
-    return 0;
+    return true;
 }
