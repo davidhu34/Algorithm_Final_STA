@@ -265,7 +265,7 @@ start_function:
         // because of --slack of PI.
         if (slack + 1 < slack_constraint) { 
             if (no_conflict(cir, path, path_value, subpath, 
-                            subpath_value)                 ) {
+                            subpath_value, solver)         ) {
                 paths.push_back(path);
                 values.push_back(path_value);
 
@@ -348,3 +348,4 @@ bool Sta::Ana::find_true_paths(
 
     return true;
 }
+

@@ -23,7 +23,8 @@ bool init_solver(const Cir::Circuit& cir, Minisat::Solver& solver);
 // a true path. `subpath` is additional gates that you've touched
 // while trying to make a path to become a true path.
 //
-// It will modify gates inside the circuit.
+// It will modify gates inside the circuit. It will set PIs to values
+// that can prove that this is a true path, if no conflict occur.
 //
 // Please make sure that all gates' min and max arrival time is
 // calculated.
@@ -34,7 +35,8 @@ bool no_conflict(const Cir::Circuit&   cir,
                  const Cir::Path&      path,
                  const Cir::PathValue& path_value,
                  const Cir::Path&      subpath,
-                 const Cir::PathValue& subpath_value);
+                 const Cir::PathValue& subpath_value,
+                 Minisat::Solver&      solver       );
 
 } // namespace Ana
 } // namespace Sta
