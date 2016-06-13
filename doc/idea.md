@@ -335,9 +335,9 @@ NOR  |B    |1    |11   |AB    |imp
 TODO: Parallelize it.
 
 ```
-sensitizable_paths = vector()
-values             = vector()
-input_vecs         = vector()
+paths      = vector()
+values     = vector()
+input_vecs = vector()
 
 path          = vector()
 path_value    = vector()
@@ -353,8 +353,7 @@ function find_true_paths(_cir, time_constraint, slack_constraint)
 
     calculate_max_arrival_time(cir)
     calculate_min_arrival_time(cir)
-    reset_gate_value_to_undef(cir)
-    reset_arrival_time_to_unknown(cir)
+    reset_gate_value_and_arrival_time(cir)
 
     cir = _cir
 
@@ -363,7 +362,7 @@ function find_true_paths(_cir, time_constraint, slack_constraint)
         trace()
         path.pop()
 
-    return tuple(sensitizable_paths, values, input_vecs)
+    return tuple(paths, values, input_vecs)
 
 #define PUSH_PATH(gate)
     path.push(gate)
@@ -397,19 +396,23 @@ function trace()
         assert(gate.type == PO)
 
         gate.value = 0
+        subpath_value.push(0)
         gate.from.value = 0
         PUSH_PATH(gate.from)
         trace()
         POP_PATH()
         gate.from.value = X
+        subpath_value.pop()
         gate.value = X
 
         gate.value = 1
+        subpath_value.push(1)
         gate.from.value = 1
         PUSH_PATH(gate.from)
         trace()
         POP_PATH()
         gate.from.value = X
+        subpath_value.pop()
         gate.value = X
 
     else if gate.type == NAND
@@ -457,9 +460,9 @@ function trace()
             gate.from.value = X
 
     else if gate.type == PI 
-        if slack < slack_constraint
+        if slack + 1 < slack_constraint
             if no_conflict(cir, path, subpath)
-                sensitizable_paths.push(path)
+                paths.push(path)
                 values.push(path_value)
 
                 input_vec = vector()
@@ -468,8 +471,7 @@ function trace()
                 input_vecs.push(input_vec)
 
             // Restore cir to state before passing to no_conflict()
-            reset_gate_value_to_undef(cir)
-            reset_arrival_time_to_unknown(cir)
+            reset_gate_value_and_arrival_time(cir)
             
             for i = 0 to path.size - 1
                 path[i].value = path_value[i].copy()
@@ -609,9 +611,9 @@ function no_conflict(cir, path, subpath)
             else if (T, Yt, At, Bt, Q) == (X, 1, 0, 0, 0) then assertion failed
             else if (T, Yt, At, Bt, Q) == (X, 1, 0, 1, 0) then assertion failed
             else if (T, Yt, At, Bt, Q) == (X, 1, 1, 0, 0) then assertion failed
-            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 1) then assertion failed
-            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 2) then assertion failed
-            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 3) then assertion failed
+            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 1)
+            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 2)
+            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 3)
 
             else if (T, Yt, At, Bt, Q) == (A, 0, 0, 0, 0) then assertion failed
             else if (T, Yt, At, Bt, Q) == (A, 0, 0, 1, 0) then assertion failed
@@ -804,9 +806,9 @@ function no_conflict(cir, path, subpath)
             else if (T, Yt, At, Bt, Q) == (X, 1, 0, 0, 0) then assertion failed
             else if (T, Yt, At, Bt, Q) == (X, 1, 0, 1, 0) then assertion failed
             else if (T, Yt, At, Bt, Q) == (X, 1, 1, 0, 0) then assertion failed
-            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 1) then assertion failed
-            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 2) then assertion failed
-            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 3) then assertion failed
+            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 1)
+            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 2)
+            else if (T, Yt, At, Bt, Q) == (X, 1, 1, 1, 3)
 
             else if (T, Yt, At, Bt, Q) == (A, 0, 0, 0, 0) then assertion failed
             else if (T, Yt, At, Bt, Q) == (A, 0, 0, 1, 0) then assertion failed
@@ -945,22 +947,17 @@ function no_conflict(cir, path, subpath)
             //
             if      (T, Yt, At) == (X, 0, 0)
             else if (T, Yt, At) == (X, 0, 1) then Ytt = Att + 1
+            else if (T, Yt, At) == (X, 1, 0) then assertion failed
+            else if (T, Yt, At) == (X, 1, 1)
+            else if (T, Yt, At) == (A, 0, 0) then assertion failed
+            else if (T, Yt, At) == (A, 0, 1) then assertion failed
             else if (T, Yt, At) == (A, 1, 0) then assertion failed
             else if (T, Yt, At) == (A, 1, 1)
 
         else if gate.type == PI
-            // T: True path
-            // - X: No
-            // - A
-            //
-            // Yt: Arrival time known
-            // - 0 = unknown
-            // - 1 = known
-            //
-            if      (T, Yt) == (X, 0) then Ytt = 0
-            else if (T, Yt) == (X, 1)
-            else if (T, Yt) == (A, 0) then assertion failed
-            else if (T, Yt) == (A, 1)
+            if Yt == 0
+                Yt = 1
+                Ytt = 0
 
         else // gate.type == PO
             Ytt = Att
