@@ -1,4 +1,4 @@
 EXEC      = system_test
-DEPDIR    = mtl
+DEPDIR    = src/mtl
 
 include ../mtl/template.mk

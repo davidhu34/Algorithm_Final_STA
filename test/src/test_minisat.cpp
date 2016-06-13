@@ -140,7 +140,8 @@ void test_minisat(void) {
            F = solver.newVar(), 
            G = solver.newVar(), 
            H = solver.newVar(), 
-           I = solver.newVar();
+           I = solver.newVar(),
+           J = solver.newVar();
 
     if (!add_OR_clause  (B, C, F, solver) ||
         !add_NAND_clause(D, E, G, solver) ||
@@ -165,7 +166,8 @@ void test_minisat(void) {
                   << "B = " << toInt(solver.model[B]) << "\n"
                   << "C = " << toInt(solver.model[C]) << "\n"
                   << "D = " << toInt(solver.model[D]) << "\n"
-                  << "E = " << toInt(solver.model[E]) << "\n";
+                  << "E = " << toInt(solver.model[E]) << "\n"
+                  << "J = " << toInt(solver.model[J]) << "\n";
     }
     else {
         std::cout << "Unsatisfiable.\n";
