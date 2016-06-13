@@ -1,4 +1,4 @@
-#include "sta/src/ana/analyzer.h"
+#include "sta/src/ana/helper.h"
 
 #include <assert.h>
 #include <queue>
@@ -157,7 +157,7 @@ static uint8_t pack_atime(const Sta::Cir::Gate* gY,
     return bits;
 }
 
-#define PUSH_FANOUT_TO_QUEUE                                         \
+#define PUSH_FANOUT_TO_QUEUE(gate)                                   \
     for (size_t i = 0; i < gate->tos.size(); ++i) {                  \
         if (gate->tos[i]->tag == 0) {                                \
             gate->tos[i]->tag = 1;                                   \
@@ -169,14 +169,15 @@ static uint8_t pack_atime(const Sta::Cir::Gate* gY,
     gate->value = val;                                               \
     value_state &= ~0x30;                                            \
     value_state |= (val << 4);                                       \
-    PUSH_FANOUT_TO_QUEUE
+    PUSH_FANOUT_TO_QUEUE(gate)
 
 #define ASSIGN_PIN(pin, val)                                         \
     pin->value = val;                                                \
     if (pin->tag == 0) {                                             \
         pin->tag = 1;                                                \
         q.push(pin);                                                 \
-    }
+    }                                                                \
+    PUSH_FANOUT_TO_QUEUE(pin)
 
 #define ASSIGN_A(val)                                                \
     value_state &= ~0xc;                                             \
@@ -191,7 +192,7 @@ static uint8_t pack_atime(const Sta::Cir::Gate* gY,
 #define ASSIGN_YTT_FROM(pin)                                         \
     gate->arrival_time = pin->arrival_time + 1;                      \
     atime_state |= (1 << 4);                                         \
-    PUSH_FANOUT_TO_QUEUE
+    PUSH_FANOUT_TO_QUEUE(gate)
 
 #define IF_BMINT_GT_ATT_THEN_RETURN_F                                \
     if (gB->min_arrival_time > gA->arrival_time) {                   \
@@ -447,11 +448,36 @@ static uint8_t pack_atime(const Sta::Cir::Gate* gY,
     default: assert(0 && "Unknown value state.");             break; \
     }
 
+// Add gate that value is not undefined into assumptions.
+//
+static void get_assumptions(const Sta::Cir::Circuit&    cir,
+                            Minisat::vec<Minisat::Lit>& assumptions) {
+
+    using Sta::Cir::Gate;
+    using Minisat::mkLit;
+    using Minisat::toInt;
+    
+#define ADD_GROUP_TO_ASSUMPTIONS(group)                              \
+    for (size_t i = 0; i < cir.group.size(); ++i) {                  \
+        const Gate* g = cir.group[i];                                \
+                                                                     \
+        assert(g->value == 0 || g->value == 1 || g->value == 2);     \
+        if (g->value != 2) {                                         \
+            assumptions.push(mkLit(g->var, !g->value));              \
+        }                                                            \
+    }
+
+    ADD_GROUP_TO_ASSUMPTIONS(primary_inputs)
+    ADD_GROUP_TO_ASSUMPTIONS(primary_outputs)
+    ADD_GROUP_TO_ASSUMPTIONS(logic_gates)
+}
+
 bool Sta::Ana::no_conflict(const Cir::Circuit&   cir,
                            const Cir::Path&      path,
                            const Cir::PathValue& path_value,
                            const Cir::Path&      subpath,
-                           const Cir::PathValue& subpath_value) {
+                           const Cir::PathValue& subpath_value,
+                           Minisat::Solver&      solver        ) {
 
     assert(path.size() == path_value.size());
     assert(subpath.size() == subpath_value.size());
@@ -700,7 +726,7 @@ bool Sta::Ana::no_conflict(const Cir::Circuit&   cir,
         case Module::PI: {
             if (gate->arrival_time == UNKNOWN) {
                 gate->arrival_time = 0;
-                PUSH_FANOUT_TO_QUEUE
+                PUSH_FANOUT_TO_QUEUE(gate)
             }
 
             break;
@@ -722,11 +748,22 @@ bool Sta::Ana::no_conflict(const Cir::Circuit&   cir,
 
     } // while q is not empty
 
-    // Give default value to PI that has unknown value.
-    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
-        if (cir.primary_inputs[i]->value == 2) {
-            cir.primary_inputs[i]->value = 0;
+
+    // Use SAT solver to get other undefined value.
+    Minisat::vec<Minisat::Lit> assumptions;
+    get_assumptions(cir, assumptions);
+
+    using Minisat::toInt;
+
+    bool solved = false;
+    if (solver.solve(assumptions)) {
+        // Set PIs.
+        for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+            Gate* pi = cir.primary_inputs[i];
+            pi->value = !toInt(solver.modelValue(pi->var));
         }
+
+        solved = true;
     }
 
     // Reset is_true_path.
@@ -734,6 +771,6 @@ bool Sta::Ana::no_conflict(const Cir::Circuit&   cir,
         path[i]->is_true_path = false;
     }
 
-    return true;
+    return solved;
 }
 
