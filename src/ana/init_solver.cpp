@@ -71,6 +71,10 @@ bool Sta::Ana::init_solver(const Cir::Circuit& cir,
     for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
         cir.logic_gates[i]->var = solver.newVar();
     }
+    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+        cir.primary_outputs[i]->var = 
+            cir.primary_outputs[i]->froms[0]->var;
+    }
 
     // Add clauses into solver.
     for (size_t i = 0; i < cir.logic_gates.size(); ++i) {

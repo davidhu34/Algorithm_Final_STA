@@ -1,4 +1,4 @@
 EXEC      = minisat
-DEPDIR    = mtl utils
+DEPDIR    = src/mtl src/utils
 
 include ../mtl/template.mk
