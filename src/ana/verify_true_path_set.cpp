@@ -36,8 +36,10 @@ static bool verify_true_path_wrapper(
         
         if (g->value != path_value[i]) {
             std::cerr << "Error: Gate " << g->name << "'s value "
+                      << "(" << (int)(gate->value) << ") "
                       << "in Path { " << path_idx + 1 << " } does "
-                      << "not match with simulated value.\n";
+                      << "not match with simulated value "
+                      << "(" << path_value[i] << ").\n";
             return false;
         }
     }
