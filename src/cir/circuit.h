@@ -49,6 +49,7 @@ public:
 private:
 	void linkWire ( Gate* g, string wname, string pin );
 	bool isInput ( string wname )	{ return _Inputs.find(wname) != _Inputs.end(); }
+	void resetBF ();
 
 	map< string, Wire*>	_Wires;		// no wire to inputs
 	map< string, Gate*>	_Inputs;

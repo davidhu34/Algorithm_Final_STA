@@ -184,6 +184,7 @@ vector< vector<Gate*> > Circuit::truepathBruteForce ( vector<bool> input_vec )
 				pending.insert( pending.end(), outs.begin(), outs.end() );
 			}
 	}
-};
+}
+
 } // namespace Cir
 } // namespace Sta

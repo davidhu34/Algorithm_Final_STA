@@ -52,6 +52,9 @@ public:
 	virtual bool checkArrival () = 0;
 	virtual void checkTruePath () = 0;
 	virtual void bfReset () = 0;
+	bool getBfOutput ()	{ return _bfOutput; }
+	int getBfDelay ()	{ return _bfDelay; }
+	void setBFInput ( bool v ) { _bfOutput = v; }
 
 	string getName () const  { return _name; }
 	string getModel () const { return _model; }
@@ -119,13 +122,13 @@ public:
 	bool checkArrival ()
 	{
 		if ( _bfPrevDelay == -1 )
-			_bfPrevDelay = _inputs[0].getBfDelay();
+			_bfPrevDelay = _inputs[0]->getBfDelay();
 		return _bfPrevDelay != -1;
 	}
 	void checkTruePath ()
 	{
 		_bfIsTP = true;
-		_bfOutput = !( _inputs[0].getBfOutput() );
+		_bfOutput = !( _inputs[0]->getBfOutput() );
 		_bfDelay = _bfPrevDelay + 1;
 	}
 
@@ -173,8 +176,10 @@ public:
 	{
 		_bfDelay = -1;
 		_bfOutput = false;
-		_bfIsTP = [ false, false ];
-		_bfPrevDelay = [ -1, -1 ];
+		for ( int i = 0; i < 2 ; i++ ) {
+			_bfIsTP[i] = false;
+			_bfPrevDelay[i] = -1;
+		}
 	}
 	bool checkArrival ()
 	{
@@ -187,8 +192,8 @@ public:
 	{
 		int delay1 = _bfPrevDelay[0];
 		int delay2 = _bfPrevDelay[1];
-		bool V1 = _inputs[0].getBfOutput();
-		bool V2 = _inputs[1].getBfOutput();
+		bool V1 = _inputs[0]->getBfOutput();
+		bool V2 = _inputs[1]->getBfOutput();
 		if ( delay1 == delay2 ) {
 			if ( V1 && V2 ) {
 				_bfOutput = false;
@@ -265,8 +270,10 @@ public:
 	{
 		_bfDelay = -1;
 		_bfOutput = false;
-		_bfIsTP = [ false, false ];
-		_bfPrevDelay = [ -1, -1 ];
+		for ( int i = 0; i < 2 ; i++ ) {
+			_bfIsTP[i] = false;
+			_bfPrevDelay[i] = -1;
+		}
 	}
 	bool checkArrival ()
 	{
@@ -279,8 +286,8 @@ public:
 	{
 		int delay1 = _bfPrevDelay[0];
 		int delay2 = _bfPrevDelay[1];
-		bool V1 = _inputs[0].getBfOutput();
-		bool V2 = _inputs[1].getBfOutput();
+		bool V1 = _inputs[0]->getBfOutput();
+		bool V2 = _inputs[1]->getBfOutput();
 		if ( delay1 == delay2 ) {
 			if ( !V1 && !V2 ) {
 				_bfOutput = true;
@@ -340,7 +347,6 @@ public:
 		cout<<"\n";
 	}
 
-	void setBFInput ( bool v ) { _bfOutput = v; }
 	void bfReset ()
 	{
 		_bfDelay = -1;
@@ -380,13 +386,13 @@ public:
 	bool checkArrival ()
 	{
 		if ( _bfPrevDelay == -1 )
-			_bfPrevDelay = _inputs[0].getBfDelay();
+			_bfPrevDelay = _inputs[0]->getBfDelay();
 		return _bfPrevDelay != -1;
 	}
 	void checkTruePath ()
 	{
 		_bfIsTP = true;
-		_bfOutput = _inputs[0].getBfOutput();
+		_bfOutput = _inputs[0]->getBfOutput();
 		_bfDelay = _bfPrevDelay + 1;
 	}
 
