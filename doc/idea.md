@@ -243,6 +243,36 @@ NAND |A    |1    |11   |A     |imp
 NAND |A    |1    |11   |B     |imp
 NAND |A    |1    |11   |AB    |imp
 
+0: A first
+1: B first
+2: Together
+
+NAND 0 00 10
+NAND 0 01 10
+NAND 0 10 01
+NAND 0 11 01
+NAND 1 00 01
+NAND 1 01 10
+NAND 1 10 01
+NAND 1 11 10
+NAND 2 00 11
+NAND 2 01 10
+NAND 2 10 01
+NAND 2 11 11
+
+NOR  0 00 01
+NOR  0 01 01
+NOR  0 10 10
+NOR  0 11 10
+NOR  1 00 10
+NOR  1 01 01
+NOR  1 10 10
+NOR  1 11 01
+NOR  2 00 11
+NOR  2 01 01
+NOR  2 10 10
+NOR  2 11 11
+
 Gate |True |Y    |AB   |First |Note
 ---- |---- |---- |---- |----- |----
 NAND |B    |0    |00   |A     |imp
