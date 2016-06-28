@@ -129,8 +129,6 @@ static bool add_NOR_clause(Var A, Var B, Var C, Solver& solver) {
 }
 
 void test_minisat(void) {
-    std::cerr << __FUNCTION__ << "():\n";
-
     Solver solver;
     Var    A = solver.newVar(), 
            B = solver.newVar(), 
@@ -172,8 +170,6 @@ void test_minisat(void) {
     else {
         std::cout << "Unsatisfiable.\n";
     }
-        
-    std::cerr << __FUNCTION__ << "() passed.\n";
 }
 
 void test_minisat_2(void) {

@@ -9,8 +9,6 @@
 #include "sta/src/util/hash_set.h"
 
 void test_hash_set(void) {
-    std::cerr << __FUNCTION__ << "():\n";
-
     using Sta::Util::hash_str;
     using Sta::Util::prime_gt;
 
@@ -64,7 +62,5 @@ void test_hash_set(void) {
     }
 
     ASSERT(dict.size == 1, );
-
-    std::cerr << __FUNCTION__ << "() passed.\n";
 }
 

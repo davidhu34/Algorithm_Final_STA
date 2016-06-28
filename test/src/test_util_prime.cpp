@@ -4,8 +4,6 @@
 #include "sta/src/util/prime.h"
 
 void test_prime_gt(void) {
-    std::cerr << __FUNCTION__ << "():\n";
-
     using Sta::Util::prime_gt;
 
     size_t n;
@@ -24,6 +22,4 @@ void test_prime_gt(void) {
 
     ASSERT((n = prime_gt(51437)) == 51437,
         << "n = " << n << " != 51437\n");
-
-    std::cerr << __FUNCTION__ << "() passed.\n";
 }

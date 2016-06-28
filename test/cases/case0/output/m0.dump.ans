@@ -1,0 +1,11 @@
+-subcircuit_of              case0
+-pi_count                   2
+-po_count                   1
+-gate_count                 2
+-M0/PO/fanin                U4
+-U4/NOT1/fanout             Y:M0
+-U4/NOT1/fanin              A:U17
+-U17/NAND2/fanout           Y:U4
+-U17/NAND2/fanin            A:A0 B:B0
+-A0/PI/fanout               U17
+-B0/PI/fanout               U17

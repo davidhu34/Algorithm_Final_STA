@@ -48,8 +48,6 @@ struct Record {
            slack_constraint)
 
 void test_overall(void) {
-    std::cerr << __FUNCTION__ << "():\n";
-
     using Sta::Cir::Circuit;
     using Sta::Cir::Path;
     using Sta::Cir::InputVec;
@@ -143,7 +141,5 @@ void test_overall(void) {
 
         std::cerr << "Done case" << i << ".\n";
     }
-
-    std::cerr << __FUNCTION__ << "() passed.\n";
 }
 

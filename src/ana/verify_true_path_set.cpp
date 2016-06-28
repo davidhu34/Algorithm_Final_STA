@@ -1,19 +1,36 @@
 #include "sta/src/ana/analyzer.h"
 
+#include <time.h>
 #include <iostream>
 
-#ifndef NDEBUG
-#include <time.h>
 #include "sta/src/util/converter.h"
 
+// Timing variables.
 static time_t      start_time;
 static double      time_difference;
 static double      time_step;
 static std::string buffer;
-#endif
+
+static void reset_timing_variables() {
+    start_time      = time(0);
+    time_difference = 0.0;
+    time_step       = 1.0;
+    buffer          = "";
+}
+
+static void update_number_of_examined_path(size_t n, bool force) {
+    time_difference = difftime(time(0), start_time);
+
+    if (force || time_difference > time_step) {
+        time_step = time_difference + 1.0;
+        std::cerr << std::string(buffer.size(), '\b');
+
+        buffer = Sta::Util::to_str(n);
+        std::cerr << buffer;
+    }
+}
 
 // Wrap verify_true_path() to output error messages.
-//
 static bool verify_true_path_wrapper(
     const Sta::Cir::Circuit&   cir,
     const Sta::Cir::Path&      path,
@@ -74,14 +91,9 @@ bool Sta::Ana::verify_true_path_set(
     const std::vector<Cir::PathValue>& values,
     const std::vector<Cir::InputVec>&  input_vecs) {
 
-    #ifndef NDEBUG
-    std::cerr << "Number of examined path: ";
 
-    start_time       = 0;
-    time_difference  = 0.0;
-    time_step        = 1.0;
-    buffer           = "";
-    #endif
+    reset_timing_variables();
+    std::cerr << "Number of examined path: ";
 
     bool passed = true;
 
@@ -94,23 +106,10 @@ bool Sta::Ana::verify_true_path_set(
             passed = false;
         }
 
-        #ifndef NDEBUG
-        time_difference = difftime(time(0), start_time);
-
-        if (time_difference > time_step) {
-            time_step = time_difference + 1.0;
-            std::cerr << std::string(buffer.size(), '\b');
-
-            buffer = Sta::Util::to_str(i);
-            std::cerr << buffer;
-        }
-        #endif
+        update_number_of_examined_path(i, false);
     }
 
-    #ifndef NDEBUG
-    std::cerr << std::string(buffer.size(), '\b');
-    std::cerr << paths.size() << "\n";
-    #endif
+    update_number_of_examined_path(paths.size(), true);
 
     return passed;
 }

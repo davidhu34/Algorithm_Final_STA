@@ -4,25 +4,19 @@
 #include <stdint.h>
 #include <string>
 
-// Since C++03 does not offer <cstdint>, I'll have to to define them
-// myself.
-//typedef __UINT8_TYPE__  uint8_t;
-//typedef __UINT32_TYPE__ uint32_t;
-
 namespace Sta {
 namespace Util {
 
 // String hash function. It is a modified version of MurmurHash3_x86_32.
-//
-// #### Input
-//
-// - key: A string.
-//
-// #### Output
-//
-// - An 32-bit integer.
-//
 uint32_t hash_str(const std::string& str);
+
+// Pointer hash function.
+inline uint32_t hash_ptr(const void* ptr) {
+    return reinterpret_cast<uint64_t>(ptr) >> 2;
+}
+
+typedef uint32_t (*StrHashFunc)(const std::string& str);
+typedef uint32_t (*PtrHashFunc)(const void* ptr);
 
 } // namespace Util
 } // namespace Sta

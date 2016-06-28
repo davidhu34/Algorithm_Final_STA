@@ -14,8 +14,6 @@
 // of collision > certain critical value, this test is failed.
 //
 void test_hash_str(void) {
-    std::cerr << __FUNCTION__ << "():\n";
-
     using Sta::Util::hash_str;
 
     const char* filename = "test/cases/words.txt";
@@ -65,6 +63,20 @@ void test_hash_str(void) {
 
     ASSERT(max_num_in_bucket < 3,
         << "I think the implementation is wrong, too many collisions.\n");
+}
+
+void test_hash_ptr(void) {
+    std::cerr << __FUNCTION__ << "():\n";
+
+    using Sta::Util::hash_ptr;
+
+    char* c1 = new char('a');
+    char* c2 = new char('b');
+
+    ASSERT(hash_ptr(c1) != hash_ptr(c2), << "Ops...\n");
+
+    delete c1;
+    delete c2;
 
     std::cerr << __FUNCTION__ << "() passed.\n";
 }

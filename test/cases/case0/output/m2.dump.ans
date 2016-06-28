@@ -1,0 +1,23 @@
+-subcircuit_of         case0
+-pi_count              4
+-po_count              1
+-gate_count            7
+-M2/PO/fanin           U9
+-U9/NOR2/fanin         A:U5  B:U10
+-U9/NOR2/fanout        Y:M2
+-U10/NAND2/fanin       A:A1  B:U3
+-U10/NAND2/fanout      Y:U9
+-U3/NOT1/fanin         A:U11
+-U3/NOT1/fanout        Y:U10
+-U11/NOR2/fanin        A:U15 B:U16
+-U11/NOR2/fanout       Y:U3
+-U15/NAND2/fanin       A:B1  B:A0
+-U15/NAND2/fanout      Y:U11
+-U16/NAND2/fanin       A:B0  B:A1
+-U16/NAND2/fanout      Y:U11
+-U5/NOT1/fanin         A:B1
+-U5/NOT1/fanout        Y:U9
+-A0/PI/fanout          U15 
+-A1/PI/fanout          U16 U10 
+-B0/PI/fanout          U16 
+-B1/PI/fanout          U15 U5  

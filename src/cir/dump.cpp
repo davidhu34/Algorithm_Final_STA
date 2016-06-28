@@ -5,15 +5,9 @@
 
 #include "sta/src/cir/writer.h"
 
-bool Sta::Cir::dump(const Circuit&     cir,
-                    const std::string& dump_file) {
-
-    using std::setw;
-
-    // Output to file or stdout depends on dump_file.
-    //
-    std::streambuf* buf;
-    std::ofstream   fout;
+static bool open_stream(const std::string& dump_file,
+                        std::streambuf*&   buf,
+                        std::ofstream&     fout      ) {
 
     if (dump_file.empty()) {
         buf = std::cout.rdbuf();
@@ -26,6 +20,23 @@ bool Sta::Cir::dump(const Circuit&     cir,
             return false;
         }
         buf = fout.rdbuf();
+    }
+
+    return true;
+}
+
+bool Sta::Cir::dump(const Circuit&     cir,
+                    const std::string& dump_file) {
+
+    using std::setw;
+
+    // Output to file or stdout depends on dump_file.
+    //
+    std::streambuf* buf;
+    std::ofstream   fout;
+
+    if (!open_stream(dump_file, buf, fout)) {
+        return false;
     }
 
     std::ostream out(buf);
@@ -101,6 +112,86 @@ bool Sta::Cir::dump(const Circuit&     cir,
 
         for (size_t j = 0; j < g->tos.size(); ++j) {
             out << g->tos[j]->name << " ";
+        }
+        out << "\n";
+    }
+
+    return true;
+}
+
+bool Sta::Cir::dump(const Subcircuit&  cir,
+                    const std::string& dump_file) {
+
+    using std::setw;
+
+    // Output to file or stdout depends on dump_file.
+    //
+    std::streambuf* buf;
+    std::ofstream   fout;
+
+    if (!open_stream(dump_file, buf, fout)) {
+        return false;
+    }
+
+    std::ostream out(buf);
+    const int    w = 30; // Field width.
+
+    out << std::left;
+
+    // Start printing.
+    out << setw(w) << "-subcircuit_of" << cir.orig.name << "\n"
+        << setw(w) << "-pi_count" << cir.primary_inputs.size() << "\n"
+        << setw(w) << "-po_count" << cir.primary_outputs.size() << "\n"
+        << setw(w) << "-gate_count" << cir.logic_gates.size() << "\n";
+
+    std::string temp;
+    temp.reserve(64);
+
+    for (size_t i = 0; i < cir.logic_gates.size(); ++i) {
+        const GateCopy* g = cir.logic_gates[i];
+        // Print fanin
+        temp.clear();
+        temp += "-";
+        temp += g->orig->name;
+        temp += "/";
+        temp += cir.orig.modules[g->orig->module].name;
+
+        out << setw(w) << temp + "/fanin";
+
+        for (size_t j = 0; j < g->froms.size(); ++j) {
+            out << cir.orig.modules[g->orig->module].input_names[j] << ":"
+                << g->froms[j]->orig->name << " ";
+        }
+        out << "\n";
+
+        // Print fanout
+        out << setw(w) << temp + "/fanout";
+
+        for (size_t j = 0; j < g->tos.size(); ++j) {
+            out << cir.orig.modules[g->orig->module].output_name << ":"
+                << g->tos[j]->orig->name << " ";
+        }
+        out << "\n";
+    }
+
+    for (size_t i = 0; i < cir.primary_outputs.size(); ++i) {
+        // Print fanin
+        const GateCopy* g = cir.primary_outputs[i];
+        out << setw(w) << "-" + g->orig->name + "/PO/fanin";
+
+        for (size_t j = 0; j < g->froms.size(); ++j) {
+            out << g->froms[j]->orig->name << " ";
+        }
+        out << "\n";
+    }
+
+    for (size_t i = 0; i < cir.primary_inputs.size(); ++i) {
+        // Print fanout
+        const GateCopy* g = cir.primary_inputs[i];
+        out << setw(w) << "-" + g->orig->name + "/PI/fanout";
+
+        for (size_t j = 0; j < g->tos.size(); ++j) {
+            out << g->tos[j]->orig->name << " ";
         }
         out << "\n";
     }

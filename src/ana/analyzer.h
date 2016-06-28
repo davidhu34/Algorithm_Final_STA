@@ -2,6 +2,7 @@
 #define STA_ANA_ANALYZER_H
 
 #include "sta/src/cir/circuit.h"
+#include "sta/src/cir/subcircuit.h"
 
 namespace Sta {
 namespace Ana {
@@ -115,6 +116,26 @@ void calculate_max_arrival_time(const Cir::Circuit& circuit);
 // It will modify gates inside the circuit.
 //
 void calculate_min_arrival_time(const Cir::Circuit& circuit);
+
+// Check whether there is any conflict in the circuit with this
+// assignment of value and arrival time.
+//
+// `path` is vector of gate that you are trying to make it to become
+// a true path. `subpath` is additional gates that you've touched
+// while trying to make a path to become a true path.
+//
+// It will modify gates inside the circuit. It will set PIs to values
+// that can prove that this is a true path, if no conflict occur.
+//
+// Please make sure that all gates' min and max arrival time is
+// calculated.
+//
+// Return true if no conflict. Return false otherwise.
+//
+bool no_conflict_2(const Cir::Subcircuit& cir,
+                   const Cir::PathCopy&   path,
+                   Cir::PathCopy          subpath,
+                   Cir::InputVec&         input_vec);
 
 } // namespace Ana
 } // namespace Sta

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "sta/src/cir/circuit.h"
+#include "sta/src/cir/subcircuit.h"
 
 namespace Sta {
 namespace Cir {
@@ -37,6 +38,9 @@ bool write(const Circuit&                circuit,
 // Return true is operation success. Return false otherwise.
 // 
 bool dump(const Circuit&     cir,
+          const std::string& dump_file = "");
+
+bool dump(const Subcircuit&  cir,
           const std::string& dump_file = "");
 
 } // namespace Cir

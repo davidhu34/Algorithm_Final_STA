@@ -23,12 +23,10 @@ struct Module {
         npos = SIZE_MAX
     };
 
-    // Data Member
     std::string              name;
     std::string              output_name;
     std::vector<std::string> input_names;
 
-    // Constructor
     explicit Module(const std::string& _name): name(_name) { }
 
     // Find index of input pin. If not found, return npos.
@@ -49,40 +47,33 @@ namespace Time {
 }
 
 struct Gate {
-    // Data Member
     uint8_t            module;       // NAND2, NOR2, NOT1, PI or PO
     uint8_t            value;        // 1:true, 0:false or 2:floating.
     uint8_t            tag;          // Needed when using some algo.
-    bool               is_true_path; // Needed for no_conflict().
     int                arrival_time; 
     int                min_arrival_time; 
     int                max_arrival_time; 
-    int                var;          // SAT variable.
     std::string        name;
     std::vector<Gate*> froms;
     std::vector<Gate*> tos;
 
-    // Constructor
     Gate(int                _module, 
          const std::string& _name   ):
         module (_module),
         name   (_name)    { }
 };
 
-typedef std::vector<Gate*>   Path;
-typedef std::vector<bool>    PathValue;
-typedef std::vector<bool>    InputVec;
+typedef std::vector<Gate*>     Path;
+typedef std::vector<bool>      PathValue;
+typedef std::vector<bool>      InputVec;
 
 struct Circuit {
-    // Data Member
-    std::string name;
-
+    std::string         name;
     std::vector<Gate*>  primary_inputs;
     std::vector<Gate*>  primary_outputs;
     std::vector<Gate*>  logic_gates;
     std::vector<Module> modules;
 
-    // Default Constructor
     Circuit() {
         modules.reserve(5);
         modules.push_back(Module("NAND2"));
@@ -92,10 +83,10 @@ struct Circuit {
         modules.push_back(Module("out"  ));
     }
 
-    // Copy Constructor: It performs deep copy.
+    // Performs deep copy.
     Circuit(const Circuit& circuit);
 
-    // Destructor: Free all gates allocated in circuit.
+    // Free all gates allocated in circuit.
     ~Circuit();
 };
 

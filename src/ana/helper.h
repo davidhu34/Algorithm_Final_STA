@@ -31,12 +31,12 @@ bool init_solver(const Cir::Circuit& cir, Minisat::Solver& solver);
 //
 // Return true if no conflict. Return false otherwise.
 //
-bool no_conflict(const Cir::Circuit&   cir,
-                 const Cir::Path&      path,
-                 const Cir::PathValue& path_value,
-                 const Cir::Path&      subpath,
-                 const Cir::PathValue& subpath_value,
-                 Minisat::Solver&      solver       );
+bool no_conflict_1(const Cir::Circuit&   cir,
+                   const Cir::Path&      path,
+                   const Cir::PathValue& path_value,
+                   const Cir::Path&      subpath,
+                   const Cir::PathValue& subpath_value,
+                   Minisat::Solver&      solver        );
 
 } // namespace Ana
 } // namespace Sta
