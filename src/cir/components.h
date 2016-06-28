@@ -55,6 +55,7 @@ public:
 	bool getBfOutput ()	{ return _bfOutput; }
 	int getBfDelay ()	{ return _bfDelay; }
 	void setBFInput ( bool v ) { _bfOutput = v; }
+	vector<Gate*> getTrueFanIn () = 0;
 
 	string getName () const  { return _name; }
 	string getModel () const { return _model; }
@@ -112,6 +113,12 @@ public:
 		cout<<"\n";
 	}
 
+	vector<Gate*> getTrueFanIn ()
+	{
+		return (_bfIsTP)? 
+			vector<Gate*>(1, _inputs[0]);
+			: vector<Gate*>();
+	}
 	void bfReset ()
 	{
 		_bfDelay = -1;
@@ -172,6 +179,13 @@ public:
 		cout<<"\n";
 	}
 
+	vector<Gate*> getTrueFanIn ()
+	{
+		vector<Gate*> trueFanIn;
+		if (_bfIsTP[0]) trueFanIn.push_back( _inputs[0] );
+		if (_bfIsTP[1]) trueFanIn.push_back( _inputs[1] );
+		return trueFanIn;
+	}
 	void bfReset ()
 	{
 		_bfDelay = -1;
@@ -266,6 +280,13 @@ public:
 		cout<<"\n";
 	}
 
+	vector<Gate*> getTrueFanIn ()
+	{
+		vector<Gate*> trueFanIn;
+		if (_bfIsTP[0]) trueFanIn.push_back( _inputs[0] );
+		if (_bfIsTP[1]) trueFanIn.push_back( _inputs[1] );
+		return trueFanIn;
+	}
 	void bfReset ()
 	{
 		_bfDelay = -1;
@@ -347,6 +368,7 @@ public:
 		cout<<"\n";
 	}
 
+	vector<Gate*> getTrueFanIn () { return vector<Gate*>(); }
 	void bfReset ()
 	{
 		_bfDelay = -1;
@@ -376,6 +398,7 @@ public:
 		cout<<"-"<<_name<<"/"<<_model<<"/fanin "<<_inputs[0]->getName()<<"\n";
 	}
 
+	vector<Gate*> getTrueFanIn () { return _inputs[0]; }
 	void bfReset ()
 	{
 		_bfDelay = -1;

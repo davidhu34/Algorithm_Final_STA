@@ -160,29 +160,76 @@ void Circuit::resetBF ()
 	for ( size_t i = 0; i < _LogicGates.size(); i++ )
 		_LogicGates[i]->bfReset();
 }
-vector< vector<Gate*> > Circuit::truepathBruteForce ( vector<bool> input_vec )
+vector< vector<Gate*> > Circuit::truepathBruteForce (
+	vector< vector<Gate*> > paths,
+	vector< vector<bool> > values,
+	vector< vector<bool> > input_vecs )
 {
-	// assue input_vec matches input
-	vector<Gate*> pending;
-	for ( map< string, Gate*>::iterator iit = _Inputs.begin();
-		iit != _Inputs.end(); iit++ )
-		pending.push_back( iit->second );
-	for ( size_t i = 0; i < pending.size(); i++ )
-		pending[i]->setBFInput( input_vec[i] );
-
-	while ( !pending.empty() )
+	vector<bool> loopInputs = vector<bool>( _Inputs.size(), false);
+	bool flag = true;
+	while(flag) 	// break after all input sets run
 	{
-		vector<bool> inputReady = vector<bool>( false, pending.size() );
+		resetBF();
+		vector<Gate*> pending;
+		for ( map< string, Gate*>::iterator iit = _Inputs.begin();
+			iit != _Inputs.end(); iit++ )
+			pending.push_back( iit->second );
 		for ( size_t i = 0; i < pending.size(); i++ )
-			if ( pending[i]->checkArrival() )
-				inputReady[i] = true;
-		for ( size_t i = 0; i < pending.size(); i++ )
-			if ( inputReady[i] )
+			pending[i]->setBFInput( loopInputs[i] );
+
+		// traverse to find true values and delays
+		while ( !pending.empty() )
+		{
+			vector<bool> inputReady = vector<bool>( false, pending.size() );
+			for ( size_t j = 0; j < pending.size(); j++ )
+				if ( pending[j]->checkArrival() )
+					inputReady[j] = true;
+			for ( size_t i = 0; i < pending.size(); i++ )
+				if ( inputReady[i] )
+				{
+					pending[i]->checkTruePath();
+					vector<Gate*> outs = pending[i]->getFanOut();
+					pending.insert( pending.end(), outs.begin(), outs.end() );
+				}
+		}
+
+		// traverse backwards to return found true paths
+		vector< vector< Gate*> > findingPath;
+		for ( size_t oi = 0; oi < _Outputs.size(); oi++ )
+			findingPath.push_back( vector<Gate*>(1, _Outputs[oi]) );
+		while ( !findingPath.empty() )
+		{
+			vector< vector< Gate*> > newPaths;
+			for ( size_t pi = 0; pi < findingPath.size(); pi++ )
 			{
-				pending[i]->checkTruePath();
-				vector<Gate*> outs = pending[i]->getFanOut();
-				pending.insert( pending.end(), outs.begin(), outs.end() );
+				vector<Gate*> path = findingPath[pi];
+				vector<Gate*> trueInputs = path.back()->getTrueFanIn();
+				if ( trueInputs.empty() )
+				{	// finding path reaches input gate
+
+				}
+				else while ( !trueInputs.empty() )
+				{
+					vector<Gate*> newPath = path;
+					newPath.push_back( trueInputs.back() );
+					newPaths.push_back(newPath);
+					trueInputs.pop_back();
+				}
 			}
+			findingPath = newPaths;
+		}
+
+		// new input set
+		for ( size_t iv = 0; iv < loopInputs.size(); iv++)
+		{
+			loopInputs[iv] = !loopInputs[iv];
+			if ( loopInputs[iv] ) {
+				break;
+			} else if ( iv == loopInputs.size() - 1 ) {
+		 		flag = false;
+		 		break;
+		 	}
+		}
 	}
 }
 
