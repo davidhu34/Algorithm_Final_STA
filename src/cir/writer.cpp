@@ -26,7 +26,7 @@ bool Writer::writeTruePathBF (
 		vector<bool> value = values[i];
 		vector<int> delay = delays[i];
 		vector<bool> input_vec = input_vecs[i];
-		
+
 		_onf
 	<< "  Path  {  " << i + 1 << "  }" << endl << endl
 	<< "  A True Path List" << endl
@@ -53,12 +53,13 @@ bool Writer::writeTruePathBF (
 
 			line[ line.find("/") + 1 ] = 'Y';
 			_onf
-	<< "  " << line << "1" << setw(10) << delay[pi] << " " << RF( value[pi] ) << endl;
+	<< "  " << line << delay[pi] - delay[pi+1] << setw(10) << delay[pi] << " " << RF( value[pi] ) << endl;
 		}
 		// output gate
 		line = w41;
 		string output = path.front()->getName() + " (out)";
 		line.replace( 0, output.length(), output );
+		
 		_onf
 	<< "  " << line << "0" << setw(10) << delay.front() << " " << RF( value.front() ) << endl;
 

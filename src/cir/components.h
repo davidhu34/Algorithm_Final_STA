@@ -235,6 +235,8 @@ public:
 				else _bfIsTP[1] = true;
 			}
 		}
+		if ( _bfIsTP[0] ) _bfDelay = 1 + delay1;
+		else _bfDelay = 1+ delay2;
 	}
 
 private:
@@ -336,6 +338,8 @@ public:
 				else _bfIsTP[1] = true;
 			}
 		}
+		if ( _bfIsTP[0] ) _bfDelay = 1 + delay1;
+		else _bfDelay = 1+ delay2;
 	}
 
 private:
@@ -414,7 +418,7 @@ public:
 	{
 		_bfIsTP = true;
 		_bfOutput = _inputs[0]->getBfOutput();
-		_bfDelay = _bfPrevDelay + 1;
+		_bfDelay = _bfPrevDelay;
 	}
 
 private:

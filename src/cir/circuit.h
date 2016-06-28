@@ -34,10 +34,10 @@ public:
 	bool newLogicGate ( string gname, string model, string inA, string inB, string outY );
 	void connectGates ();
 	void truepathBruteForce (
-		vector< vector<Gate*> > paths,
-		vector< vector<bool> > values,
-		vector< vector<int> > delays,
-		vector< vector<bool> > input_vecs );
+		vector< vector<Gate*> >& paths,
+		vector< vector<bool> >& values,
+		vector< vector<int> >& delays,
+		vector< vector<bool> >& input_vecs );
 	
 	vector<string> getInputNames () const;
 	

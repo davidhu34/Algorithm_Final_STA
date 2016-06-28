@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -161,10 +162,10 @@ void Circuit::resetBF ()
 		_LogicGates[i]->bfReset();
 }
 void Circuit::truepathBruteForce (
-	vector< vector<Gate*> > paths,
-	vector< vector<bool> > values,
-	vector< vector<int> > delays,
-	vector< vector<bool> > input_vecs )
+	vector< vector<Gate*> >& paths,
+	vector< vector<bool> >& values,
+	vector< vector<int> >& delays,
+	vector< vector<bool> >& input_vecs )
 {
 	vector<bool> loopInputs = vector<bool>( _Inputs.size(), false);
 	bool flag = true;
@@ -175,24 +176,39 @@ void Circuit::truepathBruteForce (
 		for ( map< string, Gate*>::iterator iit = _Inputs.begin();
 			iit != _Inputs.end(); iit++ )
 			pending.push_back( iit->second );
-		for ( size_t i = 0; i < pending.size(); i++ )
+		cout<<"current input_vec: ";
+		for ( size_t i = 0; i < pending.size(); i++ ){
 			pending[i]->setBFInput( loopInputs[i] );
+			cout<< (loopInputs[i])<<", ";
+		}
+		cout<<endl;
 
 		// traverse to find true values and delays
 		while ( !pending.empty() )
 		{
-			vector<bool> inputReady = vector<bool>( false, pending.size() );
-			for ( size_t j = 0; j < pending.size(); j++ )
+			vector<bool> inputReady = vector<bool>( pending.size(), false );
+			cout<<"now pending gates: ";
+			for ( size_t j = 0; j < pending.size(); j++ ) {
+				cout<<pending[j]->getName()<<", ";
 				if ( pending[j]->checkArrival() )
 					inputReady[j] = true;
+			}
+			cout<<endl;
+
+			vector<Gate*> pendingNew;
 			for ( size_t i = 0; i < pending.size(); i++ )
-				if ( inputReady[i] )
-				{
+			{
+				if ( inputReady[i] ) {
 					pending[i]->checkTruePath();
 					vector<Gate*> outs = pending[i]->getFanOut();
-					for ( size_t oi = 0; oi < outs.size(); oi++ )
-						pending.push_back( outs[oi] );
+					for ( size_t oi = 0; oi < outs.size(); oi++ ) {
+						if ( find( pendingNew.begin(), pendingNew.end(), outs[oi] )
+						 	== pendingNew.end() )
+							pendingNew.push_back( outs[oi] );
+					}
 				}
+			}
+			pending = pendingNew;
 		}
 
 		// traverse backwards to return found true paths
@@ -205,13 +221,21 @@ void Circuit::truepathBruteForce (
 			for ( size_t pi = 0; pi < findingPath.size(); pi++ )
 			{
 				vector<Gate*> path = findingPath[pi];
+
 				vector<Gate*> trueInputs = path.back()->getTrueFanIn();
 				if ( trueInputs.empty() )
 				{	// finding path reaches input gate
+					cout<<"found path: ";
+					for (size_t fp = 0; fp < path.size(); fp++ )
+					{
+						cout<<path[fp]->getName()<<", ";
+					}
+					cout<<endl;
+
 					vector<Gate*> foundPath;
 					vector<bool> foundValues;
 					vector<int> foundDelays;
-					for ( size_t f = 0; f < path.size(); f++ )
+					while ( !path.empty() )
 					{
 						foundPath.insert( foundPath.begin(), path.back() );
 						foundValues.insert( foundValues.begin(), path.back()->getBfOutput() );
@@ -235,12 +259,12 @@ void Circuit::truepathBruteForce (
 		}
 
 		// new input set
-		for ( size_t iv = 0; iv < loopInputs.size(); iv++)
+		for ( size_t iv = loopInputs.size() - 1; iv >= 0; iv--)
 		{
 			loopInputs[iv] = !loopInputs[iv];
 			if ( loopInputs[iv] ) {
 				break;
-			} else if ( iv == loopInputs.size() - 1 ) {
+			} else if ( iv == 0 ) {
 		 		flag = false;
 		 		break;
 		 	}
