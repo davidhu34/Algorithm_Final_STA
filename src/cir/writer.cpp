@@ -19,7 +19,7 @@ bool Writer::writeTruePathBF (
 	_onf
 	<< "Header  {  A True Path Set  }  " << endl << endl
 	<< "  Benchmark  {  " << _ckt->getCaseName() << "  }" << endl << endl;
-
+	int pathcount = 0;
 	for ( size_t i = 0; i < paths.size(); i++ )
 	{
 		vector<Gate*> path = paths[i];
@@ -27,8 +27,10 @@ bool Writer::writeTruePathBF (
 		vector<int> delay = delays[i];
 		vector<bool> input_vec = input_vecs[i];
 
+		if ( _dataReqTime - delay.front() > _slack )
+			continue;
 		_onf
-	<< "  Path  {  " << i + 1 << "  }" << endl << endl
+	<< "  Path  {  " << ++pathcount << "  }" << endl << endl
 	<< "  A True Path List" << endl
 	<< "  {" << endl
 	<< "  ---------------------------------------------------------------------------" << endl
@@ -59,7 +61,7 @@ bool Writer::writeTruePathBF (
 		line = w41;
 		string output = path.front()->getName() + " (out)";
 		line.replace( 0, output.length(), output );
-		
+
 		_onf
 	<< "  " << line << "0" << setw(10) << delay.front() << " " << RF( value.front() ) << endl;
 

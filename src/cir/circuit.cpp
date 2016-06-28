@@ -167,6 +167,7 @@ void Circuit::truepathBruteForce (
 	vector< vector<int> >& delays,
 	vector< vector<bool> >& input_vecs )
 {
+	vector<string> tpSets;
 	vector<bool> loopInputs = vector<bool>( _Inputs.size(), false);
 	bool flag = true;
 	while(flag) 	// break after all input sets run
@@ -225,27 +226,36 @@ void Circuit::truepathBruteForce (
 				vector<Gate*> trueInputs = path.back()->getTrueFanIn();
 				if ( trueInputs.empty() )
 				{	// finding path reaches input gate
+					string pathKey = "";
 					cout<<"found path: ";
 					for (size_t fp = 0; fp < path.size(); fp++ )
 					{
-						cout<<path[fp]->getName()<<", ";
+						string gateName = path[fp]->getName();
+						pathKey += gateName;
+						cout<<gateName<<", ";
 					}
 					cout<<endl;
+					if ( path.back()->getBfOutput() )	pathKey += "1";
+					else pathKey += "0";
 
-					vector<Gate*> foundPath;
-					vector<bool> foundValues;
-					vector<int> foundDelays;
-					while ( !path.empty() )
+					if ( find( tpSets.begin(), tpSets.end(), pathKey ) == tpSets.end() )
 					{
-						foundPath.insert( foundPath.begin(), path.back() );
-						foundValues.insert( foundValues.begin(), path.back()->getBfOutput() );
-						foundDelays.insert( foundDelays.begin(), path.back()->getBfDelay() );
-						path.pop_back();
+						vector<Gate*> foundPath;
+						vector<bool> foundValues;
+						vector<int> foundDelays;
+						while ( !path.empty() )
+						{
+							foundPath.insert( foundPath.begin(), path.back() );
+							foundValues.insert( foundValues.begin(), path.back()->getBfOutput() );
+							foundDelays.insert( foundDelays.begin(), path.back()->getBfDelay() );
+							path.pop_back();
+						}
+						paths.push_back(foundPath);
+						values.push_back(foundValues);
+						delays.push_back(foundDelays);
+						input_vecs.push_back( loopInputs );
+						tpSets.push_back(pathKey);
 					}
-					paths.push_back(foundPath);
-					values.push_back(foundValues);
-					delays.push_back(foundDelays);
-					input_vecs.push_back( loopInputs );
 				}
 				else while ( !trueInputs.empty() )
 				{	// continue to travel true path
