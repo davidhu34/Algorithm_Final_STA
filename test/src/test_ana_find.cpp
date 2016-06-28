@@ -124,10 +124,11 @@ void test_find_true_paths_single(void) {
     // find_true_paths() will put its result into these variables.
     std::vector<Sta::Cir::Path>      paths;
     std::vector< std::vector<bool> > values;
+    std::vector< std::vector<int> > delays;
     std::vector<Sta::Cir::InputVec>  input_vecs;
-    
-    int return_code;
 
+    int return_code;
+/*
     return_code = Sta::Ana::find_true_paths(Ckt,
                                             10,  // time constraint
                                             7,   // slack constraint
@@ -137,6 +138,8 @@ void test_find_true_paths_single(void) {
 
     ASSERT(return_code == 0, // return_code should be 0 if success.
         << "Find answer failed while doing case0.\n");
+*/
+    Ckt.truepathBruteForce( paths, values, delays, input_vecs );
 
     // Open true_path_set_file to write on it.
     std::ofstream outf("test/cases/case0/true_path/case0_true_path_set");
@@ -150,8 +153,10 @@ void test_find_true_paths_single(void) {
     writer.setConstraint(10, 7);
 
     // Write result.
-    return_code = writer.writeTruePath(paths, 
-                                       values, 
+    return_code = writer.writeTruePathBF(
+                                       paths,
+                                       values,
+                                       delays,
                                        input_vecs);
 
     ASSERT(return_code, // return_code == 1 if success.

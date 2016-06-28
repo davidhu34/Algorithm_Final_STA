@@ -28,6 +28,11 @@ public:
 		_dataReqTime = dataReqTime;
 		_slack = slack;
 	}
+	bool writeTruePathBF (
+		vector< vector<Gate*> > paths,
+		vector< vector<bool> > values,
+		vector< vector<int> > delays,
+		vector< vector<bool> > input_vecs );
 	bool writeTruePath (
 		vector< vector<Gate*> > paths,
 		vector< vector<bool> > values,

@@ -160,9 +160,10 @@ void Circuit::resetBF ()
 	for ( size_t i = 0; i < _LogicGates.size(); i++ )
 		_LogicGates[i]->bfReset();
 }
-vector< vector<Gate*> > Circuit::truepathBruteForce (
+void Circuit::truepathBruteForce (
 	vector< vector<Gate*> > paths,
 	vector< vector<bool> > values,
+	vector< vector<int> > delays,
 	vector< vector<bool> > input_vecs )
 {
 	vector<bool> loopInputs = vector<bool>( _Inputs.size(), false);
@@ -189,7 +190,8 @@ vector< vector<Gate*> > Circuit::truepathBruteForce (
 				{
 					pending[i]->checkTruePath();
 					vector<Gate*> outs = pending[i]->getFanOut();
-					pending.insert( pending.end(), outs.begin(), outs.end() );
+					for ( size_t oi = 0; oi < outs.size(); oi++ )
+						pending.push_back( outs[oi] );
 				}
 		}
 
@@ -206,10 +208,23 @@ vector< vector<Gate*> > Circuit::truepathBruteForce (
 				vector<Gate*> trueInputs = path.back()->getTrueFanIn();
 				if ( trueInputs.empty() )
 				{	// finding path reaches input gate
-
+					vector<Gate*> foundPath;
+					vector<bool> foundValues;
+					vector<int> foundDelays;
+					for ( size_t f = 0; f < path.size(); f++ )
+					{
+						foundPath.insert( foundPath.begin(), path.back() );
+						foundValues.insert( foundValues.begin(), path.back()->getBfOutput() );
+						foundDelays.insert( foundDelays.begin(), path.back()->getBfDelay() );
+						path.pop_back();
+					}
+					paths.push_back(foundPath);
+					values.push_back(foundValues);
+					delays.push_back(foundDelays);
+					input_vecs.push_back( loopInputs );
 				}
 				else while ( !trueInputs.empty() )
-				{
+				{	// continue to travel true path
 					vector<Gate*> newPath = path;
 					newPath.push_back( trueInputs.back() );
 					newPaths.push_back(newPath);

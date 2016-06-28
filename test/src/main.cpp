@@ -52,8 +52,8 @@ int main(int argc, const char* argv[]) {
     test_circuit_state();
 */
     std::cerr << "\ntest_ana_find.cpp\n";
-    test_find_true_paths();
-    //test_find_true_paths_single();
+    //test_find_true_paths();
+    test_find_true_paths_single();
 
     return 0;
 }
