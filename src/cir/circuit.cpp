@@ -177,24 +177,24 @@ void Circuit::truepathBruteForce (
 		for ( map< string, Gate*>::iterator iit = _Inputs.begin();
 			iit != _Inputs.end(); iit++ )
 			pending.push_back( iit->second );
-		cout<<"current input_vec: ";
+		//cout<<"current input_vec: ";
 		for ( size_t i = 0; i < pending.size(); i++ ){
 			pending[i]->setBFInput( loopInputs[i] );
-			cout<< (loopInputs[i])<<", ";
+			//cout<< (loopInputs[i])<<", ";
 		}
-		cout<<endl;
+		//cout<<endl;
 
 		// traverse to find true values and delays
 		while ( !pending.empty() )
 		{
 			vector<bool> inputReady = vector<bool>( pending.size(), false );
-			cout<<"now pending gates: ";
+			//cout<<"now pending gates: ";
 			for ( size_t j = 0; j < pending.size(); j++ ) {
-				cout<<pending[j]->getName()<<", ";
+			//	cout<<pending[j]->getName()<<", ";
 				if ( pending[j]->checkArrival() )
 					inputReady[j] = true;
 			}
-			cout<<endl;
+			//cout<<endl;
 
 			vector<Gate*> pendingNew;
 			for ( size_t i = 0; i < pending.size(); i++ )
@@ -227,14 +227,14 @@ void Circuit::truepathBruteForce (
 				if ( trueInputs.empty() )
 				{	// finding path reaches input gate
 					string pathKey = "";
-					cout<<"found path: ";
+					//cout<<"found path: ";
 					for (size_t fp = 0; fp < path.size(); fp++ )
 					{
 						string gateName = path[fp]->getName();
 						pathKey += gateName;
-						cout<<gateName<<", ";
+					//	cout<<gateName<<", ";
 					}
-					cout<<endl;
+					//cout<<endl;
 					if ( path.back()->getBfOutput() )	pathKey += "1";
 					else pathKey += "0";
 

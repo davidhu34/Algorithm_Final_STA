@@ -213,8 +213,8 @@ public:
 				_bfIsTP[1] = true;
 			} else {
 				_bfOutput = true;
-				if (!V1) _bfIsTP[1] = true;
-				if (!V2) _bfIsTP[0] = true;
+				if (!V1) _bfIsTP[0] = true;
+				if (!V2) _bfIsTP[1] = true;
 			}
 		} else if ( delay1 > delay2 ) {
 			if ( V1 && V2 ) {
@@ -316,8 +316,8 @@ public:
 				_bfIsTP[1] = true;
 			} else {
 				_bfOutput = false;
-				if (V1) _bfIsTP[1] = true;
-				if (V2) _bfIsTP[0] = true;
+				if (V1) _bfIsTP[0] = true;
+				if (V2) _bfIsTP[1] = true;
 			}
 		} else if ( delay1 > delay2 ) {
 			if ( !V1 && !V2 ) {

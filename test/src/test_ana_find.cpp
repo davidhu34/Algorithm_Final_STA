@@ -110,16 +110,16 @@ void test_find_true_paths_single(void) {
     Sta::Cir::Circuit Ckt;
 
     // Open netlist file.
-    std::ifstream inf("test/cases/case0/input/case0");
+    std::ifstream inf("test/cases/case1/input/case1");
 
     ASSERT(inf.good(),
-        << "Cannot open 'test/cases/case0/input/case0'.\n");
+        << "Cannot open 'test/cases/case1/input/case1'.\n");
 
     // Parse netlist file into circuit.
     Sta::Cir::Parser parser(inf, &Ckt);
 
     ASSERT(parser.parseCase(),
-        << "Parse circuit failed while doing case0.\n");
+        << "Parse circuit failed while doing case1.\n");
 
     // find_true_paths() will put its result into these variables.
     std::vector<Sta::Cir::Path>      paths;
@@ -137,20 +137,20 @@ void test_find_true_paths_single(void) {
                                             input_vecs);
 
     ASSERT(return_code == 0, // return_code should be 0 if success.
-        << "Find answer failed while doing case0.\n");
+        << "Find answer failed while doing case1.\n");
 */
     Ckt.truepathBruteForce( paths, values, delays, input_vecs );
 
     // Open true_path_set_file to write on it.
-    std::ofstream outf("test/cases/case0/true_path/case0_true_path_set");
+    std::ofstream outf("test/cases/case1/true_path/case1_true_path_set");
 
     ASSERT(outf.good(),
-        << "Cannot open 'test/cases/case0/true_path/case0_true_path_set'.\n");
+        << "Cannot open 'test/cases/case1/true_path/case1_true_path_set'.\n");
 
     // Create writer to write result.
     Sta::Cir::Writer writer(outf, &Ckt);
 
-    writer.setConstraint(10, 7);
+    writer.setConstraint(45, 4);
 
     // Write result.
     return_code = writer.writeTruePathBF(
@@ -160,7 +160,7 @@ void test_find_true_paths_single(void) {
                                        input_vecs);
 
     ASSERT(return_code, // return_code == 1 if success.
-        << "Write file failed while doing case0");
+        << "Write file failed while doing case1");
 
     // Clear circuit.
     Ckt.clear();

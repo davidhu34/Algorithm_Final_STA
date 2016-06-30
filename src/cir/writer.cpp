@@ -27,7 +27,7 @@ bool Writer::writeTruePathBF (
 		vector<int> delay = delays[i];
 		vector<bool> input_vec = input_vecs[i];
 
-		if ( _dataReqTime - delay.front() > _slack )
+		if ( _dataReqTime - delay.front() >= _slack )
 			continue;
 		_onf
 	<< "  Path  {  " << ++pathcount << "  }" << endl << endl
